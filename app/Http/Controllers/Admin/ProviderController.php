@@ -6,6 +6,7 @@ use App\DataTables\ProvidersDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Provider;
 use Exception;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

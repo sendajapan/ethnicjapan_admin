@@ -7,9 +7,7 @@
                 <h4 class="content-title card-title">Purchases</h4>
             </div>
         </div>
-
         <div class="row">
-
             <div class="col-lg-12 col-xl-12 col-xxl-12">
                 <div class="card mb-4">
                     <div class="card-body">
@@ -23,7 +21,6 @@
                 </div>
             </div>
         </div>
-
     </section>
 
 @endsection

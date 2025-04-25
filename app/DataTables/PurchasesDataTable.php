@@ -25,36 +25,26 @@ class PurchasesDataTable extends DataTable
             ->setRowId('DT_RowIndex')
             ->addIndexColumn()
             ->addColumn('purchase_invoice', function ($query) {
-                if($query->purchase_invoice!=''){
-                    return '<a target="_blank" href="'.url('/'.$query->purchase_invoice).'" class="btn btn-youtube font-sm btn-outline-danger">
+                if ($query->purchase_invoice != '') {
+                    return '<a target="_blank" href="' . url('/' . $query->purchase_invoice) . '" class="btn btn-youtube font-sm btn-outline-danger">
                     <i class="material-icons md-picture_as_pdf fs-6"></i>
                 </a>';
                 }
-                else{
-                    return '';
-                }
+                return '';
             })
             ->addColumn('product_qty', function ($query) {
                 return $query->purchasedItems->count();
-//                if($query->purchase_invoice!=''){
-//                    return '<a target="_blank" href="'.url('/'.$query->purchase_invoice).'" class="btn btn-youtube font-sm btn-outline-danger">
-//                    <i class="material-icons md-picture_as_pdf fs-6"></i>
-//                </a>';
-//                }
-//                else{
-//                    return '';
-//                }
             })
             ->addColumn('action', function ($query) {
-                return '<a href="'. route('admin.purchase.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
+                return '<a href="' . route('admin.purchase.edit', $query->id) . '" class="btn btn-sm font-sm rounded btn-dark">
                     <i class="material-icons md-edit fs-6"></i>
                 </a>
-                <a href="'. route('admin.purchase.destroy', $query->id) .'" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
+                <a href="' . route('admin.purchase.destroy', $query->id) . '" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
                     <i class="material-icons md-delete_forever fs-6"></i>
                 </a>';
 
             })
-            ->rawColumns([  'purchase_no', 'purchase_date', 'product_qty', 'purchase_amount', 'purchase_invoice', 'action']);
+            ->rawColumns(['purchase_no', 'purchase_date', 'product_qty', 'purchase_amount', 'purchase_invoice', 'action']);
     }
 
     /**

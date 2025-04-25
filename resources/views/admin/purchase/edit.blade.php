@@ -10,7 +10,7 @@
         $items[] = $p;
     }
 
-   // \Barryvdh\Debugbar\Facades\Debugbar::info($items);
+    \Barryvdh\Debugbar\Facades\Debugbar::info($data);
 @endphp
 
 @section('content')
@@ -25,8 +25,9 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <h5>Please enter purchase information</h5>
-                        <form action="{{ route('admin.purchase.store') }}" method="POST" enctype="multipart/form-data">
+                        <form action="{{ route('admin.purchase.update', $data->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf
+                            @method('PUT')
                             <div class="row">
                                 <div class="col-lg-3">
                                     <div class="mb-4">
@@ -34,7 +35,7 @@
                                         <select class="form-select" id="provider_id" name="provider_id"  value="{{ $data->provider_id }}" required>
                                             <option value="">Select</option>
                                             @foreach(Provider::orderBy('provider_name')->get() as $p)
-                                                <option value="{{ $p->id }}">{{ $p->provider_name }}</option>
+                                                <option value="{{ $p->id }}" {{ $p->id == $data->provider->id ? 'selected' : '' }}>{{ $p->provider_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -54,12 +55,17 @@
                                 <div class="col-lg-2">
                                     <div class="mb-4">
                                         <label for="purchase_amount" class="form-label">Purchase Amount (USD)</label>
-                                        <input type="text" placeholder="ex. 99.50" class="form-control" id="purchase_amount" name="purchase_amount"  value="{{ old('purchase_amount') }}" required>
+                                        <input type="text" placeholder="ex. 99.50" class="form-control" id="purchase_amount" name="purchase_amount"  value="{{ empty($data->purchase_amount) ? old('purchase_amount')  : $data->purchase_amount }}" required>
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="mb-4">
                                         <label for="purchase_invoice" class="form-label">Purchase Invoice</label>
+                                        @if(!empty($data->purchase_invoice))
+                                            <a target="_blank" href="'.url('/'.$data->purchase_invoice).'" class="btn btn-youtube font-sm btn-outline-danger">
+                                                <i class="material-icons md-picture_as_pdf fs-6"></i>
+                                            </a>
+                                        @endif
                                         <input type="file" class="form-control" id="purchase_invoice" name="purchase_invoice"  value="{{ $data->purchase_invoice }}">
                                     </div>
                                 </div>
@@ -192,10 +198,6 @@
             }
         }
 
-
-
-
-
         show_line();
         show_line();
         show_line();
@@ -206,12 +208,17 @@
             unit_price = parseFloat(document.getElementById('item_unit_price_'+i).value);
             item_qty = parseFloat(document.getElementById('item_qty_'+i).value);
             line_total = parseFloat(unit_price*item_qty).toFixed(2);
-            if(!isNaN(line_total)){
-                document.getElementById('item_line_price_'+i).value = line_total;
-            }
-            else{
-                document.getElementById('item_line_price_'+i).value = 0;
+
+            if (!isNaN(line_total)) {
+                document.getElementById('item_line_price_' + i).value = line_total;
+            } else {
+                document.getElementById('item_line_price_' + i).value = 0;
             }
         }
+
+        @foreach($data->purchasedItems as $i => $v)
+            update_line({{ $i }});
+        @endforeach
+
     </script>
 @endpush
