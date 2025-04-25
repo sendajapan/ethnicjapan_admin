@@ -36,8 +36,6 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-
-
         $request->validate([
             'provider_id' => 'required|integer|max:255',
             'purchase_no' => 'required|string|max:255',
@@ -45,12 +43,9 @@ class PurchaseController extends Controller
             'purchase_invoice' => 'file|mimes:jpg,png,pdf|max:20480'
         ]);
 
-
-        if($request->hasFile('purchase_invoice')){
-        // Store the file in the 'uploads' directory on the 'public' disk
-        $filePath = $request->file('purchase_invoice')->store('uploads/purchase', 'public');
+        if ($request->hasFile('purchase_invoice')) {
+            $filePath = $request->file('purchase_invoice')->store('uploads/purchase', 'public');
         }
-
 
         // Return success response
         DB::beginTransaction();
@@ -113,16 +108,78 @@ class PurchaseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, purchase $purchase)
+    public function update(Request $request, Purchase $purchase)
     {
-        //
+        $request->validate([
+            'provider_id' => 'required|integer|max:255',
+            'purchase_no' => 'required|string|max:255',
+            'purchase_date' => 'required|date',
+            'purchase_invoice' => 'file|mimes:jpg,png,pdf|max:20480'
+        ]);
+
+        if ($request->hasFile('purchase_invoice')) {
+            $filePath = $request->file('purchase_invoice')->store('uploads/purchase', 'public');
+        }
+
+        DB::beginTransaction();
+        try {
+            $purchase->provider_id = $request->input('provider_id');
+            $purchase->purchase_no = $request->input('purchase_no');
+            $purchase->purchase_date = $request->input('purchase_date');
+            $purchase->purchase_amount = $request->input('purchase_amount');
+
+            if(isset($filePath)){
+                if(!empty($filePath)){
+                    $purchase->purchase_invoice = $filePath;
+                }
+            }
+
+            $purchase->update();
+            $purchase_id = $purchase->id;
+
+            $purchase->purchasedItems()->delete();
+
+            foreach($request->input('item_id') as $key=> $value){
+                if(($request->input('item_id')[$key]) && ($request->input('item_qty')[$key]) && ($request->input('item_unit_price')[$key]) && ($request->input('item_line_price')[$key])){
+                    $purchaseItems = new PurchaseItem();
+                    $purchaseItems->purchase_id = $purchase_id;
+                    $purchaseItems->item_id = $request->input('item_id')[$key];
+                    $purchaseItems->item_description = $request->input('item_description')[$key];
+                    $purchaseItems->item_qty = $request->input('item_qty')[$key];
+                    $purchaseItems->item_unit_price = $request->input('item_unit_price')[$key];
+                    $purchaseItems->item_line_price = $request->input('item_line_price')[$key];
+
+                    $purchaseItems->save();
+                }
+            }
+
+            DB::commit();
+
+        } catch (Exception $exception) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'error updating data ' . $purchase->purchase_no . ': ' . $exception->getMessage());
+        }
+
+        return redirect()->route('admin.purchase.index')->with('success', $purchase->purchase_no . ' updated successfully.');
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(purchase $purchase)
+    public function destroy(string $id)
     {
-        //
+        try {
+            $purchase = Purchase::where('id', $id)->firstOrFail();
+            $purchase->purchasedItems()->delete();
+            $purchase->delete();
+        } catch (Exception $exception) {
+            return response(array('code' => 403, 'status' => 'failed', 'message' => $exception->getMessage()), 403, array('Content-Type' => 'application/json'));
+        }
+
+        return response(array('code' => 200,
+            'status' => 'success',
+            'message' => 'Purchase deleted successfully!',
+        ), 200, array('Content-Type' => 'application/json'));
     }
 }
