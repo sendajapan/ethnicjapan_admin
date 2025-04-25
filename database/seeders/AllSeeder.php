@@ -73,5 +73,20 @@ class AllSeeder extends Seeder
                 'status' => 'active',
             ]
         ]);
+
+
+        DB::table('items')->insert([
+            [
+                'item_name' => 'Cacao grains / VRAEM15 + Cropllo / Grade 1',
+                'item_description' => '50kg yute bag',
+                'hts_code' => 'HTS 1801.00.00.00'
+            ],
+            [
+                'item_name' => 'White Quinoa Non Pesticides',
+                'item_description' => '20kg bag',
+                'hts_code' => 'HTS 1008.50.90.00'
+            ]
+        ]);
+
     }
 }
