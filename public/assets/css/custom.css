@@ -1,0 +1,154 @@
+.border-1 {
+    border: 1px solid rgba(60, 63, 65, 0.15);
+}
+
+.bg-1 {
+    background-color: #fddde4 !important;
+}
+
+.bg-2 {
+    background-color: #cdebbc !important;
+}
+
+.bg-3 {
+    background-color: #d1e8f2 !important;
+}
+
+.bg-4 {
+    background-color: #cdd4f8 !important;
+}
+
+.bg-5 {
+    background-color: #f6dbf6 !important;
+}
+
+.bg-6 {
+    background-color: #fff2e5 !important;
+}
+
+.bg-7 {
+    background-color: #d77f7a !important;
+}
+
+.bg-8 {
+    background-color: #d4f0fe !important;
+}
+
+.bg-9 {
+    background-color: #F2FCE4 !important;
+}
+
+.bg-10 {
+    background-color: #FFFCEB !important;
+}
+
+.bg-11 {
+    background-color: #bbf2d9 !important;
+}
+
+.bg-12 {
+    background-color: #fbe2e2 !important;
+}
+
+.bg-13 {
+    background-color: #FFF3EB !important;
+}
+
+.bg-14 {
+    background-color: #FFF3FF !important;
+}
+
+.bg-15 {
+    background-color: #F2FCE4 !important;
+}
+
+.bg-grey-9 {
+    background-color: #f4f5f9 !important;
+}
+
+
+
+/* input number field remove the increase decrease default button */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0;
+    /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+    /* Firefox */
+}
+
+/* scroll thumb */
+/*::-webkit-scrollbar {*/
+/*    width: 6px;*/
+/*    height: 5px;*/
+/*}*/
+
+/*::-webkit-scrollbar-track {*/
+/*    background: rgb(255, 255, 255);*/
+/*    border-radius: 8px;*/
+/*}*/
+
+/*::-webkit-scrollbar-thumb {*/
+/*    background-image: linear-gradient(45deg, #29A56C, rgb(255, 255, 255));*/
+/*    border-radius: 5px;*/
+/*}*/
+
+/*::-webkit-scrollbar-thumb:hover {*/
+/*    background: linear-gradient(45deg, rgb(255, 255, 255), #29A56C);*/
+/*    border-radius: 8px;*/
+/*}*/
+
+/*::-webkit-scrollbar-thumb:active {*/
+/*    background: linear-gradient(45deg, rgb(255, 255, 255), #29A56C);*/
+/*    border-radius: 8px;*/
+/*}*/
+
+button.btn {
+    text-align: center !important;
+}
+
+/* cart page select option css */
+
+#make option, #part option, #model option {
+    padding: .25rem;
+    font-size: 12px;
+    text-transform: capitalize;
+}
+
+/* data table */
+
+.dt-search input {
+    width: 300px !important;
+}
+
+/* part-table */
+
+#part-table, .vehicle-table {
+    table-layout: fixed;
+    white-space: nowrap;
+}
+
+#part-table td, .vehicle-table td {
+    padding-block: .25rem;
+    padding-inline: 1rem;
+    font-size: 11px;
+    border: 1px solid #dfdbdb;
+}
+
+.table-parts, .table-part-category td {
+    padding-block: 8px !important;
+}
+
+.table-sub-sale{
+    background: white;
+}
+
+.table-sub-sale th, td {
+    padding-block: 4px;
+}
