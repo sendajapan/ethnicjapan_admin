@@ -179,7 +179,7 @@ class PurchaseController extends Controller
 
         return response(array('code' => 200,
             'status' => 'success',
-            'message' => 'Purchase deleted successfully!',
+            'message' => 'Purchase deleted successfully!!!',
         ), 200, array('Content-Type' => 'application/json'));
     }
 }
