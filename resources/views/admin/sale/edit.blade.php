@@ -10,7 +10,7 @@
         $items[] = $p;
     }
 
-    \Barryvdh\Debugbar\Facades\Debugbar::info($data);
+   // \Barryvdh\Debugbar\Facades\Debugbar::info($data);
 @endphp
 
 @section('content')
