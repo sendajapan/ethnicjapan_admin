@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sale extends Model
 {
-    use HasFactory;
-
-    public function parts(): BelongsToMany
+    public function purchasedItems(): HasMany
     {
-        return $this->belongsToMany(Part::class)->withPivot(['quantity_sold', 'price_at_sale', 'created_at', 'updated_at']);
+        return $this->hasMany(SaleItem::class);
+    }
+
+    public function provider(): BelongsTo
+    {
+        return $this->belongsTo(Provider::class);
     }
 }

@@ -41,7 +41,7 @@
                 <script>
                     document.write(new Date().getFullYear());
                 </script>
-                &copy; Parts Management System - Senda Japan Ltd.
+                &copy; Ethnic Admin Panel Management System - Senda Japan Ltd.
             </div>
         </div>
     </footer>

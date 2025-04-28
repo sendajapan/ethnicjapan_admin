@@ -54,8 +54,8 @@
                 </a>
             </li>
 
-            <li class="menu-item {{ setActive(['admin.dashboard']) }}">
-                <a class="menu-link {{ setActive(['admin.provider.index']) }}" href="{{ route('admin.provider.index') }}">
+            <li class="menu-item {{ setActive(['admin.sale.*']) }}">
+                <a class="menu-link {{ setActive(['admin.sale.index']) }}" href="{{ route('admin.sale.index') }}">
                     <i class="icon material-icons md-payments text-muted"></i>
                     <span class="text">Sales</span>
                 </a>
