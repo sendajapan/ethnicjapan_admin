@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\item;
+use App\Models\Item;
 use App\Models\Purchase;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
