@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('item_name')->nullable();
             $table->string('item_description')->nullable();
             $table->string('hts_code')->nullable();
+            $table->string('default_price')->nullable();
             $table->timestamps();
         });
     }

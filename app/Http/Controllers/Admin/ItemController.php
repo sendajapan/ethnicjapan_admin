@@ -41,7 +41,8 @@ class ItemController extends Controller
         $request->validate([
             'item_name' => 'required|string|max:255',
             'item_description' => 'max:255',
-            'hts_code' => 'max:255'
+            'hts_code' => 'max:255',
+            'default_price' => 'max:20'
         ]);
 
         DB::beginTransaction();
@@ -51,6 +52,7 @@ class ItemController extends Controller
             $item->item_name = $request->input('item_name');
             $item->item_description = $request->input('item_description');
             $item->hts_code = $request->input('hts_code');
+            $item->default_price = $request->input('default_price');
 
             $item->save();
             DB::commit();
@@ -94,6 +96,7 @@ class ItemController extends Controller
             $name->item_name = strtoupper($request->input('item_name'));
             $name->item_description = $request->input('item_description');
             $name->hts_code = $request->input('hts_code');
+            $name->default_price = $request->input('default_price');
 
             $name->save();
             DB::commit();

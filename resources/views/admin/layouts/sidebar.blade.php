@@ -22,49 +22,63 @@
             <li class="menu-item {{ setActive(['admin.category.*']) }}">
                 <a class="menu-link {{ setActive(['admin.category.index']) }}" href="{{ route('admin.category.index') }}">
                     <i class="icon material-icons md-category text-muted"></i>
-                    <span class="text">Categories</span>
+                    <span class="text">Categories List</span>
                 </a>
             </li>
 
             <li class="menu-item {{ setActive(['admin.item.*']) }}">
                 <a class="menu-link {{ setActive(['admin.item.index']) }}" href="{{ route('admin.item.index') }}">
                     <i class="icon material-icons md-production_quantity_limits text-muted"></i>
-                    <span class="text">Items</span>
+                    <span class="text">Items / Products List</span>
                 </a>
             </li>
 
             <li class="menu-item {{ setActive(['admin.provider.*']) }}">
                 <a class="menu-link {{ setActive(['admin.provider.index']) }}" href="{{ route('admin.provider.index') }}">
                     <i class="icon material-icons md-work text-muted"></i>
-                    <span class="text">Providers</span>
+                    <span class="text">Providers List</span>
                 </a>
             </li>
 
             <li class="menu-item {{ setActive(['admin.customer.*']) }}">
                 <a class="menu-link {{ setActive(['admin.customer.index']) }}" href="{{ route('admin.customer.index') }}">
                     <i class="icon material-icons md-group text-muted"></i>
-                    <span class="text">Customers</span>
+                    <span class="text">Customers List</span>
                 </a>
             </li>
 
             <li class="menu-item {{ setActive(['admin.purchase.*']) }}">
                 <a class="menu-link {{ setActive(['admin.purchase.index']) }}" href="{{ route('admin.purchase.index') }}">
                     <i class="icon material-icons md-request_quote text-muted"></i>
-                    <span class="text">Purchases</span>
+                    <span class="text">Purchases List</span>
                 </a>
             </li>
 
             <li class="menu-item {{ setActive(['admin.sale.*']) }}">
                 <a class="menu-link {{ setActive(['admin.sale.index']) }}" href="{{ route('admin.sale.index') }}">
                     <i class="icon material-icons md-payments text-muted"></i>
-                    <span class="text">Sales</span>
+                    <span class="text">Sales List</span>
                 </a>
             </li>
 
-            <li class="menu-item {{ setActive(['admin.dashboard']) }}">
-                <a class="menu-link {{ setActive(['admin.provider.index']) }}" href="{{ route('admin.provider.index') }}">
+            <li class="menu-item {{ setActive(['admin.stock.*']) }}">
+                <a class="menu-link {{ setActive(['admin.stock.index']) }}" href="{{ route('admin.stock.index') }}">
                     <i class="icon material-icons md-shopping_cart text-muted"></i>
-                    <span class="text">Stock</span>
+                    <span class="text">Stock Report</span>
+                </a>
+            </li>
+
+            <li class="menu-item {{ setActive(['admin.purchase_report.*']) }}">
+                <a class="menu-link {{ setActive(['admin.purchase_report.index']) }}" href="{{ route('admin.purchase_report.index') }}">
+                    <i class="icon material-icons md-shopping_cart text-muted"></i>
+                    <span class="text">Purchase Report</span>
+                </a>
+            </li>
+
+            <li class="menu-item {{ setActive(['admin.sale_report.*']) }}">
+                <a class="menu-link {{ setActive(['admin.sale_report.index']) }}" href="{{ route('admin.sale_report.index') }}">
+                    <i class="icon material-icons md-shopping_cart text-muted"></i>
+                    <span class="text">Sales Report</span>
                 </a>
             </li>
 

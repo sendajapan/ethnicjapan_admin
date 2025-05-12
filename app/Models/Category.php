@@ -12,9 +12,5 @@ class Category extends Model
 
     protected $primaryKey = 'id';
 
-    public function parts(): HasMany
-    {
-        return $this->hasMany(Part::class);
-    }
 
 }

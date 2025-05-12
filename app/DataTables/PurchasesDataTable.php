@@ -32,8 +32,45 @@ class PurchasesDataTable extends DataTable
                 }
                 return '';
             })
+            ->addColumn('provider_name', function ($query) {
+                return $query->provider->provider_name;
+            })
+            ->addColumn('purchase_amount', function ($query) {
+                return "$ ".number_format($query->purchase_amount,2);
+            })
             ->addColumn('product_qty', function ($query) {
-                return $query->purchasedItems->count();
+                $item_count = $query->purchasedItems->count();
+                $html = $item_count;
+                if($item_count>0){
+                    $html .= '
+                    <a id="detail_link_show_'.$query->id.'" class="show_detail_table_link float-end" onclick="show_detail('.$query->id.')">Show Details</a>
+                    <a id="detail_link_hide_'.$query->id.'" class="float-end" onclick="show_detail('.$query->id.')" style="display: none;">Hide Details</a>
+                    <table id="detail_table_'.$query->id.'" width="100%" class="table table-nowrap mb-0 " style="line-height:0; font-size:10px; display:none;">
+                        <tr>
+                            <td class="fw-bolder bg-black text-white">No.</td>
+                            <td class="fw-bolder bg-black text-white">Item</td>
+                            <td class="fw-bolder bg-black text-white">Qty</td>
+                            <td class="fw-bolder bg-black text-white">Unit<br>Price</td>
+                            <td class="fw-bolder bg-black text-white">Amount</td>
+                        </tr>';
+
+                        foreach($query->purchasedItems as $key => $item){
+                        $html .= '<tr>
+                            <td class="text-left">'.($key+1).'</td>
+                            <td class="text-left">'.$item->item->item_name.'</td>
+                            <td class="text-center">'.number_format($item->item_qty,0).'</td>
+                            <td class="text-end">'.number_format($item->item_unit_price,2).'</td>
+                            <td class="text-end">'.number_format($item->item_line_price,2).'</td>
+                        </tr>';
+                        }
+
+                        $html .= '<tr>
+                            <td class="fw-bolder" colspan="4">Total</td>
+                            <td class="fw-bolder text-end">'.number_format($query->purchase_amount,2).'</td>
+                        </tr>
+                    </table>';
+                }
+                return $html;
             })
             ->addColumn('action', function ($query) {
                 return '<a href="' . route('admin.purchase.edit', $query->id) . '" class="btn btn-sm font-sm rounded btn-dark">
@@ -44,7 +81,7 @@ class PurchasesDataTable extends DataTable
                 </a>';
 
             })
-            ->rawColumns(['purchase_no', 'purchase_date', 'product_qty', 'purchase_amount', 'purchase_invoice', 'action']);
+            ->rawColumns(['purchase_no', 'provider_name', 'purchase_date', 'product_qty', 'purchase_amount', 'purchase_invoice', 'action']);
     }
 
     /**
@@ -52,7 +89,7 @@ class PurchasesDataTable extends DataTable
      */
     public function query(Purchase $model): QueryBuilder
     {
-        return $query = $model->newQuery();
+        return $query = $model->newQuery()->with('provider');
     }
 
     /**
@@ -64,28 +101,39 @@ class PurchasesDataTable extends DataTable
 
         return $this->builder()
             ->setTableId('purchases-table')
-            ->addTableClass("table table-hover align-middle table-nowrap mb-0")
+            ->addTableClass("table table-striped table-light table-border table-hover align-middle table-nowrap mb-0 ")
             ->setTableHeadClass("table-light bordered")
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->parameters(
                 [
+                    'order'=> [[1, 'asc']],
                     'pageLength' => 100,
                     'lengthMenu' => [25, 50, 100, 500],
                     'paging' => !$disablePagination,
                     'searching' => !$disablePagination,
-                    'info' => !$disablePagination
+                    'info' => !$disablePagination,
+                    'dom' => 'Bfrt<"bottom mt-10 d-flex align-items-center justify-content-between"ip>',
+                    'buttons' => ['export', 'print', 'reset', 'reload']
                 ]
             )
             ->orderBy(0)
             ->selectStyleSingle()
             ->buttons([
-                Button::make('excel'),
-                Button::make('csv'),
-                Button::make('pdf'),
-                Button::make('print'),
-                Button::make('reset'),
-                Button::make('reload')
+                Button::make('create')
+                    ->addClass('btn btn-primary mr-15 mb-15 fs-6 fst-normal bg-success text-white')
+                    ->init('function(api, node, config) { $(node).removeClass("dt-button") }')
+                    ->action("window.location = '".route('admin.purchase.create')."';")
+                    ->text('<i class="fas fa-plus"></i> Regsiter New Purchase'),
+                Button::make('excel')->addClass('btn btn-primary btn-facebook mr-15  mb-15 fs-6 fst-normal bg-dark text-white')
+                    ->init('function(api, node, config) { $(node).removeClass("dt-button") }')
+                    ->text('<i class="fas fa-download"></i> Download Report as Excel'),
+                Button::make('print')->addClass('btn btn-primary btn-youtube mr-15  mb-15 fs-6 fst-normal text-white')
+                    ->init('function(api, node, config) { $(node).removeClass("dt-button") }')
+                    ->text('<i class="fas fa-print"></i> Print Page Data'),
+                Button::make('reset')->addClass('btn btn-success btn-primary mr-15  mb-15 fs-6 bg-secondary fst-normal text-white')
+                    ->init('function(api, node, config) { $(node).removeClass("dt-button") }')
+                    ->text('<i class="fas fa-undo"></i> Reset Page Data')
             ]);
     }
 
@@ -97,13 +145,14 @@ class PurchasesDataTable extends DataTable
         return [
             Column::computed('DT_RowIndex')->className('text-start')->title('S/N')->width(20),
             Column::make('purchase_no')->className('text-start')->width(140),
+            Column::make('provider_name')->className('text-start')->width(140),
             Column::make('purchase_date')->className('text-start')->width(140),
-            Column::make('product_qty')->className('text-start')->width(140),
-            Column::make('purchase_amount')->className('text-start')->width(140),
-            Column::make('purchase_invoice')->className('text-start')->width(140),
+            Column::make('product_qty')->className('text-start')->width(290),
+            Column::make('purchase_amount')->className('text-center')->width(90),
+            Column::make('purchase_invoice')->className('text-start')->width(90),
             Column::computed('action')
-                ->exportable(false)
-                ->printable(false)
+                ->exportable(true)
+                ->printable(true)
                 ->width(100)
                 ->addClass('text-center')
         ];

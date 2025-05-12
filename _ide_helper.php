@@ -5,7 +5,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 11.44.2.
+ * Generated for Laravel 11.44.7.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -3323,6 +3323,20 @@ namespace Illuminate\Support\Facades {
         {
             /** @var \Illuminate\View\Compilers\BladeCompiler $instance */
             $instance->precompiler($precompiler);
+        }
+
+        /**
+         * Execute the given callback using a custom echo format.
+         *
+         * @param string $format
+         * @param callable $callback
+         * @return string 
+         * @static 
+         */
+        public static function usingEchoFormat($format, $callback)
+        {
+            /** @var \Illuminate\View\Compilers\BladeCompiler $instance */
+            return $instance->usingEchoFormat($format, $callback);
         }
 
         /**
@@ -23610,6 +23624,473 @@ namespace Barryvdh\Debugbar\Facades {
             }
     }
 
+namespace Barryvdh\Snappy\Facades {
+    /**
+     * 
+     *
+     */
+    class SnappyPdf {
+        /**
+         * Get the Snappy instance.
+         *
+         * @return \Knp\Snappy\Pdf 
+         * @static 
+         */
+        public static function snappy()
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->snappy();
+        }
+
+        /**
+         * Set temporary folder
+         *
+         * @param string $path
+         * @static 
+         */
+        public static function setTemporaryFolder($path)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setTemporaryFolder($path);
+        }
+
+        /**
+         * Set the paper size (default A4)
+         *
+         * @param string $paper
+         * @param string $orientation
+         * @return \Barryvdh\Snappy\PdfWrapper 
+         * @static 
+         */
+        public static function setPaper($paper, $orientation = null)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setPaper($paper, $orientation);
+        }
+
+        /**
+         * Set the orientation (default portrait)
+         *
+         * @param string $orientation
+         * @return \Barryvdh\Snappy\PdfWrapper 
+         * @static 
+         */
+        public static function setOrientation($orientation)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setOrientation($orientation);
+        }
+
+        /**
+         * Show or hide warnings
+         *
+         * @param bool $warnings
+         * @return \Barryvdh\Snappy\PdfWrapper 
+         * @deprecated 
+         * @static 
+         */
+        public static function setWarnings($warnings)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setWarnings($warnings);
+        }
+
+        /**
+         * 
+         *
+         * @param string $name
+         * @param mixed $value
+         * @return \Barryvdh\Snappy\PdfWrapper 
+         * @static 
+         */
+        public static function setOption($name, $value)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setOption($name, $value);
+        }
+
+        /**
+         * 
+         *
+         * @param array $options
+         * @return \Barryvdh\Snappy\PdfWrapper 
+         * @static 
+         */
+        public static function setOptions($options)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->setOptions($options);
+        }
+
+        /**
+         * Load a HTML string
+         *
+         * @param Array|string|\Illuminate\Contracts\Support\Renderable $html
+         * @return \Barryvdh\Snappy\PdfWrapper 
+         * @static 
+         */
+        public static function loadHTML($html)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->loadHTML($html);
+        }
+
+        /**
+         * Load a HTML file
+         *
+         * @param string $file
+         * @return \Barryvdh\Snappy\PdfWrapper 
+         * @static 
+         */
+        public static function loadFile($file)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->loadFile($file);
+        }
+
+        /**
+         * Load a View and convert to HTML
+         *
+         * @param string $view
+         * @param array $data
+         * @param array $mergeData
+         * @return \Barryvdh\Snappy\PdfWrapper 
+         * @static 
+         */
+        public static function loadView($view, $data = [], $mergeData = [])
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->loadView($view, $data, $mergeData);
+        }
+
+        /**
+         * Output the PDF as a string.
+         *
+         * @return string The rendered PDF as string
+         * @throws \InvalidArgumentException
+         * @static 
+         */
+        public static function output()
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->output();
+        }
+
+        /**
+         * Save the PDF to a file
+         *
+         * @param $filename
+         * @return \Barryvdh\Snappy\PdfWrapper 
+         * @static 
+         */
+        public static function save($filename, $overwrite = false)
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->save($filename, $overwrite);
+        }
+
+        /**
+         * Make the PDF downloadable by the user
+         *
+         * @param string $filename
+         * @return \Illuminate\Http\Response 
+         * @static 
+         */
+        public static function download($filename = 'document.pdf')
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->download($filename);
+        }
+
+        /**
+         * Return a response with the PDF to show in the browser
+         *
+         * @param string $filename
+         * @return \Illuminate\Http\Response 
+         * @static 
+         */
+        public static function inline($filename = 'document.pdf')
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->inline($filename);
+        }
+
+        /**
+         * Return a response with the PDF to show in the browser
+         *
+         * @param string $filename
+         * @return \Symfony\Component\HttpFoundation\StreamedResponse 
+         * @deprecated use inline() instead
+         * @static 
+         */
+        public static function stream($filename = 'document.pdf')
+        {
+            /** @var \Barryvdh\Snappy\PdfWrapper $instance */
+            return $instance->stream($filename);
+        }
+
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function assertViewIs($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertViewIs($value);
+        }
+
+        /**
+         * Assert that the response view has a given piece of bound data.
+         *
+         * @param string|array $key
+         * @param mixed $value
+         * @return \Barryvdh\Snappy\PdfFaker 
+         * @static 
+         */
+        public static function assertViewHas($key, $value = null)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertViewHas($key, $value);
+        }
+
+        /**
+         * Assert that the response view has a given list of bound data.
+         *
+         * @param array $bindings
+         * @return \Barryvdh\Snappy\PdfFaker 
+         * @static 
+         */
+        public static function assertViewHasAll($bindings)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertViewHasAll($bindings);
+        }
+
+        /**
+         * Assert that the response view is missing a piece of bound data.
+         *
+         * @param string $key
+         * @return \Barryvdh\Snappy\PdfFaker 
+         * @static 
+         */
+        public static function assertViewMissing($key)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertViewMissing($key);
+        }
+
+        /**
+         * Assert that the given string is contained within the response.
+         *
+         * @param string $value
+         * @return \Barryvdh\Snappy\PdfFaker 
+         * @static 
+         */
+        public static function assertSee($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertSee($value);
+        }
+
+        /**
+         * Assert that the given string is contained within the response text.
+         *
+         * @param string $value
+         * @return \Barryvdh\Snappy\PdfFaker 
+         * @static 
+         */
+        public static function assertSeeText($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertSeeText($value);
+        }
+
+        /**
+         * Assert that the given string is not contained within the response.
+         *
+         * @param string $value
+         * @return \Barryvdh\Snappy\PdfFaker 
+         * @static 
+         */
+        public static function assertDontSee($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertDontSee($value);
+        }
+
+        /**
+         * Assert that the given string is not contained within the response text.
+         *
+         * @param string $value
+         * @return \Barryvdh\Snappy\PdfFaker 
+         * @static 
+         */
+        public static function assertDontSeeText($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertDontSeeText($value);
+        }
+
+        /**
+         * Assert that the given string is equal to the saved filename.
+         *
+         * @param string $value
+         * @return \Barryvdh\Snappy\PdfFaker 
+         * @static 
+         */
+        public static function assertFileNameIs($value)
+        {
+            /** @var \Barryvdh\Snappy\PdfFaker $instance */
+            return $instance->assertFileNameIs($value);
+        }
+
+            }
+    /**
+     * 
+     *
+     */
+    class SnappyImage {
+        /**
+         * Get the Snappy instance.
+         *
+         * @return \Knp\Snappy\Image 
+         * @static 
+         */
+        public static function snappy()
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->snappy();
+        }
+
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function setOption($name, $value)
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->setOption($name, $value);
+        }
+
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function setOptions($options)
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->setOptions($options);
+        }
+
+        /**
+         * Load a HTML string
+         *
+         * @param string $string
+         * @return static 
+         * @static 
+         */
+        public static function loadHTML($string)
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->loadHTML($string);
+        }
+
+        /**
+         * Load a HTML file
+         *
+         * @param string $file
+         * @return static 
+         * @static 
+         */
+        public static function loadFile($file)
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->loadFile($file);
+        }
+
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function loadView($view, $data = [], $mergeData = [])
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->loadView($view, $data, $mergeData);
+        }
+
+        /**
+         * Output the PDF as a string.
+         *
+         * @return string The rendered PDF as string
+         * @throws \InvalidArgumentException
+         * @static 
+         */
+        public static function output()
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->output();
+        }
+
+        /**
+         * Save the image to a file
+         *
+         * @param $filename
+         * @return static 
+         * @static 
+         */
+        public static function save($filename, $overwrite = false)
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->save($filename, $overwrite);
+        }
+
+        /**
+         * Make the image downloadable by the user
+         *
+         * @param string $filename
+         * @return \Symfony\Component\HttpFoundation\Response 
+         * @static 
+         */
+        public static function download($filename = 'image.jpg')
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->download($filename);
+        }
+
+        /**
+         * Return a response with the image to show in the browser
+         *
+         * @param string $filename
+         * @return \Illuminate\Http\Response 
+         * @static 
+         */
+        public static function inline($filename = 'image.jpg')
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->inline($filename);
+        }
+
+        /**
+         * Return a response with the image to show in the browser
+         *
+         * @deprecated Use inline() instead
+         * @param string $filename
+         * @return \Symfony\Component\HttpFoundation\Response 
+         * @static 
+         */
+        public static function stream($filename = 'image.jpg')
+        {
+            /** @var \Barryvdh\Snappy\ImageWrapper $instance */
+            return $instance->stream($filename);
+        }
+
+            }
+    }
+
 namespace Livewire {
     /**
      * 
@@ -24082,67 +24563,274 @@ namespace Livewire {
             }
     }
 
-namespace Milon\Barcode\Facades {
+namespace Maatwebsite\Excel\Facades {
     /**
      * 
      *
-     * @method static string|false getBarcodePNGPath(string $code, string $type, int|float $w = 2, int|float $h = 30, array $color = [0, 0, 0], bool $showCode = false)
-     * @method static \Illuminate\Contracts\Routing\UrlGenerator|string getBarcodePNGUri(string $code, string $type, int|float $w = 2, int|float $h = 30, array $color = [0, 0, 0])
      */
-    class DNS1DFacade {
+    class Excel {
         /**
-         * Return a SVG string representation of barcode.
+         * 
          *
-         * @param $code (string) code to print
-         * @param $type (string) type of barcode: <ul><li>C39 : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9.</li><li>C39+ : CODE 39 with checksum</li><li>C39E : CODE 39 EXTENDED</li><li>C39E+ : CODE 39 EXTENDED + CHECKSUM</li><li>C93 : CODE 93 - USS-93</li><li>S25 : Standard 2 of 5</li><li>S25+ : Standard 2 of 5 + CHECKSUM</li><li>I25 : Interleaved 2 of 5</li><li>I25+ : Interleaved 2 of 5 + CHECKSUM</li><li>C128 : CODE 128</li><li>C128A : CODE 128 A</li><li>C128B : CODE 128 B</li><li>C128C : CODE 128 C</li><li>EAN2 : 2-Digits UPC-Based Extention</li><li>EAN5 : 5-Digits UPC-Based Extention</li><li>EAN8 : EAN 8</li><li>EAN13 : EAN 13</li><li>UPCA : UPC-A</li><li>UPCE : UPC-E</li><li>MSI : MSI (Variation of Plessey code)</li><li>MSI+ : MSI + CHECKSUM (modulo 11)</li><li>POSTNET : POSTNET</li><li>PLANET : PLANET</li><li>RMS4CC : RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code)</li><li>KIX : KIX (Klant index - Customer index)</li><li>IMB: Intelligent Mail Barcode - Onecode - USPS-B-3200</li><li>CODABAR : CODABAR</li><li>CODE11 : CODE 11</li><li>PHARMA : PHARMACODE</li><li>PHARMA2T : PHARMACODE TWO-TRACKS</li></ul>
-         * @param $w (int) Minimum width of a single bar in user units.
-         * @param $h (int) Height of barcode in user units.
-         * @param $color (string) Foreground color (in SVG format) for bar elements (background is transparent).
-         * @return string SVG code.
-         * @protected 
+         * @param object $export
+         * @param string|null $fileName
+         * @param string $writerType
+         * @param array $headers
+         * @return \Symfony\Component\HttpFoundation\BinaryFileResponse 
+         * @throws \PhpOffice\PhpSpreadsheet\Exception
+         * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
          * @static 
          */
-        public static function getBarcodeSVG($code, $type, $w = 2, $h = 30, $color = 'black', $showCode = true, $inline = false)
+        public static function download($export, $fileName, $writerType = null, $headers = [])
         {
-            /** @var \Milon\Barcode\DNS1D $instance */
-            return $instance->getBarcodeSVG($code, $type, $w, $h, $color, $showCode, $inline);
+            /** @var \Maatwebsite\Excel\Excel $instance */
+            return $instance->download($export, $fileName, $writerType, $headers);
         }
 
         /**
-         * Return an HTML representation of barcode.
+         * 
          *
-         * @param $code (string) code to print
-         * @param $type (string) type of barcode: <ul><li>C39 : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9.</li><li>C39+ : CODE 39 with checksum</li><li>C39E : CODE 39 EXTENDED</li><li>C39E+ : CODE 39 EXTENDED + CHECKSUM</li><li>C93 : CODE 93 - USS-93</li><li>S25 : Standard 2 of 5</li><li>S25+ : Standard 2 of 5 + CHECKSUM</li><li>I25 : Interleaved 2 of 5</li><li>I25+ : Interleaved 2 of 5 + CHECKSUM</li><li>C128 : CODE 128</li><li>C128A : CODE 128 A</li><li>C128B : CODE 128 B</li><li>C128C : CODE 128 C</li><li>EAN2 : 2-Digits UPC-Based Extention</li><li>EAN5 : 5-Digits UPC-Based Extention</li><li>EAN8 : EAN 8</li><li>EAN13 : EAN 13</li><li>UPCA : UPC-A</li><li>UPCE : UPC-E</li><li>MSI : MSI (Variation of Plessey code)</li><li>MSI+ : MSI + CHECKSUM (modulo 11)</li><li>POSTNET : POSTNET</li><li>PLANET : PLANET</li><li>RMS4CC : RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code)</li><li>KIX : KIX (Klant index - Customer index)</li><li>IMB: Intelligent Mail Barcode - Onecode - USPS-B-3200</li><li>CODABAR : CODABAR</li><li>CODE11 : CODE 11</li><li>PHARMA : PHARMACODE</li><li>PHARMA2T : PHARMACODE TWO-TRACKS</li></ul>
-         * @param $w (int) Width of a single bar element in pixels.
-         * @param $h (int) Height of a single bar element in pixels.
-         * @param $color (string) Foreground color for bar elements (background is transparent).
-         * @param $showcode (int) font size of the shown code, default 0.
-         * @return string HTML code.
-         * @protected 
+         * @param string|null $disk Fallback for usage with named properties
+         * @param object $export
+         * @param string $filePath
+         * @param string|null $diskName
+         * @param string $writerType
+         * @param mixed $diskOptions
+         * @return bool 
+         * @throws \PhpOffice\PhpSpreadsheet\Exception
+         * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
          * @static 
          */
-        public static function getBarcodeHTML($code, $type, $w = 2, $h = 30, $color = 'black', $showCode = 0)
+        public static function store($export, $filePath, $diskName = null, $writerType = null, $diskOptions = [], $disk = null)
         {
-            /** @var \Milon\Barcode\DNS1D $instance */
-            return $instance->getBarcodeHTML($code, $type, $w, $h, $color, $showCode);
+            /** @var \Maatwebsite\Excel\Excel $instance */
+            return $instance->store($export, $filePath, $diskName, $writerType, $diskOptions, $disk);
         }
 
         /**
-         * Return a PNG image representation of barcode (requires GD or Imagick library).
+         * 
          *
-         * @param $code (string) code to print
-         * @param $type (string) type of barcode: <ul><li>C39 : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9.</li><li>C39+ : CODE 39 with checksum</li><li>C39E : CODE 39 EXTENDED</li><li>C39E+ : CODE 39 EXTENDED + CHECKSUM</li><li>C93 : CODE 93 - USS-93</li><li>S25 : Standard 2 of 5</li><li>S25+ : Standard 2 of 5 + CHECKSUM</li><li>I25 : Interleaved 2 of 5</li><li>I25+ : Interleaved 2 of 5 + CHECKSUM</li><li>C128 : CODE 128</li><li>C128A : CODE 128 A</li><li>C128B : CODE 128 B</li><li>C128C : CODE 128 C</li><li>EAN2 : 2-Digits UPC-Based Extention</li><li>EAN5 : 5-Digits UPC-Based Extention</li><li>EAN8 : EAN 8</li><li>EAN13 : EAN 13</li><li>UPCA : UPC-A</li><li>UPCE : UPC-E</li><li>MSI : MSI (Variation of Plessey code)</li><li>MSI+ : MSI + CHECKSUM (modulo 11)</li><li>POSTNET : POSTNET</li><li>PLANET : PLANET</li><li>RMS4CC : RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code)</li><li>KIX : KIX (Klant index - Customer index)</li><li>IMB: Intelligent Mail Barcode - Onecode - USPS-B-3200</li><li>CODABAR : CODABAR</li><li>CODE11 : CODE 11</li><li>PHARMA : PHARMACODE</li><li>PHARMA2T : PHARMACODE TWO-TRACKS</li></ul>
-         * @param $w (int) Width of a single bar element in pixels.
-         * @param $h (int) Height of a single bar element in pixels.
-         * @param $color (array) RGB (0-255) foreground color for bar elements (background is transparent).
-         * @return string|false in case of error.
-         * @protected 
+         * @param object $export
+         * @param string $filePath
+         * @param string|null $disk
+         * @param string $writerType
+         * @param mixed $diskOptions
+         * @return \Illuminate\Foundation\Bus\PendingDispatch 
          * @static 
          */
-        public static function getBarcodePNG($code, $type, $w = 2, $h = 30, $color = [], $showCode = false)
+        public static function queue($export, $filePath, $disk = null, $writerType = null, $diskOptions = [])
         {
-            /** @var \Milon\Barcode\DNS1D $instance */
-            return $instance->getBarcodePNG($code, $type, $w, $h, $color, $showCode);
+            /** @var \Maatwebsite\Excel\Excel $instance */
+            return $instance->queue($export, $filePath, $disk, $writerType, $diskOptions);
+        }
+
+        /**
+         * 
+         *
+         * @param object $export
+         * @param string $writerType
+         * @return string 
+         * @static 
+         */
+        public static function raw($export, $writerType)
+        {
+            /** @var \Maatwebsite\Excel\Excel $instance */
+            return $instance->raw($export, $writerType);
+        }
+
+        /**
+         * 
+         *
+         * @param object $import
+         * @param string|\Symfony\Component\HttpFoundation\File\UploadedFile $filePath
+         * @param string|null $disk
+         * @param string|null $readerType
+         * @return \Maatwebsite\Excel\Reader|\Illuminate\Foundation\Bus\PendingDispatch 
+         * @static 
+         */
+        public static function import($import, $filePath, $disk = null, $readerType = null)
+        {
+            /** @var \Maatwebsite\Excel\Excel $instance */
+            return $instance->import($import, $filePath, $disk, $readerType);
+        }
+
+        /**
+         * 
+         *
+         * @param object $import
+         * @param string|\Symfony\Component\HttpFoundation\File\UploadedFile $filePath
+         * @param string|null $disk
+         * @param string|null $readerType
+         * @return array 
+         * @static 
+         */
+        public static function toArray($import, $filePath, $disk = null, $readerType = null)
+        {
+            /** @var \Maatwebsite\Excel\Excel $instance */
+            return $instance->toArray($import, $filePath, $disk, $readerType);
+        }
+
+        /**
+         * 
+         *
+         * @param object $import
+         * @param string|\Symfony\Component\HttpFoundation\File\UploadedFile $filePath
+         * @param string|null $disk
+         * @param string|null $readerType
+         * @return \Illuminate\Support\Collection 
+         * @static 
+         */
+        public static function toCollection($import, $filePath, $disk = null, $readerType = null)
+        {
+            /** @var \Maatwebsite\Excel\Excel $instance */
+            return $instance->toCollection($import, $filePath, $disk, $readerType);
+        }
+
+        /**
+         * 
+         *
+         * @param \Illuminate\Contracts\Queue\ShouldQueue $import
+         * @param string|\Symfony\Component\HttpFoundation\File\UploadedFile $filePath
+         * @param string|null $disk
+         * @param string $readerType
+         * @return \Illuminate\Foundation\Bus\PendingDispatch 
+         * @static 
+         */
+        public static function queueImport($import, $filePath, $disk = null, $readerType = null)
+        {
+            /** @var \Maatwebsite\Excel\Excel $instance */
+            return $instance->queueImport($import, $filePath, $disk, $readerType);
+        }
+
+        /**
+         * Register a custom macro.
+         *
+         * @param string $name
+         * @param object|callable $macro
+         * @param-closure-this static  $macro
+         * @return void 
+         * @static 
+         */
+        public static function macro($name, $macro)
+        {
+            \Maatwebsite\Excel\Excel::macro($name, $macro);
+        }
+
+        /**
+         * Mix another object into the class.
+         *
+         * @param object $mixin
+         * @param bool $replace
+         * @return void 
+         * @throws \ReflectionException
+         * @static 
+         */
+        public static function mixin($mixin, $replace = true)
+        {
+            \Maatwebsite\Excel\Excel::mixin($mixin, $replace);
+        }
+
+        /**
+         * Checks if macro is registered.
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */
+        public static function hasMacro($name)
+        {
+            return \Maatwebsite\Excel\Excel::hasMacro($name);
+        }
+
+        /**
+         * Flush the existing macros.
+         *
+         * @return void 
+         * @static 
+         */
+        public static function flushMacros()
+        {
+            \Maatwebsite\Excel\Excel::flushMacros();
+        }
+
+        /**
+         * 
+         *
+         * @param string $concern
+         * @param callable $handler
+         * @param string $event
+         * @static 
+         */
+        public static function extend($concern, $handler, $event = 'Maatwebsite\\Excel\\Events\\BeforeWriting')
+        {
+            return \Maatwebsite\Excel\Excel::extend($concern, $handler, $event);
+        }
+
+        /**
+         * When asserting downloaded, stored, queued or imported, use regular expression
+         * to look for a matching file path.
+         *
+         * @return void 
+         * @static 
+         */
+        public static function matchByRegex()
+        {
+            /** @var \Maatwebsite\Excel\Fakes\ExcelFake $instance */
+            $instance->matchByRegex();
+        }
+
+        /**
+         * When asserting downloaded, stored, queued or imported, use regular string
+         * comparison for matching file path.
+         *
+         * @return void 
+         * @static 
+         */
+        public static function doNotMatchByRegex()
+        {
+            /** @var \Maatwebsite\Excel\Fakes\ExcelFake $instance */
+            $instance->doNotMatchByRegex();
+        }
+
+        /**
+         * 
+         *
+         * @param string $fileName
+         * @param callable|null $callback
+         * @static 
+         */
+        public static function assertDownloaded($fileName, $callback = null)
+        {
+            /** @var \Maatwebsite\Excel\Fakes\ExcelFake $instance */
+            return $instance->assertDownloaded($fileName, $callback);
+        }
+
+        /**
+         * 
+         *
+         * @param string $filePath
+         * @param string|callable|null $disk
+         * @param callable|null $callback
+         * @static 
+         */
+        public static function assertStored($filePath, $disk = null, $callback = null)
+        {
+            /** @var \Maatwebsite\Excel\Fakes\ExcelFake $instance */
+            return $instance->assertStored($filePath, $disk, $callback);
+        }
+
+        /**
+         * 
+         *
+         * @param string $filePath
+         * @param string|callable|null $disk
+         * @param callable|null $callback
+         * @static 
+         */
+        public static function assertQueued($filePath, $disk = null, $callback = null)
+        {
+            /** @var \Maatwebsite\Excel\Fakes\ExcelFake $instance */
+            return $instance->assertQueued($filePath, $disk, $callback);
         }
 
         /**
@@ -24150,115 +24838,37 @@ namespace Milon\Barcode\Facades {
          *
          * @static 
          */
-        public static function setStorPath($path)
+        public static function assertQueuedWithChain($chain)
         {
-            /** @var \Milon\Barcode\DNS1D $instance */
-            return $instance->setStorPath($path);
-        }
-
-        /**
-         * Return a JPG image representation of barcode (requires GD or Imagick library).
-         *
-         * @param $code (string) code to print
-         * @param $type (string) type of barcode: <ul><li>C39 : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9.</li><li>C39+ : CODE 39 with checksum</li><li>C39E : CODE 39 EXTENDED</li><li>C39E+ : CODE 39 EXTENDED + CHECKSUM</li><li>C93 : CODE 93 - USS-93</li><li>S25 : Standard 2 of 5</li><li>S25+ : Standard 2 of 5 + CHECKSUM</li><li>I25 : Interleaved 2 of 5</li><li>I25+ : Interleaved 2 of 5 + CHECKSUM</li><li>C128 : CODE 128</li><li>C128A : CODE 128 A</li><li>C128B : CODE 128 B</li><li>C128C : CODE 128 C</li><li>EAN2 : 2-Digits UPC-Based Extention</li><li>EAN5 : 5-Digits UPC-Based Extention</li><li>EAN8 : EAN 8</li><li>EAN13 : EAN 13</li><li>UPCA : UPC-A</li><li>UPCE : UPC-E</li><li>MSI : MSI (Variation of Plessey code)</li><li>MSI+ : MSI + CHECKSUM (modulo 11)</li><li>POSTNET : POSTNET</li><li>PLANET : PLANET</li><li>RMS4CC : RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code)</li><li>KIX : KIX (Klant index - Customer index)</li><li>IMB: Intelligent Mail Barcode - Onecode - USPS-B-3200</li><li>CODABAR : CODABAR</li><li>CODE11 : CODE 11</li><li>PHARMA : PHARMACODE</li><li>PHARMA2T : PHARMACODE TWO-TRACKS</li></ul>
-         * @param $w (int) Width of a single bar element in pixels.
-         * @param $h (int) Height of a single bar element in pixels.
-         * @param $color (array) RGB (0-255) foreground color for bar elements (background is transparent).
-         * @return string|false in case of error.
-         * @protected 
-         * @static 
-         */
-        public static function getBarcodeJPG($code, $type, $w = 2, $h = 30, $color = [], $showCode = false)
-        {
-            /** @var \Milon\Barcode\DNS1D $instance */
-            return $instance->getBarcodeJPG($code, $type, $w, $h, $color, $showCode);
-        }
-
-            }
-    /**
-     * 
-     *
-     * @method static string|false getBarcodePNGPath(string $code, string $type, int $w = 2, int $h = 30, array $color = [0, 0, 0])
-     */
-    class DNS2DFacade {
-        /**
-         * Return a SVG string representation of barcode.
-         * 
-         * <li>$arrcode['code'] code to be printed on text label</li>
-         * <li>$arrcode['num_rows'] required number of rows</li>
-         * <li>$arrcode['num_cols'] required number of columns</li>
-         * <li>$arrcode['bcode'][$r][$c] value of the cell is $r row and $c column (0 = transparent, 1 = black)</li></ul>
-         *
-         * @param $code (string) code to print
-         * @param $type (string) type of barcode: <ul><li>DATAMATRIX : Datamatrix (ISO/IEC 16022)</li><li>PDF417 : PDF417 (ISO/IEC 15438:2006)</li><li>PDF417,a,e,t,s,f,o0,o1,o2,o3,o4,o5,o6 : PDF417 with parameters: a = aspect ratio (width/height); e = error correction level (0-8); t = total number of macro segments; s = macro segment index (0-99998); f = file ID; o0 = File Name (text); o1 = Segment Count (numeric); o2 = Time Stamp (numeric); o3 = Sender (text); o4 = Addressee (text); o5 = File Size (numeric); o6 = Checksum (numeric). NOTES: Parameters t, s and f are required for a Macro Control Block, all other parametrs are optional. To use a comma character ',' on text options, replace it with the character 255: "\xff".</li><li>QRCODE : QRcode Low error correction</li><li>QRCODE,L : QRcode Low error correction</li><li>QRCODE,M : QRcode Medium error correction</li><li>QRCODE,Q : QRcode Better error correction</li><li>QRCODE,H : QR-CODE Best error correction</li><li>RAW: raw mode - comma-separad list of array rows</li><li>RAW2: raw mode - array rows are surrounded by square parenthesis.</li><li>TEST : Test matrix</li></ul>
-         * @param $w (int) Width of a single rectangle element in user units.
-         * @param $h (int) Height of a single rectangle element in user units.
-         * @param $color (string) Foreground color (in SVG format) for bar elements (background is transparent).
-         * @return string SVG code.
-         * @protected 
-         * @static 
-         */
-        public static function getBarcodeSVG($code, $type, $w = 3, $h = 3, $color = 'black')
-        {
-            /** @var \Milon\Barcode\DNS2D $instance */
-            return $instance->getBarcodeSVG($code, $type, $w, $h, $color);
-        }
-
-        /**
-         * Return an HTML representation of barcode.
-         * 
-         * <li>$arrcode['code'] code to be printed on text label</li>
-         * <li>$arrcode['num_rows'] required number of rows</li>
-         * <li>$arrcode['num_cols'] required number of columns</li>
-         * <li>$arrcode['bcode'][$r][$c] value of the cell is $r row and $c column (0 = transparent, 1 = black)</li></ul>
-         *
-         * @param $code (string) code to print
-         * @param $type (string) type of barcode: <ul><li>DATAMATRIX : Datamatrix (ISO/IEC 16022)</li><li>PDF417 : PDF417 (ISO/IEC 15438:2006)</li><li>PDF417,a,e,t,s,f,o0,o1,o2,o3,o4,o5,o6 : PDF417 with parameters: a = aspect ratio (width/height); e = error correction level (0-8); t = total number of macro segments; s = macro segment index (0-99998); f = file ID; o0 = File Name (text); o1 = Segment Count (numeric); o2 = Time Stamp (numeric); o3 = Sender (text); o4 = Addressee (text); o5 = File Size (numeric); o6 = Checksum (numeric). NOTES: Parameters t, s and f are required for a Macro Control Block, all other parametrs are optional. To use a comma character ',' on text options, replace it with the character 255: "\xff".</li><li>QRCODE : QRcode Low error correction</li><li>QRCODE,L : QRcode Low error correction</li><li>QRCODE,M : QRcode Medium error correction</li><li>QRCODE,Q : QRcode Better error correction</li><li>QRCODE,H : QR-CODE Best error correction</li><li>RAW: raw mode - comma-separad list of array rows</li><li>RAW2: raw mode - array rows are surrounded by square parenthesis.</li><li>TEST : Test matrix</li></ul>
-         * @param $w (int) Width of a single rectangle element in pixels.
-         * @param $h (int) Height of a single rectangle element in pixels.
-         * @param $color (string) Foreground color for bar elements (background is transparent).
-         * @return string HTML code.
-         * @protected 
-         * @static 
-         */
-        public static function getBarcodeHTML($code, $type, $w = 10, $h = 10, $color = 'black')
-        {
-            /** @var \Milon\Barcode\DNS2D $instance */
-            return $instance->getBarcodeHTML($code, $type, $w, $h, $color);
-        }
-
-        /**
-         * Return a PNG image representation of barcode (requires GD or Imagick library).
-         * 
-         * <li>$arrcode['code'] code to be printed on text label</li>
-         * <li>$arrcode['num_rows'] required number of rows</li>
-         * <li>$arrcode['num_cols'] required number of columns</li>
-         * <li>$arrcode['bcode'][$r][$c] value of the cell is $r row and $c column (0 = transparent, 1 = black)</li></ul>
-         *
-         * @param $code (string) code to print
-         * @param $type (string) type of barcode: <ul><li>DATAMATRIX : Datamatrix (ISO/IEC 16022)</li><li>PDF417 : PDF417 (ISO/IEC 15438:2006)</li><li>PDF417,a,e,t,s,f,o0,o1,o2,o3,o4,o5,o6 : PDF417 with parameters: a = aspect ratio (width/height); e = error correction level (0-8); t = total number of macro segments; s = macro segment index (0-99998); f = file ID; o0 = File Name (text); o1 = Segment Count (numeric); o2 = Time Stamp (numeric); o3 = Sender (text); o4 = Addressee (text); o5 = File Size (numeric); o6 = Checksum (numeric). NOTES: Parameters t, s and f are required for a Macro Control Block, all other parametrs are optional. To use a comma character ',' on text options, replace it with the character 255: "\xff".</li><li>QRCODE : QRcode Low error correction</li><li>QRCODE,L : QRcode Low error correction</li><li>QRCODE,M : QRcode Medium error correction</li><li>QRCODE,Q : QRcode Better error correction</li><li>QRCODE,H : QR-CODE Best error correction</li><li>RAW: raw mode - comma-separad list of array rows</li><li>RAW2: raw mode - array rows are surrounded by square parenthesis.</li><li>TEST : Test matrix</li></ul>
-         * @param $w (int) Width of a single rectangle element in pixels.
-         * @param $h (int) Height of a single rectangle element in pixels.
-         * @param $color (array) RGB (0-255) foreground color for bar elements (background is transparent).
-         * @return string|false path or false in case of error.
-         * @protected 
-         * @static 
-         */
-        public static function getBarcodePNG($code, $type, $w = 3, $h = 3, $color = [])
-        {
-            /** @var \Milon\Barcode\DNS2D $instance */
-            return $instance->getBarcodePNG($code, $type, $w, $h, $color);
+            /** @var \Maatwebsite\Excel\Fakes\ExcelFake $instance */
+            return $instance->assertQueuedWithChain($chain);
         }
 
         /**
          * 
          *
+         * @param string $classname
+         * @param callable|null $callback
          * @static 
          */
-        public static function setStorPath($path)
+        public static function assertExportedInRaw($classname, $callback = null)
         {
-            /** @var \Milon\Barcode\DNS2D $instance */
-            return $instance->setStorPath($path);
+            /** @var \Maatwebsite\Excel\Fakes\ExcelFake $instance */
+            return $instance->assertExportedInRaw($classname, $callback);
+        }
+
+        /**
+         * 
+         *
+         * @param string $filePath
+         * @param string|callable|null $disk
+         * @param callable|null $callback
+         * @static 
+         */
+        public static function assertImported($filePath, $disk = null, $callback = null)
+        {
+            /** @var \Maatwebsite\Excel\Fakes\ExcelFake $instance */
+            return $instance->assertImported($filePath, $disk, $callback);
         }
 
             }
@@ -24534,6 +25144,36 @@ namespace Illuminate\Support {
         public static function debug()
         {
             return \Illuminate\Support\Collection::debug();
+        }
+
+        /**
+         * 
+         *
+         * @see \Maatwebsite\Excel\Mixins\DownloadCollectionMixin::downloadExcel()
+         * @param string $fileName
+         * @param string|null $writerType
+         * @param mixed $withHeadings
+         * @param array $responseHeaders
+         * @static 
+         */
+        public static function downloadExcel($fileName, $writerType = null, $withHeadings = false, $responseHeaders = [])
+        {
+            return \Illuminate\Support\Collection::downloadExcel($fileName, $writerType, $withHeadings, $responseHeaders);
+        }
+
+        /**
+         * 
+         *
+         * @see \Maatwebsite\Excel\Mixins\StoreCollectionMixin::storeExcel()
+         * @param string $filePath
+         * @param string|null $disk
+         * @param string|null $writerType
+         * @param mixed $withHeadings
+         * @static 
+         */
+        public static function storeExcel($filePath, $disk = null, $writerType = null, $withHeadings = false)
+        {
+            return \Illuminate\Support\Collection::storeExcel($filePath, $disk, $writerType, $withHeadings);
         }
 
             }
@@ -26699,6 +27339,64 @@ namespace  {
         {
             /** @var \Illuminate\Database\Eloquent\Builder $instance */
             return $instance->mergeConstraintsFrom($from);
+        }
+
+        /**
+         * 
+         *
+         * @see \Maatwebsite\Excel\Mixins\DownloadQueryMacro::__invoke()
+         * @param string $fileName
+         * @param string|null $writerType
+         * @param mixed $withHeadings
+         * @static 
+         */
+        public static function downloadExcel($fileName, $writerType = null, $withHeadings = false)
+        {
+            return \Illuminate\Database\Eloquent\Builder::downloadExcel($fileName, $writerType, $withHeadings);
+        }
+
+        /**
+         * 
+         *
+         * @see \Maatwebsite\Excel\Mixins\StoreQueryMacro::__invoke()
+         * @param string $filePath
+         * @param string|null $disk
+         * @param string|null $writerType
+         * @param mixed $withHeadings
+         * @static 
+         */
+        public static function storeExcel($filePath, $disk = null, $writerType = null, $withHeadings = false)
+        {
+            return \Illuminate\Database\Eloquent\Builder::storeExcel($filePath, $disk, $writerType, $withHeadings);
+        }
+
+        /**
+         * 
+         *
+         * @see \Maatwebsite\Excel\Mixins\ImportMacro::__invoke()
+         * @param string $filename
+         * @param string|null $disk
+         * @param string|null $readerType
+         * @static 
+         */
+        public static function import($filename, $disk = null, $readerType = null)
+        {
+            return \Illuminate\Database\Eloquent\Builder::import($filename, $disk, $readerType);
+        }
+
+        /**
+         * 
+         *
+         * @see \Maatwebsite\Excel\Mixins\ImportAsMacro::__invoke()
+         * @param string $filename
+         * @param callable $mapping
+         * @param string|null $disk
+         * @param string|null $readerType
+         * @static 
+         */
+        public static function importAs($filename, $mapping, $disk = null, $readerType = null)
+        {
+            return \Illuminate\Database\Eloquent\Builder::importAs($filename, $mapping, $disk, $readerType);
         }
 
         /**
@@ -29484,9 +30182,10 @@ namespace  {
     class Vite extends \Illuminate\Support\Facades\Vite {}
     class Cart extends \Gloudemans\Shoppingcart\Facades\Cart {}
     class Debugbar extends \Barryvdh\Debugbar\Facades\Debugbar {}
+    class PDF extends \Barryvdh\Snappy\Facades\SnappyPdf {}
+    class SnappyImage extends \Barryvdh\Snappy\Facades\SnappyImage {}
     class Livewire extends \Livewire\Livewire {}
-    class DNS1D extends \Milon\Barcode\Facades\DNS1DFacade {}
-    class DNS2D extends \Milon\Barcode\Facades\DNS2DFacade {}
+    class Excel extends \Maatwebsite\Excel\Facades\Excel {}
     class Flasher extends \Flasher\Laravel\Facade\Flasher {}
     class DataTables extends \Yajra\DataTables\Facades\DataTables {}
 }

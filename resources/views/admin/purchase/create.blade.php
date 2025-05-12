@@ -73,6 +73,7 @@
                                             <th class="text-center px-4" width="60">S/N</th>
                                             <th class="text-left px-4">Item Name</th>
                                             <th class="text-left px-4">Item Description</th>
+                                            <th class="text-left px-4">Item HTS Code</th>
                                             <th class="text-left px-4">Item Qty</th>
                                             <th class="text-left px-4">Unit Price</th>
                                             <th class="text-left px-4">Total</th>
@@ -85,24 +86,27 @@
                                             <tr id="tr_{{$i}}" style="display:none;">
                                                 <td class="border-1 fw-bolder text-primary-emphasis text-center py-0">{{ ($i+1) }}</td>
                                                 <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                                    <select class="form-select" id="item_id" name="item_id[]"  value="{{ old('item_id') }}">
+                                                    <select class="form-select" id="item_id_{{$i}}" name="item_id[]"  value="{{ old('item_id') }}" onchange="update_item_info('{{$i}}');">
                                                         <option value="">Select</option>
                                                         @foreach($items as $p)
-                                                            <option value="{{ $p['id'] }}">{{ $p['item_name'] }}</option>
+                                                            <option value="{{ $p['id'] }}" >{{ $p['item_name'] }}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
                                                 <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                                    <textarea placeholder="ex. description" class="form-control" id="item_description_{{$i}}" name="item_description[]" style="min-height:50px !important;" >{{ old('item_description') }}</textarea>
+                                                    <textarea class="form-control" id="item_description_{{$i}}" name="item_description[]" style="min-height:50px !important;" >{{ old('item_description') }}</textarea>
                                                 </td>
                                                 <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                                    <input type="text" placeholder="ex. 5" class="form-control" id="item_qty_{{$i}}" name="item_qty[]" onkeyup="update_line({{$i}});"  value="{{ old('item_qty') }}">
+                                                    <textarea class="form-control" id="item_hts_code_{{$i}}" name="item_hts_code[]" style="min-height:50px !important;" >{{ old('item_hts_code') }}</textarea>
                                                 </td>
                                                 <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                                    <input type="text" placeholder="ex. 19.50" class="form-control" onkeyup="update_line({{$i}});" id="item_unit_price_{{$i}}" name="item_unit_price[]"  value="{{ old('item_unit_price') }}">
+                                                    <input type="text" class="form-control" id="item_qty_{{$i}}" name="item_qty[]" onkeyup="update_line({{$i}});"  value="{{ old('item_qty') }}">
                                                 </td>
                                                 <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                                    <input type="text" placeholder="ex. 39.50" class="form-control" id="item_line_price_{{$i}}" name="item_line_price[]"  value="" readonly>
+                                                    <input type="text" class="form-control" onkeyup="update_line({{$i}});" id="item_unit_price_{{$i}}" name="item_unit_price[]"  value="{{ old('item_unit_price') }}">
+                                                </td>
+                                                <td class="border-1 fw-bold py-0" style="font-size: 11px">
+                                                    <input type="text" class="form-control" id="item_line_price_{{$i}}" name="item_line_price[]"  value="" readonly>
                                                 </td>
                                                 <td width="120" class="border-1 py-0">
                                                     <div class="d-flex justify-content-evenly text-end">
@@ -175,6 +179,46 @@
             else{
                 document.getElementById('item_line_price_'+i).value = 0;
             }
+            get_total();
         }
+
+        function get_total(){
+            var total_purchase_amount = 0;
+            for(i=0; i<20; i++){
+                if ($('#tr_'+i).length){
+                    if($('#tr_'+i+':visible').length != 0) {
+                        each_total = parseFloat(parseFloat(parseFloat(document.getElementById('item_unit_price_'+i).value)*parseFloat(document.getElementById('item_qty_'+i).value)).toFixed(2));
+                        if(!isNaN(each_total)){
+                            total_purchase_amount = parseFloat(total_purchase_amount) + parseFloat(each_total);
+                        }
+                    }
+                }
+            }
+            document.getElementById('purchase_amount').value = total_purchase_amount;
+        }
+
+
+
+        function update_item_info(i){
+            selected_item_id = document.getElementById('item_id_'+i).value
+
+            @php
+                foreach($items as $p){
+            @endphp
+            if(selected_item_id == {{$p['id']}}){
+                item_description = '{{$p['item_description']}}';
+                item_hts_code = '{{$p['hts_code']}}';
+                default_price = '{{$p['default_price']}}';
+                $('#item_description_'+i).html(item_description);
+                $('#item_hts_code_'+i).html(item_hts_code);
+                $('#item_unit_price_'+i).val(default_price);
+            }
+            @php
+                }
+            @endphp
+
+
+        }
+
     </script>
     @endpush

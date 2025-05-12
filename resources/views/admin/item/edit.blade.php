@@ -32,6 +32,10 @@
                                 <label for="hts_code" class="form-label">HTS Code</label>
                                 <input type="text" placeholder="ex. 1800.00.00" class="form-control" id="hts_code" name="hts_code"  value="{{ $data->hts_code }}" required>
                             </div>
+                            <div class="mb-4">
+                                <label for="hts_code" class="form-label">Default Price</label>
+                                <input type="text" placeholder="ex. 9.95" class="form-control" id="default_price" name="default_price"  value="{{ $data->default_price }}" required>
+                            </div>
 
                             <div class="d-flex justify-content-end">
                                 <button class="btn btn-primary btn-sm rounded" type="submit" name="submit">UPDATE</button>

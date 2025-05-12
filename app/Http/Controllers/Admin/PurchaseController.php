@@ -145,6 +145,7 @@ class PurchaseController extends Controller
                     $purchaseItems->purchase_id = $purchase_id;
                     $purchaseItems->item_id = $request->input('item_id')[$key];
                     $purchaseItems->item_description = $request->input('item_description')[$key];
+                    $purchaseItems->item_hts_code = $request->input('item_hts_code')[$key];
                     $purchaseItems->item_qty = $request->input('item_qty')[$key];
                     $purchaseItems->item_unit_price = $request->input('item_unit_price')[$key];
                     $purchaseItems->item_line_price = $request->input('item_line_price')[$key];

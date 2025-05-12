@@ -18,7 +18,7 @@ return new class extends Migration
             $table->date('sale_date')->nullable();
             $table->double('sale_amount')->nullable();
             $table->string('sale_invoice')->nullable();
-            $table->foreignIdFor(Customer::class)->constrained('id');
+            $table->foreignIdFor(Customer::class)->constrained();
             $table->timestamps();
         });
     }

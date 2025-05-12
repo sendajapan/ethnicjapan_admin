@@ -9,7 +9,10 @@ use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProviderController;
 use App\Http\Controllers\Admin\PurchaseController;
+use App\Http\Controllers\Admin\PurchaseReportController;
 use App\Http\Controllers\Admin\SaleController;
+use App\Http\Controllers\Admin\SaleReportController;
+use App\Http\Controllers\Admin\StockController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('dashboard', [AdminDashboardController::class, 'dashboard'])
@@ -21,6 +24,9 @@ Route::resource('customer', CustomerController::class);
 Route::resource('item', ItemController::class);
 Route::resource('purchase', PurchaseController::class);
 Route::resource('sale', SaleController::class);
+Route::resource('stock', StockController::class);
+Route::resource('purchase_report', PurchaseReportController::class);
+Route::resource('sale_report', SaleReportController::class);
 
 
 

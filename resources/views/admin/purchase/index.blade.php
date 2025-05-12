@@ -11,9 +11,6 @@
             <div class="col-lg-12 col-xl-12 col-xxl-12">
                 <div class="card mb-4">
                     <div class="card-body">
-                        <div class="d-flex justify-content-end align-items-center">
-                            <a href="{{ route('admin.purchase.create') }}" class="btn btn-sm btn-outline-dark text-sm mb-4"><i class="fas fa-plus"></i>New Purchase</a>
-                        </div>
                         <div class="table-responsive">
                             {{ $dataTable->table() }}
                         </div>
@@ -26,6 +23,9 @@
 @endsection
 
 @push('scripts')
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.0.3/css/buttons.dataTables.min.css">
+    <script src="https://cdn.datatables.net/buttons/1.0.3/js/dataTables.buttons.min.js"></script>
+    <script src="/vendor/datatables/buttons.server-side.js"></script>
     {{ $dataTable->scripts(attributes: ['type' => 'module']) }}
 
     <script>
@@ -56,6 +56,14 @@
                 }
             });
         }
+
+        function show_detail(id){
+            $('#detail_table_'+id).toggle('slow');
+            $('#detail_link_show_'+id).toggle();
+            $('#detail_link_hide_'+id).toggle();
+        }
+
+
 
         $(document).ready(function () {
             $('body').on('click', '.delete-part-category', function (event) {

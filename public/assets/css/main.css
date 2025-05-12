@@ -742,20 +742,20 @@ b {
 }
 
 .btn-facebook {
-    background-color: #405D9D;
+    background-color: #405D9D !important;
     color: #fff;
 }
 
 .btn-facebook:hover {
-    color: #fff;
+    color: #fff !important;
 }
 
 .btn.btn-instagram {
     font-size: 14px;
     font-weight: 500;
     padding: 10px 40px;
-    background-color: #E52D27;
-    color: #fff;
+    background-color: #E52D27 !important;
+    color: #fff !important;
     border: none;
     border-radius: 4px;
 }
@@ -766,8 +766,8 @@ b {
 }
 
 .btn-youtube {
-    background-color: #C8046C;
-    color: #fff;
+    background-color: #C8046C !important;
+    color: #fff !important;
 }
 
 .btn-youtube:hover {
@@ -4187,3 +4187,20 @@ footer.main-footer {
 }
 
 /*# sourceMappingURL=main.css.map */
+
+
+
+.table-striped th{
+    border: 2px solid #222 !important;
+    font-size:1.25em;
+}
+.table-striped td{
+    border: 1px solid #888 !important;
+}
+.table-responsive .form-control{
+    border: 1px solid #222 !important;
+}
+.table-responsive label{
+    font-size:1.25em;
+ }
+
