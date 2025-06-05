@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Item;
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -27,16 +28,28 @@ class ItemsDataTable extends DataTable
             ->addColumn('default_price', function ($query) {
                 return "$ ".$query->default_price;
             })
+            ->addColumn('item_name', function ($query) {
+                return $query->item_name.'<a href="'. route('admin.item.edit', $query->id) .'" class="float-end btn btn-sm font-sm rounded btn-dark">
+                    <i class="material-icons md-edit fs-6"></i> Edit
+                </a>';
+            })
             ->addColumn('action', function ($query) {
-                return '<a href="'. route('admin.item.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
-                    <i class="material-icons md-edit fs-6"></i>
-                </a>
+                return '
                 <a href="'. route('admin.item.destroy', $query->id) .'" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
-                    <i class="material-icons md-delete_forever fs-6"></i>
+                    <i class="material-icons md-delete_forever fs-6"></i> Delete
                 </a>';
 
             })
-            ->rawColumns([  'item_name', 'item_description', 'hts_code', 'action']);
+            ->addColumn('detail', function ($query) {
+                return '<a target="_blank" href="'. route('admin.item.detail', $query->id) .'" class="btn btn-sm font-sm rounded btn-facebook">
+                    <i class="material-icons md-visibility fs-6"></i> View
+                </a>';
+
+            })
+            ->addColumn('category_name', function ($query) {
+                return $query->category->category_name;
+            })
+            ->rawColumns([ 'category_name',  'item_name', 'item_description', 'hts_code', 'detail', 'action']);
     }
 
     /**
@@ -90,6 +103,7 @@ class ItemsDataTable extends DataTable
                     ->init('function(api, node, config) { $(node).removeClass("dt-button") }')
                     ->text('<i class="fas fa-undo"></i> Reset Page Data')
             ]);
+
     }
 
     /**
@@ -100,9 +114,12 @@ class ItemsDataTable extends DataTable
         return [
             Column::computed('DT_RowIndex')->className('text-start')->title('S/N')->width(20),
             Column::make('item_name')->className('text-start')->width(250),
+            Column::make('category_name')->className('text-start')->width(250),
             Column::make('item_description')->className('text-start')->width(250),
+            Column::make('item_origin')->className('text-start')->width(250),
             Column::make('hts_code')->className('text-start')->width(100),
             Column::make('default_price')->className('text-center')->width(60),
+            Column::make('detail')->className('text-center')->width(60),
             Column::computed('action')
                 ->exportable(true)
                 ->printable(true)

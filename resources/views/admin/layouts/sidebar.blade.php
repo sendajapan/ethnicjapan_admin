@@ -33,6 +33,10 @@
                 </a>
             </li>
 
+
+
+
+<?php /*
             <li class="menu-item {{ setActive(['admin.provider.*']) }}">
                 <a class="menu-link {{ setActive(['admin.provider.index']) }}" href="{{ route('admin.provider.index') }}">
                     <i class="icon material-icons md-work text-muted"></i>
@@ -53,7 +57,8 @@
                     <span class="text">Purchases List</span>
                 </a>
             </li>
-
+ */ ?>
+<?php /*
             <li class="menu-item {{ setActive(['admin.sale.*']) }}">
                 <a class="menu-link {{ setActive(['admin.sale.index']) }}" href="{{ route('admin.sale.index') }}">
                     <i class="icon material-icons md-payments text-muted"></i>
@@ -81,7 +86,7 @@
                     <span class="text">Sales Report</span>
                 </a>
             </li>
-
+*/ ?>
 
 
 

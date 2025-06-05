@@ -70,21 +70,17 @@ class AllSeeder extends Seeder
 
         DB::table('categories')->insert([
             [
-                'category_name' => 'GRAINS',
-                'category_description' => '1',
+                'category_name' => 'SUPERFOODS',
+                'category_description' => 'SUPERFOODS',
             ],
             [
-                'category_name' => 'BEANS',
-                'category_description' => '2',
+                'category_name' => 'SPICES',
+                'category_description' => 'SPICES',
             ],
             [
-                'category_name' => 'FRESH FOOD',
-                'category_description' => '3',
-            ],
-            [
-                'category_name' => 'OILS',
-                'category_description' => '3',
-            ],
+                'category_name' => 'NUTS',
+                'category_description' => 'NUTS',
+            ]
         ]);
 
         DB::table('users')->insert([
@@ -109,84 +105,75 @@ class AllSeeder extends Seeder
 
 
 
+
+
+
+
+
+
         $itemsData = array(
             '0' => array(
-                'item_name' => 'Cocoa Grains / VRAEM15 + Criollo / Grade 1',
-                'item_description' => '50kg yute bag',
+                'item_name' => 'CHIA',
+                'item_description' => '',
+                'category_id' => '1',
+                'item_origin' => 'Peru',
+                'item_photo' => 'uploads/item_photos/chia.webp',
                 'hts_code' => 'HTS 1801.00.00.00',
                 'default_price' => '9.98'
             ),
             '1' => array(
-                'item_name' => 'Cocoa Powder / VRAEM15 + Criollo / Grade 1',
-                'item_description' => '25kg kraft bag',
+                'item_name' => 'QUINOA',
+                'item_description' => '',
+                'category_id' => '1',
+                'item_origin' => 'Peru',
+                'item_photo' => 'uploads/item_photos/quinoa.webp',
                 'hts_code' => 'HTS 1805.00.00.00',
                 'default_price' => '9.50'
             ),
             '2' => array(
-                'item_name' => 'Cocoa Nibs / VRAEM15 + Criollo / Grade 1',
-                'item_description' => '20kg box',
+                'item_name' => 'AMARANTH',
+                'item_description' => '',
+                'category_id' => '1',
+                'item_origin' => 'Peru',
+                'item_photo' => 'uploads/item_photos/amaranth2.webp',
                 'hts_code' => 'HTS 1801.00.20.00',
                 'default_price' => '15.90'
             ),
             '3' => array(
-                'item_name' => 'White Quinoa Non Pesticides',
+                'item_name' => 'CACAO',
                 'item_description' => '20kg bag',
+                'category_id' => '1',
+                'item_origin' => 'Peru',
+                'item_photo' => 'uploads/item_photos/cocoa.webp',
                 'hts_code' => 'HTS 1008.50.90.00',
                 'default_price' => '3.35'
             ),
             '4' => array(
-                'item_name' => 'Amaranth Non Pesticides',
+                'item_name' => 'CHIA OIL',
                 'item_description' => '20kg bag',
+                'category_id' => '1',
+                'item_origin' => 'Peru',
+                'item_photo' => 'uploads/item_photos/chia-oil.webp',
                 'hts_code' => 'HTS 1008.90.90.90',
                 'default_price' => '3.22'
             ),
             '5' => array(
-                'item_name' => 'Chia Seeds',
+                'item_name' => 'SACHA OIL',
                 'item_description' => '20kg bag',
+                'category_id' => '1',
+                'item_origin' => 'Peru',
+                'item_photo' => 'uploads/item_photos/sacha-oil.webp',
                 'hts_code' => 'HTS 0000.00.00.00',
                 'default_price' => '5.49'
             ),
             '6' => array(
-                'item_name' => 'Hemp Protein',
+                'item_name' => 'HEMP HEARTS',
                 'item_description' => '40kg bag',
+                'category_id' => '1',
+                'item_origin' => 'Peru',
+                'item_photo' => 'uploads/item_photos/hemp.webp',
                 'hts_code' => 'HTS 0000.00.00.00',
                 'default_price' => '7.71'
-            ),
-            '7' => array(
-                'item_name' => 'Adzuki Beans',
-                'item_description' => '50kg bag',
-                'hts_code' => 'HTS 0000.00.00.00',
-                'default_price' => '8.23'
-            ),
-            '8' => array(
-                'item_name' => 'Sesame Seeds',
-                'item_description' => '25kg bag',
-                'hts_code' => 'HTS 0000.00.00.00',
-                'default_price' => '4.97'
-            ),
-            '9' => array(
-                'item_name' => 'Maca and Sacha Inchi',
-                'item_description' => '21kg bag',
-                'hts_code' => 'HTS 0000.00.00.00',
-                'default_price' => '17.77'
-            ),
-            '10' => array(
-                'item_name' => 'Chia Oil',
-                'item_description' => '200 Liter Drum',
-                'hts_code' => 'HTS 0000.00.00.00',
-                'default_price' => '5.63'
-            ),
-            '11' => array(
-                'item_name' => 'Chia and Olive Oil Blend',
-                'item_description' => '100 Liter Drum',
-                'hts_code' => 'HTS 0000.00.00.00',
-                'default_price' => '8.05'
-            ),
-            '12' => array(
-                'item_name' => 'Inch Oil',
-                'item_description' => '400 Liter Drum',
-                'hts_code' => 'HTS 0000.00.00.00',
-                'default_price' => '19.07'
             )
         );
         DB::table('items')->insert($itemsData);
@@ -196,7 +183,7 @@ class AllSeeder extends Seeder
             $purchase['purchase_amount']=0;
             $item_count = rand(3,10);
             for($j=1; $j<=$item_count; $j++){
-                $item_index = rand(0,12);
+                $item_index = rand(0,6);
                 $item_selected = $itemsData[$item_index];
                 $item_qty = round(rand(100,1000)/10)*10;
 
@@ -229,7 +216,7 @@ class AllSeeder extends Seeder
             $sale['sale_amount']=0;
             $item_count = rand(4,7);
             for($j=1; $j<=$item_count; $j++){
-                $item_index = rand(0,12);
+                $item_index = rand(0,6);
                 $item_selected = $itemsData[$item_index];
                 $item_qty = round(rand(20,100)/5)*5;
 
