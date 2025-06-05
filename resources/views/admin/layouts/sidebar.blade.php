@@ -36,14 +36,14 @@
 
 
 
-<?php /*
             <li class="menu-item {{ setActive(['admin.provider.*']) }}">
                 <a class="menu-link {{ setActive(['admin.provider.index']) }}" href="{{ route('admin.provider.index') }}">
                     <i class="icon material-icons md-work text-muted"></i>
-                    <span class="text">Providers List</span>
+                    <span class="text">Suppliers/Providers List</span>
                 </a>
             </li>
 
+            <?php /*
             <li class="menu-item {{ setActive(['admin.customer.*']) }}">
                 <a class="menu-link {{ setActive(['admin.customer.index']) }}" href="{{ route('admin.customer.index') }}">
                     <i class="icon material-icons md-group text-muted"></i>

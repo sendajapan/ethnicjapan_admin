@@ -19,6 +19,7 @@ Route::get('dashboard', [AdminDashboardController::class, 'dashboard'])
     ->name('dashboard');
 
 Route::resource('category', CategoryController::class);
+Route::get("provider/detail/{id}", [ProviderController::class, 'detail'])->name('provider.detail');
 Route::resource('provider', ProviderController::class);
 Route::resource('customer', CustomerController::class);
 Route::get("item/detail/{id}", [ItemController::class, 'detail'])->name('item.detail');

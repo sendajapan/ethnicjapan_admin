@@ -32,6 +32,16 @@ class ProviderController extends Controller
         return view('admin.provider.create');
     }
 
+
+
+    public function detail(string $id)
+    {
+        $data = Provider::where('id', $id)->firstOrFail();
+
+        return view('admin.provider.detail', compact('data'));
+    }
+
+
     /**
      * Store a newly created resource in storage.
      * @throws Throwable
@@ -40,28 +50,65 @@ class ProviderController extends Controller
     {
 
         $request->validate([
-            'provider_name' => 'required|string|max:255',
-            'provider_description' => 'max:255',
-            'provider_address' => 'max:255'
+            'provider_name' => 'required|string|max:255'
         ]);
 
         DB::beginTransaction();
 
         try {
-            $Provider = new Provider();
-            $Provider->Provider_name = $request->input('provider_name');
-            $Provider->Provider_description = $request->input('provider_description');
-            $Provider->Provider_address = $request->input('provider_address');
+            $provider = new Provider();
+            $provider->provider_name = $request->input('provider_name');
+            $provider->provider_country_name = $request->input('provider_country_name');
+            $provider->provider_company_name = $request->input('provider_company_name');
+            $provider->provider_physical_address = $request->input('provider_physical_address');
+            $provider->provider_pickup_address = $request->input('provider_pickup_address');
+            $provider->provider_remit_address = $request->input('provider_remit_address');
+            $provider->provider_office_phone = $request->input('provider_office_phone');
+            $provider->provider_primary_contact_name = $request->input('provider_primary_contact_name');
+            $provider->provider_primary_contact_email = $request->input('provider_primary_contact_email');
+            $provider->provider_account_receivable_contact_email = $request->input('provider_account_receivable_contact_email');
+            $provider->provider_food_safety_contact_email = $request->input('provider_food_safety_contact_email');
+            $provider->provider_food_safety_contact_phone = $request->input('provider_food_safety_contact_phone');
+            $provider->provider_emergency_recall_contact_phone = $request->input('provider_emergency_recall_contact_phone');
+            $provider->provider_emergency_recall_contact_email = $request->input('provider_emergency_recall_contact_email');
+            $provider->provider_list_of_products = $request->input('provider_list_of_products');
+            $provider->gfsi_processing_plant_certification_type = $request->input('gfsi_processing_plant_certification_type');
 
-            $Provider->save();
+
+            if ($request->hasFile('gfsi_processing_plant_certification_file')) {
+                unset($filePath);
+                $filePath = $request->file('gfsi_processing_plant_certification_file')->store('uploads/provider_docs', 'public');
+                $provider->gfsi_processing_plant_certification_file = $filePath;
+            }
+
+            if ($request->hasFile('social_certification_smeta')) {
+                unset($filePath);
+                $filePath = $request->file('social_certification_smeta')->store('uploads/provider_docs', 'public');
+                $provider->social_certification_smeta = $filePath;
+            }
+
+            if ($request->hasFile('fda_registration')) {
+                unset($filePath);
+                $filePath = $request->file('fda_registration')->store('uploads/provider_docs', 'public');
+                $provider->fda_registration = $filePath;
+            }
+
+            if ($request->hasFile('supplier_questionary_sheet')) {
+                unset($filePath);
+                $filePath = $request->file('supplier_questionary_sheet')->store('uploads/provider_docs', 'public');
+                $provider->supplier_questionary_sheet = $filePath;
+            }
+
+
+            $provider->save();
             DB::commit();
 
         } catch (Exception $exception) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'error inserting ' . $Provider->provider_name . ': ' . $exception->getMessage());
+            return redirect()->back()->with('error', 'error inserting ' . $provider->provider_name . ': ' . $exception->getMessage());
         }
 
-        return redirect()->route('admin.provider.index')->with('success', $Provider->provider_name . ' inserted successfully.');
+        return redirect()->route('admin.provider.index')->with('success', $provider->provider_name . ' inserted successfully.');
     }
 
     /**
@@ -91,12 +138,49 @@ class ProviderController extends Controller
         DB::beginTransaction();
 
         try {
-            $Name = Provider::where('id', $id)->firstOrFail();
-            $Name->provider_name = strtoupper($request->input('provider_name'));
-            $Name->provider_description = $request->input('provider_description');
-            $Name->provider_address = $request->input('provider_address');
+            $provider = Provider::where('id', $id)->firstOrFail();
+            $provider->provider_name = $request->input('provider_name');
+            $provider->provider_country_name = $request->input('provider_country_name');
+            $provider->provider_company_name = $request->input('provider_company_name');
+            $provider->provider_physical_address = $request->input('provider_physical_address');
+            $provider->provider_pickup_address = $request->input('provider_pickup_address');
+            $provider->provider_remit_address = $request->input('provider_remit_address');
+            $provider->provider_office_phone = $request->input('provider_office_phone');
+            $provider->provider_primary_contact_name = $request->input('provider_primary_contact_name');
+            $provider->provider_primary_contact_email = $request->input('provider_primary_contact_email');
+            $provider->provider_account_receivable_contact_email = $request->input('provider_account_receivable_contact_email');
+            $provider->provider_food_safety_contact_email = $request->input('provider_food_safety_contact_email');
+            $provider->provider_food_safety_contact_phone = $request->input('provider_food_safety_contact_phone');
+            $provider->provider_emergency_recall_contact_phone = $request->input('provider_emergency_recall_contact_phone');
+            $provider->provider_emergency_recall_contact_email = $request->input('provider_emergency_recall_contact_email');
+            $provider->provider_list_of_products = $request->input('provider_list_of_products');
+            $provider->gfsi_processing_plant_certification_type = $request->input('gfsi_processing_plant_certification_type');
 
-            $Name->save();
+            if ($request->hasFile('gfsi_processing_plant_certification_file')) {
+                unset($filePath);
+                $filePath = $request->file('gfsi_processing_plant_certification_file')->store('uploads/provider_docs', 'public');
+                $provider->gfsi_processing_plant_certification_file = $filePath;
+            }
+
+            if ($request->hasFile('social_certification_smeta')) {
+                unset($filePath);
+                $filePath = $request->file('social_certification_smeta')->store('uploads/provider_docs', 'public');
+                $provider->social_certification_smeta = $filePath;
+            }
+
+            if ($request->hasFile('fda_registration')) {
+                unset($filePath);
+                $filePath = $request->file('fda_registration')->store('uploads/provider_docs', 'public');
+                $provider->fda_registration = $filePath;
+            }
+
+            if ($request->hasFile('supplier_questionary_sheet')) {
+                unset($filePath);
+                $filePath = $request->file('supplier_questionary_sheet')->store('uploads/provider_docs', 'public');
+                $provider->supplier_questionary_sheet = $filePath;
+            }
+
+            $provider->save();
             DB::commit();
 
         } catch (Exception $exception) {

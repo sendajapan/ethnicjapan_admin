@@ -24,16 +24,28 @@ class ProvidersDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->setRowId('DT_RowIndex')
             ->addIndexColumn()
+            ->addColumn('provider_name', function ($query) {
+                return $query->provider_name.'<a href="'. route('admin.provider.edit', $query->id) .'" class="float-end btn btn-sm font-sm rounded btn-dark">
+                    <i class="material-icons md-edit fs-6"></i> Edit
+                </a>';
+            })
             ->addColumn('action', function ($query) {
-                return '<a href="'. route('admin.provider.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
-                    <i class="material-icons md-edit fs-6"></i>
-                </a>
-                <a href="'. route('admin.provider.destroy', $query->id) .'" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
+                return '<a href="'. route('admin.provider.destroy', $query->id) .'" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
                     <i class="material-icons md-delete_forever fs-6"></i>
                 </a>';
-
             })
-            ->rawColumns([  'category_name', 'category_description', 'action']);
+            ->addColumn('provider_list_of_products', function ($query) {
+                return nl2br($query->provider_list_of_products);
+            })
+
+
+
+            ->addColumn('detail', function ($query) {
+                return '<a target="_blank" href="'. route('admin.provider.detail', $query->id) .'" class="btn btn-sm font-sm rounded btn-facebook">
+                    <i class="material-icons md-visibility fs-6"></i> View
+                </a>';
+            })
+            ->rawColumns([  'provider_name', 'provider_list_of_products','category_name', 'category_description', 'detail', 'action']);
     }
 
     /**
@@ -97,8 +109,10 @@ class ProvidersDataTable extends DataTable
         return [
             Column::computed('DT_RowIndex')->className('text-start')->title('S/N')->width(20),
             Column::make('provider_name')->className('text-start')->width(140),
-            Column::make('provider_description')->className('text-start')->width(340),
-            Column::make('provider_address')->className('text-start')->width(200),
+            Column::make('provider_country_name')->className('text-start')->width(340),
+            Column::make('provider_physical_address')->className('text-start')->width(200),
+            Column::make('provider_list_of_products')->className('text-start')->width(200),
+            Column::make('detail')->className('text-center')->width(60),
             Column::computed('action')
                 ->exportable(true)
                 ->printable(true)
