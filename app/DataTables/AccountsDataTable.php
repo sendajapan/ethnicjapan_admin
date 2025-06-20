@@ -2,20 +2,21 @@
 
 namespace App\DataTables;
 
-use App\Models\Customer;
+use App\Models\Accounts;
+use App\Utils\ColorUtils;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class CustomersDataTable extends DataTable
+class AccountsDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
+     *
      *
      * @param QueryBuilder $query Results from query() method.
      */
@@ -24,24 +25,30 @@ class CustomersDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->setRowId('DT_RowIndex')
             ->addIndexColumn()
+            ->addColumn('view', function ($query) {
+                return '<a target="_blank" href="'. route('admin.transactions.report', ['account', $query->id]) .'" class="btn btn-sm font-sm rounded btn-facebook">
+                    <i class="material-icons md-visibility fs-6"></i> Statement
+                </a>';
+            })
             ->addColumn('action', function ($query) {
-                return '<a href="'. route('admin.customer.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
+                return '<a href="'. route('admin.accounts.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
                     <i class="material-icons md-edit fs-6"></i>
                 </a>
-                <a href="'. route('admin.customer.destroy', $query->id) .'" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
+                <a href="'. route('admin.accounts.destroy', $query->id) .'" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
                     <i class="material-icons md-delete_forever fs-6"></i>
                 </a>';
 
             })
-            ->rawColumns([  'customer_name', 'customer_description', 'action']);
+            ->rawColumns(['view', 'action']);
     }
 
     /**
      * Get the query source of dataTable.
      */
-    public function query(Customer $model): QueryBuilder
+    public function query(Accounts $model): QueryBuilder
     {
         return $query = $model->newQuery();
+
     }
 
     /**
@@ -52,7 +59,7 @@ class CustomersDataTable extends DataTable
         $disablePagination = $this->disablePagination ?? false;
 
         return $this->builder()
-            ->setTableId('customers-table')
+            ->setTableId('categories-table')
             ->addTableClass("table table-striped table-light table-border table-hover align-middle table-nowrap mb-0 ")
             ->setTableHeadClass("table-light bordered")
             ->columns($this->getColumns())
@@ -75,8 +82,8 @@ class CustomersDataTable extends DataTable
                 Button::make('create')
                     ->addClass('btn btn-primary mr-15 mb-15 fs-6 fst-normal bg-success text-white')
                     ->init('function(api, node, config) { $(node).removeClass("dt-button") }')
-                    ->action("window.location = '".route('admin.customer.create')."';")
-                    ->text('<i class="fas fa-plus"></i> Create New Customer'),
+                    ->action("window.location = '".route('admin.accounts.create')."';")
+                    ->text('<i class="fas fa-plus"></i> Create New Account Title'),
                 Button::make('excel')->addClass('btn btn-primary btn-facebook mr-15  mb-15 fs-6 fst-normal bg-dark text-white')
                     ->init('function(api, node, config) { $(node).removeClass("dt-button") }')
                     ->text('<i class="fas fa-download"></i> Download Report as Excel'),
@@ -96,16 +103,9 @@ class CustomersDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex')->className('text-start')->title('S/N')->width(20),
-            Column::make('customer_name')->title('Name')->className('text-start')->width(200),
-            Column::make('customer_office_phone')->title('Phone')->className('text-start')->width(200),
-            Column::make('customer_primary_contact_name')->title('Primary Contact Name')->className('text-start')->width(200),
-            Column::make('customer_primary_contact_email')->title('Primary Contact Email')->className('text-start')->width(200),
-            Column::make('customer_address')->title('Address')->className('text-start')->width(200),
-            Column::make('customer_country_name')->title('Country')->className('text-start')->width(200),
-            Column::make('customer_description')->title('Description')->className('text-start')->width(200),
-
-
-
+            Column::make('account_name')->className('text-start')->width(140),
+            Column::make('account_type')->className('text-start')->width(140),
+            Column::make('view')->className('text-start')->width(140),
             Column::computed('action')
                 ->exportable(true)
                 ->printable(true)
@@ -119,6 +119,10 @@ class CustomersDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'Customers_' . date('YmdHis');
+        return 'Accounts_' . date('YmdHis');
     }
 }
+
+
+
+

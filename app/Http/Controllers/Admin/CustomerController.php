@@ -47,20 +47,24 @@ class CustomerController extends Controller
         DB::beginTransaction();
 
         try {
-            $Customer = new Customer();
-            $Customer->Customer_name = $request->input('customer_name');
-            $Customer->Customer_description = $request->input('customer_description');
-            $Customer->Customer_address = $request->input('customer_address');
+            $customer = new Customer();
+            $customer->customer_name = $request->input('customer_name');
+            $customer->customer_country_name = $request->input('customer_country_name');
+            $customer->customer_office_phone = $request->input('customer_office_phone');
+            $customer->customer_primary_contact_name = $request->input('customer_primary_contact_name');
+            $customer->customer_primary_contact_email = $request->input('customer_primary_contact_email');
+            $customer->customer_address = $request->input('customer_address');
+            $customer->customer_description = $request->input('customer_description');
 
-            $Customer->save();
+            $customer->save();
             DB::commit();
 
         } catch (Exception $exception) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'error inserting ' . $Customer->customer_name . ': ' . $exception->getMessage());
+            return redirect()->back()->with('error', 'error inserting ' . $customer->customer_name . ': ' . $exception->getMessage());
         }
 
-        return redirect()->route('admin.customer.index')->with('success', $Customer->customer_name . ' inserted successfully.');
+        return redirect()->route('admin.customer.index')->with('success', $customer->customer_name . ' inserted successfully.');
     }
 
     /**
@@ -90,12 +94,16 @@ class CustomerController extends Controller
         DB::beginTransaction();
 
         try {
-            $Name = Customer::where('id', $id)->firstOrFail();
-            $Name->customer_name = strtoupper($request->input('customer_name'));
-            $Name->customer_description = $request->input('customer_description');
-            $Name->customer_address = $request->input('customer_address');
+            $customer = Customer::where('id', $id)->firstOrFail();
+            $customer->customer_name = $request->input('customer_name');
+            $customer->customer_country_name = $request->input('customer_country_name');
+            $customer->customer_office_phone = $request->input('customer_office_phone');
+            $customer->customer_primary_contact_name = $request->input('customer_primary_contact_name');
+            $customer->customer_primary_contact_email = $request->input('customer_primary_contact_email');
+            $customer->customer_address = $request->input('customer_address');
+            $customer->customer_description = $request->input('customer_description');
 
-            $Name->save();
+            $customer->save();
             DB::commit();
 
         } catch (Exception $exception) {

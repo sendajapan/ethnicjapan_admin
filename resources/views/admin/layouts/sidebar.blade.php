@@ -19,10 +19,44 @@
                 </a>
             </li>
 
+
+            <li class="menu-item {{ setActive(['admin.bank.*']) }}">
+                <a class="menu-link {{ setActive(['admin.bank.index']) }}" href="{{ route('admin.bank.index') }}">
+                    <i class="icon material-icons md-request_quote text-muted"></i>
+                    <span class="text">Bank Accounts</span>
+                </a>
+            </li>
+
+            <li class="menu-item {{ setActive(['admin.accounts.*']) }}">
+                <a class="menu-link {{ setActive(['admin.accounts.index']) }}" href="{{ route('admin.accounts.index') }}">
+                    <i class="icon material-icons md-request_quote text-muted"></i>
+                    <span class="text">Account Ledgers</span>
+                </a>
+            </li>
+
+            <li class="menu-item {{ setActive(['admin.transactions.*']) }}">
+                <a class="menu-link {{ setActive(['admin.transactions.create']) }}" href="{{ route('admin.transactions.create') }}">
+                    <i class="icon material-icons md-request_quote text-muted"></i>
+                    <span class="text">Make Transactions</span>
+                </a>
+            </li>
+
+
+
+
+
+
             <li class="menu-item {{ setActive(['admin.category.*']) }}">
                 <a class="menu-link {{ setActive(['admin.category.index']) }}" href="{{ route('admin.category.index') }}">
                     <i class="icon material-icons md-category text-muted"></i>
                     <span class="text">Categories List</span>
+                </a>
+            </li>
+
+            <li class="menu-item {{ setActive(['admin.ports.*']) }}">
+                <a class="menu-link {{ setActive(['admin.ports.index']) }}" href="{{ route('admin.ports.index') }}">
+                    <i class="icon material-icons md-category text-muted"></i>
+                    <span class="text">Ports List</span>
                 </a>
             </li>
 
@@ -43,7 +77,6 @@
                 </a>
             </li>
 
-            <?php /*
             <li class="menu-item {{ setActive(['admin.customer.*']) }}">
                 <a class="menu-link {{ setActive(['admin.customer.index']) }}" href="{{ route('admin.customer.index') }}">
                     <i class="icon material-icons md-group text-muted"></i>
@@ -54,10 +87,20 @@
             <li class="menu-item {{ setActive(['admin.purchase.*']) }}">
                 <a class="menu-link {{ setActive(['admin.purchase.index']) }}" href="{{ route('admin.purchase.index') }}">
                     <i class="icon material-icons md-request_quote text-muted"></i>
-                    <span class="text">Purchases List</span>
+                    <span class="text">Purchase Shipments</span>
                 </a>
             </li>
- */ ?>
+
+
+
+
+
+
+
+
+
+
+
 <?php /*
             <li class="menu-item {{ setActive(['admin.sale.*']) }}">
                 <a class="menu-link {{ setActive(['admin.sale.index']) }}" href="{{ route('admin.sale.index') }}">

@@ -473,6 +473,85 @@ class AllSeeder extends Seeder
 
 
 
+        $bankData = array(
+            '0' => array(
+                'bank_name' => 'SMBC',
+                'bank_account_title' => 'Japan Capital',
+                'bank_country' => 'Japan',
+                'bank_currency' => 'JPY'
+            ),
+            '1' => array(
+                'bank_name' => 'Cash in Hand',
+                'bank_account_title' => 'Petty Cash',
+                'bank_country' => 'Peru',
+                'bank_currency' => 'USD'
+            )
+        );
+        DB::table('bank_accounts')->insert($bankData);
+
+        $accountsData = array(
+            '0' => array(
+                'account_name' => 'Mr. Jorge Alvarez',
+                'account_type' => 'Expense'
+            ),
+            '1' => array(
+                'account_name' => 'Office Utility',
+                'account_type' => 'Expense'
+            )
+        );
+        DB::table('accounts')->insert($accountsData);
+
+        $portsData = array(
+            '0' => array(
+                'port_name' => 'Yokohama',
+                'country_name' => 'Japan'
+            ),
+            '1' => array(
+                'port_name' => 'Lima',
+                'country_name' => 'Peru'
+            ),
+            '2' => array(
+                'port_name' => 'Cartagena',
+                'country_name' => 'Colombia'
+            )
+        );
+        DB::table('ports')->insert($portsData);
+
+        $incotermData = array(
+            '0' => array('incoterm' => 'CIF'),
+            '1' => array('incoterm' => 'CNF'),
+            '2' => array('incoterm' => 'FOB')
+        );
+        DB::table('data_incoterms')->insert($incotermData);
+
+        $packagetypeData = array(
+            '0' => array('package_type' => 'Bag'),
+            '1' => array('package_type' => 'Box')
+        );
+        DB::table('data_package_types')->insert($packagetypeData);
+
+        $shelflifeData = array(
+            '0' => array('shelflife' => '6 Months'),
+            '1' => array('shelflife' => '1 Year'),
+            '2' => array('shelflife' => '2 Years'),
+            '3' => array('shelflife' => '3 Years'),
+            '4' => array('shelflife' => '4 Years'),
+            '5' => array('shelflife' => '5 Years')
+        );
+        DB::table('data_shelflives')->insert($shelflifeData);
+
+        $containertypesData = array(
+            '0' => array('container_type' => 'RoRo'),
+            '1' => array('container_type' => '20 Ft Container'),
+            '2' => array('container_type' => '40 Ft Container')
+        );
+        DB::table('data_container_types')->insert($containertypesData);
+
+
+
+
+
+
 
     }
 }
