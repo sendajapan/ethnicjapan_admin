@@ -33,6 +33,7 @@ class BankAccountDataTable extends DataTable
             })
             ->addColumn('balance', function ($query) {
                 $balance=0;
+                $bank_currency = '';
                 $transactions = BankTransaction::select('bank_transactions.type', 'bank_transactions.final_amount', 'bank_accounts.bank_currency')
                     ->leftJoin('bank_accounts', 'bank_accounts.id', 'bank_transactions.bank_account_id')
                     ->where('bank_account_id', $query->id)->get()->toArray();
