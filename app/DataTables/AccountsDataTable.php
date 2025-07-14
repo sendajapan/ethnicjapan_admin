@@ -3,6 +3,7 @@
 namespace App\DataTables;
 
 use App\Models\Accounts;
+use App\Models\BankTransaction;
 use App\Utils\ColorUtils;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
@@ -30,6 +31,22 @@ class AccountsDataTable extends DataTable
                     <i class="material-icons md-visibility fs-6"></i> Statement
                 </a>';
             })
+            ->addColumn('balance', function ($query) {
+                $balance=0;
+                $bank_currency = '';
+                $transactions = BankTransaction::select('bank_transactions.type', 'bank_transactions.final_amount', 'bank_accounts.bank_currency')
+                    ->leftJoin('bank_accounts', 'bank_accounts.id', 'bank_transactions.bank_account_id')
+                    ->where('accounts_id', $query->id)->get()->toArray();
+                foreach($transactions as $t) {
+                    if($t['type']=='CR') {
+                        $balance += $t['final_amount'];
+                    }elseif($t['type']=='DR') {
+                        $balance -= $t['final_amount'];
+                    }
+                    $bank_currency = $t['bank_currency'];
+                }
+                return '<span class="float-start">'.$bank_currency. '</span>'. number_format($balance,0);
+            })
             ->addColumn('action', function ($query) {
                 return '<a href="'. route('admin.accounts.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
                     <i class="material-icons md-edit fs-6"></i>
@@ -39,7 +56,7 @@ class AccountsDataTable extends DataTable
                 </a>';
 
             })
-            ->rawColumns(['view', 'action']);
+            ->rawColumns(['view', 'balance',  'action']);
     }
 
     /**
@@ -105,6 +122,7 @@ class AccountsDataTable extends DataTable
             Column::computed('DT_RowIndex')->className('text-start')->title('S/N')->width(20),
             Column::make('account_name')->className('text-start')->width(140),
             Column::make('account_type')->className('text-start')->width(140),
+            Column::make('balance')->title('Balance')->className('text-end')->width(110),
             Column::make('view')->className('text-start')->width(140),
             Column::computed('action')
                 ->exportable(true)
