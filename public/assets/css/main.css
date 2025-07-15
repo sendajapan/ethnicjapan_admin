@@ -3522,15 +3522,15 @@ body.offcanvas-active {
 }
 
 .main-wrap .content-main {
-    min-height: calc(100vh - 60px);
+    min-height: 100vh;
 }
 
 .content-main {
-    padding: 30px 3%;
+    padding: 40px;
     margin-left: auto;
     margin-right: auto;
     background-color: #f8f9fa;
-    min-height: calc(100vh - 60px);
+    min-height: 100vh;
 }
 
 .dropdown-menu-end {
@@ -3715,11 +3715,9 @@ body.aside-mini .menu-aside .menu-item.has-submenu .menu-link:after {
 
 footer.main-footer {
     bottom: 0;
-    padding: 30px 3%;
     position: absolute;
     right: 0;
     width: 100%;
-    height: 60px;
 }
 
 .card-body {

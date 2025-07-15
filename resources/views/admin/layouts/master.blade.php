@@ -28,15 +28,16 @@
 
 <main class="main-wrap">
 
-    <!--
-    <header class="main-header navbar">
-         @include('admin.layouts.navbar')
-    </header>
-    -->
-    @yield('content')
+{{--    <header class="main-header navbar">--}}
+{{--         @include('admin.layouts.navbar')--}}
+{{--    </header>--}}
 
-    <footer class="main-footer font-xs">
-        <div class="row pt-15">
+    <div class="container pb-4 m-0">
+        @yield('content')
+    </div>
+
+    <footer class="main-footer font-xs" style="background-color: #e6e7e8;">
+        <div class="row p-2 ms-4">
             <div class="col-sm-6">
                 <script>
                     document.write(new Date().getFullYear());
