@@ -30,186 +30,188 @@
         </div>
         <div class="row">
             <div class="col-lg-12 col-xl-12">
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="mb-3">Please enter purchase information</h5>
-                        <form action="{{ route('admin.purchase.update', $shipment->id) }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
-                            <div class="row mb-4">
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="invoice_number" class="form-label">Purchase/Invoice No.</label>
-                                    <input type="text" placeholder="" class="form-control" id="invoice_number" name="invoice_number"  value="{{ empty(old('invoice_number')) ?? $shipment->invoice_number }}" required>
+                <form action="{{ route('admin.purchase.update', $shipment->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <section class="section">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="mb-3">Please enter purchase information</h5>
+                                <div class="row mb-4">
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="invoice_number" class="form-label">Purchase/Invoice No.</label>
+                                        <input type="text" placeholder="" class="form-control" id="invoice_number" name="invoice_number"  value="{{ empty(old('invoice_number')) ?? $shipment->invoice_number }}" required>
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="invoice_date" class="form-label">Purchase/Invoice Date</label>
+                                        <input type="date" placeholder="" class="form-control" id="invoice_date" name="invoice_date"  value="{{ empty(old('invoice_date')) ? $shipment->invoice_date : old('invoice_date') }}" required>
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="port_of_loading" class="form-label">Port of Loading</label>
+                                        <select class="form-select" id="port_of_loading" name="port_of_loading">
+                                            <option value="">Select</option>
+                                            <option value="Lima" {{ $shipment->port_of_loading == 'Lima' ? 'selected' : '' }}>Lima</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="port_of_landing" class="form-label">Port of Landing</label>
+                                        <select class="form-select" id="port_of_landing" name="port_of_landing"  >
+                                            <option value="">Select</option>
+                                            <option value="Yokohama" {{ $shipment->port_of_landing == 'Yokohama' ? 'selected' : '' }}>Yokohama</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="country_of_destination" class="form-label">Country of Destination</label>
+                                        <select class="form-select" id="country_of_destination" name="country_of_destination"  >
+                                            <option value="">Select</option>
+                                            @foreach(Countries::orderBy('country_name')->whereIn('country_name', ['Japan'])->get() as $p)
+                                                <option value="{{ $p->country_name }}" {{ $shipment->country_name == $p->country_name ? 'selected' : '' }}>{{ $p->country_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="incoterm" class="form-label">IncoTerm</label>
+                                        <select class="form-select" id="incoterm" name="incoterm"  >
+                                            <option value="">Select</option>
+                                            @foreach(DataIncoterm::orderBy('incoterm')->get() as $p)
+                                                <option value="{{ $p->incoterm }}" {{ $shipment->incoterm == $p->incoterm ? 'selected' : '' }}>{{ $p->incoterm }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="invoice_date" class="form-label">Purchase/Invoice Date</label>
-                                    <input type="date" placeholder="" class="form-control" id="invoice_date" name="invoice_date"  value="{{ empty(old('invoice_date')) ? $shipment->invoice_date : old('invoice_date') }}" required>
+                                <div class="row mb-3">
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="provider_id" class="form-label">Provider Name</label>
+                                        <select class="form-select" id="provider_id" name="provider_id"  value="{{ old('provider_id') }}" required>
+                                            <option value="">Select</option>
+                                            @foreach(Provider::orderBy('provider_name')->get() as $p)
+                                                <option value="{{ $p->id }}" {{ $shipment->provider_name == $p->provider_name ? 'selected' : '' }}>{{ $p->provider_name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="container_type" class="form-label">Container Type</label>
+                                        <select class="form-select" id="container_type" name="container_type"  >
+                                            <option value="">Select</option>
+                                            @foreach(DataContainerType::orderBy('container_type')->get() as $p)
+                                                <option value="{{ $p->container_type }}" {{ $shipment->provider_name == $p->container_type ? 'selected' : '' }}>{{ $p->container_type }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="bl_number" class="form-label">BL Number</label>
+                                        <input type="text" class="form-control" id="bl_number" name="bl_number"  value="{{ $shipment->bl_number }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="shipping_line" class="form-label">Shipping Line</label>
+                                        <input type="text" class="form-control" id="shipping_line" name="shipping_line"  value="{{ $shipment->shipping_line }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="vessel" class="form-label">Vessel</label>
+                                        <input type="text" class="form-control" id="vessel" name="vessel"  value="{{ $shipment->vessel }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="commercial_invoice" class="form-label">Commercial Invoice</label>
+                                        <input type="file" class="form-control" id="commercial_invoice" name="commercial_invoice"  value="{{ $shipment->commercial_invoice }}">
+                                    </div>
                                 </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="port_of_loading" class="form-label">Port of Loading</label>
-                                    <select class="form-select" id="port_of_loading" name="port_of_loading">
-                                        <option value="">Select</option>
-                                        <option value="Lima" {{ $shipment->port_of_loading == 'Lima' ? 'selected' : '' }}>Lima</option>
-                                    </select>
+                                <div class="row mb-3">
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="eta" class="form-label">ETA</label>
+                                        <input type="date" class="form-control" id="eta" name="eta" value="{{ $shipment->eta }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="etd" class="form-label">ETD</label>
+                                        <input type="date" class="form-control" id="etd" name="etd"  value="{{ $shipment->etd }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="bl_telex_release" class="form-label">BL / Telex Release</label>
+                                        <input type="file" class="form-control" id="bl_telex_release" name="bl_telex_release"  value="{{ $shipment->bl_telex_release }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="packing_list" class="form-label">Packing List</label>
+                                        <input type="file" class="form-control" id="packing_list" name="packing_list"  value="{{ $shipment->packing_list }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="origin_certificate" class="form-label">Origin Certificate</label>
+                                        <input type="file" class="form-control" id="origin_certificate" name="origin_certificate"  value="{{ $shipment->origin_certificate }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="phytosanitary" class="form-label">Phytosanitary</label>
+                                        <input type="file" class="form-control" id="phytosanitary" name="phytosanitary"  value="{{ $shipment->phytosanitary }}">
+                                    </div>
                                 </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="port_of_landing" class="form-label">Port of Landing</label>
-                                    <select class="form-select" id="port_of_landing" name="port_of_landing"  >
-                                        <option value="">Select</option>
-                                        <option value="Yokohama" {{ $shipment->port_of_landing == 'Yokohama' ? 'selected' : '' }}>Yokohama</option>
-                                    </select>
+                                <div class="row mb-3">
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="freight" class="form-label">Freight</label>
+                                        <input type="text" class="form-control" id="freight" name="freight"  value="{{ $shipment->freight }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="insurance" class="form-label">Insurance</label>
+                                        <input type="text" class="form-control" id="insurance" name="insurance"  value="{{ $shipment->insurance }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="exchange_rate" class="form-label">Exchange Rate</label>
+                                        <input type="text" class="form-control" id="exchange_rate" name="exchange_rate"  value="{{ $shipment->exchange_rate }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="duties" class="form-label">Duties</label>
+                                        <input type="text" class="form-control" id="duties" name="duties"  value="{{ $shipment->duties }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="tax" class="form-label">Tax</label>
+                                        <input type="text" class="form-control" id="tax" name="tax"  value="{{ $shipment->tax }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="unpack" class="form-label">Unpack</label>
+                                        <input type="text" class="form-control" id="unpack" name="unpack"  value="{{ $shipment->unpack }}">
+                                    </div>
                                 </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="country_of_destination" class="form-label">Country of Destination</label>
-                                    <select class="form-select" id="country_of_destination" name="country_of_destination"  >
-                                        <option value="">Select</option>
-                                        @foreach(Countries::orderBy('country_name')->whereIn('country_name', ['Japan'])->get() as $p)
-                                            <option value="{{ $p->country_name }}" {{ $shipment->country_name == $p->country_name ? 'selected' : '' }}>{{ $p->country_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="incoterm" class="form-label">IncoTerm</label>
-                                    <select class="form-select" id="incoterm" name="incoterm"  >
-                                        <option value="">Select</option>
-                                        @foreach(DataIncoterm::orderBy('incoterm')->get() as $p)
-                                            <option value="{{ $p->incoterm }}" {{ $shipment->incoterm == $p->incoterm ? 'selected' : '' }}>{{ $p->incoterm }}</option>
-                                        @endforeach
-                                    </select>
+                                <div class="row mb-3">
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="transport" class="form-label">Transport</label>
+                                        <input type="text" class="form-control" id="transport" name="transport"  value="{{ $shipment->transport }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="penalty" class="form-label">Penalty</label>
+                                        <input type="text" class="form-control" id="penalty" name="penalty"  value="{{ $shipment->penalty }}">
+                                    </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="other_fee" class="form-label">Other Fee</label>
+                                        <input type="text" class="form-control" id="other_fee" name="other_fee"  value="{{ $shipment->other_fee }}">
+                                    </div>
+                                    <div class="col-lg-6 col-xl-6">
+                                        <label for="other_fee" class="form-label">Comments</label>
+                                        <input type="text" class="form-control" id="shipment_comment" name="shipment_comment"  value="{{ $shipment->shipment_comment }}">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="provider_id" class="form-label">Provider Name</label>
-                                    <select class="form-select" id="provider_id" name="provider_id"  value="{{ old('provider_id') }}" required>
-                                        <option value="">Select</option>
-                                        @foreach(Provider::orderBy('provider_name')->get() as $p)
-                                            <option value="{{ $p->id }}" {{ $shipment->provider_name == $p->provider_name ? 'selected' : '' }}>{{ $p->provider_name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="container_type" class="form-label">Container Type</label>
-                                    <select class="form-select" id="container_type" name="container_type"  >
-                                        <option value="">Select</option>
-                                        @foreach(DataContainerType::orderBy('container_type')->get() as $p)
-                                            <option value="{{ $p->container_type }}" {{ $shipment->provider_name == $p->container_type ? 'selected' : '' }}>{{ $p->container_type }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="bl_number" class="form-label">BL Number</label>
-                                    <input type="text" class="form-control" id="bl_number" name="bl_number"  value="{{ $shipment->bl_number }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="shipping_line" class="form-label">Shipping Line</label>
-                                    <input type="text" class="form-control" id="shipping_line" name="shipping_line"  value="{{ $shipment->shipping_line }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="vessel" class="form-label">Vessel</label>
-                                    <input type="text" class="form-control" id="vessel" name="vessel"  value="{{ $shipment->vessel }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="commercial_invoice" class="form-label">Commercial Invoice</label>
-                                    <input type="file" class="form-control" id="commercial_invoice" name="commercial_invoice"  value="{{ $shipment->commercial_invoice }}">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="eta" class="form-label">ETA</label>
-                                    <input type="date" class="form-control" id="eta" name="eta" value="{{ $shipment->eta }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="etd" class="form-label">ETD</label>
-                                    <input type="date" class="form-control" id="etd" name="etd"  value="{{ $shipment->etd }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="bl_telex_release" class="form-label">BL / Telex Release</label>
-                                    <input type="file" class="form-control" id="bl_telex_release" name="bl_telex_release"  value="{{ $shipment->bl_telex_release }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="packing_list" class="form-label">Packing List</label>
-                                    <input type="file" class="form-control" id="packing_list" name="packing_list"  value="{{ $shipment->packing_list }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="origin_certificate" class="form-label">Origin Certificate</label>
-                                    <input type="file" class="form-control" id="origin_certificate" name="origin_certificate"  value="{{ $shipment->origin_certificate }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="phytosanitary" class="form-label">Phytosanitary</label>
-                                    <input type="file" class="form-control" id="phytosanitary" name="phytosanitary"  value="{{ $shipment->phytosanitary }}">
-                                </div>
-                            </div>
+                        </div>
+                    </section>
 
-                            <div class="row mb-3">
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="freight" class="form-label">Freight</label>
-                                    <input type="text" class="form-control" id="freight" name="freight"  value="{{ $shipment->freight }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="insurance" class="form-label">Insurance</label>
-                                    <input type="text" class="form-control" id="insurance" name="insurance"  value="{{ $shipment->insurance }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="exchange_rate" class="form-label">Exchange Rate</label>
-                                    <input type="text" class="form-control" id="exchange_rate" name="exchange_rate"  value="{{ $shipment->exchange_rate }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="duties" class="form-label">Duties</label>
-                                    <input type="text" class="form-control" id="duties" name="duties"  value="{{ $shipment->duties }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="tax" class="form-label">Tax</label>
-                                    <input type="text" class="form-control" id="tax" name="tax"  value="{{ $shipment->tax }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="unpack" class="form-label">Unpack</label>
-                                    <input type="text" class="form-control" id="unpack" name="unpack"  value="{{ $shipment->unpack }}">
-                                </div>
-                            </div>
+                    @if(!empty($shipment->lots) && count($shipment->lots) > 0)
+                        @php
+                            $groupedByContainer = [];
 
-                            <div class="row mb-3">
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="transport" class="form-label">Transport</label>
-                                    <input type="text" class="form-control" id="transport" name="transport"  value="{{ $shipment->transport }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="penalty" class="form-label">Penalty</label>
-                                    <input type="text" class="form-control" id="penalty" name="penalty"  value="{{ $shipment->penalty }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="other_fee" class="form-label">Other Fee</label>
-                                    <input type="text" class="form-control" id="other_fee" name="other_fee"  value="{{ $shipment->other_fee }}">
-                                </div>
-                                <div class="col-lg-6 col-xl-6">
-                                    <label for="other_fee" class="form-label">Comments</label>
-                                    <input type="text" class="form-control" id="shipment_comment" name="shipment_comment"  value="{{ $shipment->shipment_comment }}">
-                                </div>
-                            </div>
-                            <section>&nbsp;</section>
+                            foreach ($shipment->lots as $lot) {
+                                $lastTwo = substr($lot['lot_unique'], -2);
 
-                            @if(!empty($shipment->lots) && count($shipment->lots) > 0)
-                                @php
-                                    $groupedByContainer = [];
+                                $containerIndex = (int) substr($lastTwo, 0, 1);
 
-                                    foreach ($shipment->lots as $lot) {
-                                        $lastTwo = substr($lot['lot_unique'], -2);
+                                if (!isset($groupedByContainer[$containerIndex])) {
+                                    $groupedByContainer[$containerIndex] = [];
+                                }
 
-                                        $containerIndex = (int) substr($lastTwo, 0, 1);
+                                $groupedByContainer[$containerIndex][] = $lot;
+                            }
+                        @endphp
+                    @endif
 
-                                        if (!isset($groupedByContainer[$containerIndex])) {
-                                            $groupedByContainer[$containerIndex] = [];
-                                        }
+                    @for($containerIndex = 1; $containerIndex <= count($groupedByContainer); $containerIndex++)
 
-                                        $groupedByContainer[$containerIndex][] = $lot;
-                                    }
-                                @endphp
-                            @endif
-
-                            @for($containerIndex = 1; $containerIndex <= count($groupedByContainer); $containerIndex++)
-
+                        <div class="card">
+                            <div class="card-body">
                                 <div id="container_{{$containerIndex}}" style="display: block;">
-
                                     <table class="table table-bordered table-nowrap table-part-category mb-0 mt-5" style="table-layout: auto">
                                         <thead class="table-light border-1">
                                         <tr>
@@ -511,13 +513,15 @@
                                         </a>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
-                            @endfor
+                    @endfor
 
-                            @for($c = $containerIndex; $c <= 9; $c++)
-
-                                <div id="container_{{$c}}" style="display:none;">
-
+                    @for($c = $containerIndex; $c <= 9; $c++)
+                        <div id="container_{{$c}}" class="card"  style="display:none;">
+                            <div class="card-body">
+                                <div>
                                     <table class="table table-bordered table-nowrap table-part-category mb-0 mt-5" style="table-layout: auto">
                                         <thead class="table-light border-1">
                                         <tr>
@@ -525,7 +529,6 @@
                                         </tr>
                                         </thead>
                                     </table>
-
 
                                     @for($i = 1; $i <= 9; $i++)
                                         @php ($i % 2) == 1 ? $bg ='#ffffff' : $bg ='#fbfbfb'; @endphp
@@ -669,22 +672,20 @@
                                         </a>
                                     </div>
                                 </div>
-
-                            @endfor
-
-                            <br><br>
-                            <div class="d-flex justify-content-start">
-                                <a id="add_container" onclick="show_container()" class="btn btn-sm  font-sm rounded btn-outline-secondary">
-                                    <i class="material-icons md-add fs-6"></i> Add Container
-                                </a>
                             </div>
+                        </div>
+                    @endfor
 
-                            <div class="d-flex justify-content-center">
-                                <button class="btn btn-primary btn-block rounded" type="submit" name="submit">UPDATE SHIPMENT</button>
-                            </div>
-                        </form>
+                    <div class="d-flex justify-content-start">
+                        <a id="add_container" onclick="show_container()" class="btn btn-sm font-sm rounded btn-outline-secondary">
+                            <i class="material-icons md-add fs-6"></i> Add Container
+                        </a>
                     </div>
-                </div>
+
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary btn-block rounded" type="submit" name="submit">UPDATE SHIPMENT</button>
+                    </div>
+                </form>
             </div>
         </div>
     </section>
