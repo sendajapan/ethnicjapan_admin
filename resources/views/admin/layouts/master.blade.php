@@ -32,7 +32,7 @@
 {{--         @include('admin.layouts.navbar')--}}
 {{--    </header>--}}
 
-    <div class="container pb-4 m-0">
+    <div class="container-fluid pb-4 m-0">
         @yield('content')
     </div>
 

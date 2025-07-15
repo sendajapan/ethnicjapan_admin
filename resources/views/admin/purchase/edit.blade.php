@@ -534,7 +534,7 @@
 
                                     @for($i = 1; $i <= 9; $i++)
                                         @php ($i % 2) == 1 ? $bg ='#ffffff' : $bg ='#fbfbfb'; @endphp
-                                        <div id="tr_{{$c}}_{{$i}}" class="p-3" style="border:1px solid #ccc;display:none; background-color:{{$bg}}">
+                                        <div id="tr_{{$c}}_{{$i}}" class="p-3" style="border:1px solid #ccc; font-size: 11px !important; display:none; background-color:{{$bg}}">
                                             <div class="row">
                                                 <div class="col-lg-8 col-xl-8">
                                                     <div class="row mb-2">
