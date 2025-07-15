@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Item;
-use App\Models\shipments;
+use App\Models\Shipment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('lots', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(shipments::class)->constrained();
+            $table->foreignIdFor(Shipment::class)->constrained();
             $table->string('lot_number')->nullable();
             $table->string('lot_unique')->nullable();
-            $table->foreignIdFor(Item::class)->constrained()->nullable();
+            $table->string('item_id')->nullable();
             $table->string('item_description')->nullable();
             $table->string('package_kg')->nullable();
             $table->string('type_of_package')->nullable();
@@ -38,8 +38,6 @@ return new class extends Migration
             $table->string('loading_report')->nullable();
             $table->string('loading_date')->nullable();
             $table->string('surveyor_name')->nullable();
-
-
 
             $table->timestamps();
         });

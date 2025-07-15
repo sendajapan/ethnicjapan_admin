@@ -7,10 +7,10 @@ use App\DataTables\PurchasesDataTable;
 use App\DataTables\ShipmentsDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\lot_photos;
-use App\Models\lots;
+use App\Models\Lot;
 use App\Models\purchase;
 use App\Models\PurchaseItem;
-use App\Models\shipments;
+use App\Models\Shipment;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -40,9 +40,6 @@ class PurchaseController extends Controller
      */
     public function store(Request $request)
     {
-
-
-
         $request->validate([
             'provider_id' => 'required|integer|max:255',
             'invoice_number' => 'required|string|max:255',
@@ -50,11 +47,10 @@ class PurchaseController extends Controller
             'commercial_invoice' => 'file|mimes:jpg,png,pdf|max:20480'
         ]);
 
-
         // Return success response
         DB::beginTransaction();
         try {
-            $shipment = new shipments();
+            $shipment = new Shipment();
 
             $shipment->invoice_number = $request->input('invoice_number');
             $shipment->invoice_date = $request->input('invoice_date');
@@ -109,36 +105,34 @@ class PurchaseController extends Controller
             $shipment->save();
             $shipment_id = $shipment->id;
 
+            for ($c = 1; $c <= 3; $c++) {
+                for ($i = 1; $i <= 5; $i++) {
 
+                    if ($request->input('lot_number')[$c][$i] != '') {
 
-            for($c=1; $c<=3; $c++){
-                for($i=1; $i<=5; $i++){
+                        $lot = new Lot();
 
-                    if($request->input('lot_number')[$c][$i]!='') {
+                        $lot->shipment_id = $shipment_id;
+                        $lot->lot_number = $request->input('lot_number')[$c][$i];
+                        $lot->container_no = substr(substr($request->input('lot_unique')[$c][$i], -2), 0, 1);
+                        $lot->lot_unique = $request->input('lot_unique')[$c][$i];
+                        $lot->item_id = $request->input('item_id')[$c][$i];
+                        $lot->package_kg = $request->input('package_kg')[$c][$i];
+                        $lot->type_of_package = $request->input('type_of_package')[$c][$i];
+                        $lot->total_packages = $request->input('total_packages')[$c][$i];
+                        $lot->unit = $request->input('unit')[$c][$i];
 
-                    $lot = new lots();
-
-                    $lot->shipments_id = $shipment_id;
-                    $lot->lot_number = $request->input('lot_number')[$c][$i];
-                    $lot->container_no = substr(substr($request->input('lot_unique')[$c][$i],-2),0,1);
-                    $lot->lot_unique = $request->input('lot_unique')[$c][$i];
-                    $lot->item_id = $request->input('item_id')[$c][$i];
-                    $lot->package_kg = $request->input('package_kg')[$c][$i];
-                    $lot->type_of_package = $request->input('type_of_package')[$c][$i];
-                    $lot->total_packages = $request->input('total_packages')[$c][$i];
-                    $lot->unit = $request->input('unit')[$c][$i];
-
-                    $lot->total_qty = $request->input('total_qty')[$c][$i];
-                    $lot->price_per_unit = $request->input('price_per_unit')[$c][$i];
-                    $lot->total_price = $request->input('total_price')[$c][$i];
-                    $lot->manufacture_date = $request->input('manufacture_date')[$c][$i];
-                    $lot->crop_year = $request->input('crop_year')[$c][$i];
-                    $lot->shelf_life = $request->input('shelf_life')[$c][$i];
-                    $lot->best_before = $request->input('best_before')[$c][$i];
-                    $lot->surveyor_name = $request->input('surveyor_name')[$c][$i];
-                    $lot->loading_date = $request->input('loading_date')[$c][$i];
-                    $lot->item_description = $request->input('item_description')[$c][$i];
-                    $lot->lot_comment = $request->input('lot_comment')[$c][$i];
+                        $lot->total_qty = $request->input('total_qty')[$c][$i];
+                        $lot->price_per_unit = $request->input('price_per_unit')[$c][$i];
+                        $lot->total_price = $request->input('total_price')[$c][$i];
+                        $lot->manufacture_date = $request->input('manufacture_date')[$c][$i];
+                        $lot->crop_year = $request->input('crop_year')[$c][$i];
+                        $lot->shelf_life = $request->input('shelf_life')[$c][$i];
+                        $lot->best_before = $request->input('best_before')[$c][$i];
+                        $lot->surveyor_name = $request->input('surveyor_name')[$c][$i];
+                        $lot->loading_date = $request->input('loading_date')[$c][$i];
+                        $lot->item_description = $request->input('item_description')[$c][$i];
+                        $lot->lot_comment = $request->input('lot_comment')[$c][$i];
 
                         try {
                             if ($request->file('loading_report')[$c][$i]) {
@@ -146,22 +140,18 @@ class PurchaseController extends Controller
                                 $filePath = $request->file('loading_report')[$c][$i]->store('uploads/purchase', 'public');
                                 $shipment->loading_report = $filePath;
                             }
-
                         } catch (Exception $exception) {
-
+                            echo $exception->getMessage();
                         }
 
-                    $lot->save();
-
-                }
-
+                        $lot->save();
+                    }
                 }
             }
 
             DB::commit();
 
         } catch (Exception $exception) {
-
             DB::rollBack();
             return redirect()->back()->with('error', 'error inserting ' . $shipment->invoice_number . ': ' . $exception->getMessage());
         }
@@ -172,15 +162,13 @@ class PurchaseController extends Controller
 
     public function detail(string $id)
     {
-        $data = shipments::where('id', $id)->firstOrFail();
+        $data = Shipment::where('id', $id)->firstOrFail();
         return view('admin.purchase.detail', compact('data'));
     }
 
 
     public function upload_lot_photo(Request $request)
     {
-
-
         if ($request->hasFile('lot_photos')) {
 
             $filePath = $request->file('lot_photos')->store('uploads/lot_photos', 'public');
@@ -208,10 +196,6 @@ class PurchaseController extends Controller
         //
     }
 
-
-
-
-
     /**
      * Display the specified resource.
      */
@@ -223,13 +207,18 @@ class PurchaseController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $id): View
     {
-        $data = shipments::where('id', $id)->firstOrFail();
-        print "<pre>";
-        print_r($data);
-        exit;
-        return view('admin.purchase.edit', compact('data'));
+        $shipment = Shipment::where('id', $id)
+            ->with('lots')
+            ->firstOrFail();
+
+//        echo "<pre>";
+//        print_r($shipment);
+//        echo "<pre>";
+//        exit();
+
+        return view('admin.purchase.edit', compact('shipment'));
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\shipments;
+use App\Models\Shipment;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -46,7 +46,7 @@ class ShipmentsDataTable extends DataTable
     /**
      * Get the query source of dataTable.
      */
-    public function query(shipments $model): QueryBuilder
+    public function query(Shipment $model): QueryBuilder
     {
         return $query = $model->newQuery()->with('provider');
     }

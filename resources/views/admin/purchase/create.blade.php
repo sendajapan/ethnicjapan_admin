@@ -1,3 +1,5 @@
+@extends('admin.layouts.master')
+
 @php use App\Models\Countries; @endphp
 @php use App\Models\Provider; @endphp
 @php use App\Models\Item; @endphp
@@ -5,12 +7,9 @@
 @php use App\Models\DataContainerType; @endphp
 @php use App\Models\DataShelflife; @endphp
 @php use App\Models\DataPackageType; @endphp
-@extends('admin.layouts.master')
-
 
 @php
     $items = array();
-
     $timestamp = time();
 
     foreach (Item::orderBy('item_name')->get() as $p){

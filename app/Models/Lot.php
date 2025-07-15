@@ -5,11 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class shipments extends Model
+class Lot extends Model
 {
-    public function provider(): BelongsTo
+    public function shipment(): BelongsTo
     {
-        return $this->belongsTo(Provider::class);
+        return $this->belongsTo(Shipment::class);
     }
-
 }

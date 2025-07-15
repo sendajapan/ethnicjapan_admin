@@ -63,8 +63,6 @@
             $('#detail_link_hide_'+id).toggle();
         }
 
-
-
         $(document).ready(function () {
             $('body').on('click', '.delete-part-category', function (event) {
                 event.preventDefault();
