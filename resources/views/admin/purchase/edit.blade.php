@@ -40,11 +40,13 @@
                                 <div class="row mb-4">
                                     <div class="col-lg-2 col-xl-2">
                                         <label for="invoice_number" class="form-label">Purchase/Invoice No.</label>
-                                        <input type="text" placeholder="" class="form-control" id="invoice_number" name="invoice_number"  value="{{ empty(old('invoice_number')) ?? $shipment->invoice_number }}" required>
+                                        <input type="text" placeholder="" class="form-control" id="invoice_number"
+                                               name="invoice_number"  value="{{ empty(old('invoice_number')) ?? $shipment->invoice_number }}" required>
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
                                         <label for="invoice_date" class="form-label">Purchase/Invoice Date</label>
-                                        <input type="date" placeholder="" class="form-control" id="invoice_date" name="invoice_date"  value="{{ empty(old('invoice_date')) ? $shipment->invoice_date : old('invoice_date') }}" required>
+                                        <input type="date" placeholder="" class="form-control" id="invoice_date"
+                                               name="invoice_date"  value="{{ empty(old('invoice_date')) ? $shipment->invoice_date : old('invoice_date') }}" required>
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
                                         <label for="port_of_loading" class="form-label">Port of Loading</label>
@@ -85,7 +87,7 @@
                                         <select class="form-select" id="provider_id" name="provider_id"  value="{{ old('provider_id') }}" required>
                                             <option value="">Select</option>
                                             @foreach(Provider::orderBy('provider_name')->get() as $p)
-                                                <option value="{{ $p->id }}" {{ $shipment->provider_name == $p->provider_name ? 'selected' : '' }}>{{ $p->provider_name }}</option>
+                                                <option value="{{ $p->id }}" {{ $shipment->provider_id == $p->id ? 'selected' : '' }}>{{ $p->provider_name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

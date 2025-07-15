@@ -11,6 +11,7 @@ use App\Models\Lot;
 use App\Models\purchase;
 use App\Models\PurchaseItem;
 use App\Models\Shipment;
+use App\Services\PurchaseService;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -18,6 +19,15 @@ use Illuminate\Support\Facades\DB;
 
 class PurchaseController extends Controller
 {
+    protected PurchaseService $purchaseService;
+
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct(){
+        $this->purchaseService = new PurchaseService();
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -50,100 +60,13 @@ class PurchaseController extends Controller
         // Return success response
         DB::beginTransaction();
         try {
-            $shipment = new Shipment();
-
-            $shipment->invoice_number = $request->input('invoice_number');
-            $shipment->invoice_date = $request->input('invoice_date');
-            $shipment->port_of_loading = $request->input('port_of_loading');
-            $shipment->port_of_landing = $request->input('port_of_landing');
-            $shipment->country_of_destination = $request->input('country_of_destination');
-            $shipment->incoterm = $request->input('incoterm');
-            $shipment->provider_id = $request->input('provider_id');
-            $shipment->container_type = $request->input('container_type');
-            $shipment->bl_number = $request->input('bl_number');
-            $shipment->shipping_line = $request->input('shipping_line');
-            $shipment->vessel = $request->input('vessel');
-            $shipment->eta = $request->input('eta');
-            $shipment->etd = $request->input('etd');
-            $shipment->freight = $request->input('freight');
-            $shipment->insurance = $request->input('insurance');
-            $shipment->exchange_rate = $request->input('exchange_rate');
-            $shipment->duties = $request->input('duties');
-            $shipment->tax = $request->input('tax');
-            $shipment->unpack = $request->input('unpack');
-            $shipment->transport = $request->input('transport');
-            $shipment->penalty = $request->input('penalty');
-            $shipment->other_fee = $request->input('other_fee');
-            $shipment->shipment_comment = $request->input('shipment_comment');
-
-            if ($request->hasFile('commercial_invoice')) {
-                $filePath = '';
-                $filePath = $request->file('commercial_invoice')->store('uploads/purchase', 'public');
-                $shipment->commercial_invoice = $filePath;
-            }
-            if ($request->hasFile('bl_telex_release')) {
-                $filePath = '';
-                $filePath = $request->file('bl_telex_release')->store('uploads/purchase', 'public');
-                $shipment->bl_telex_release = $filePath;
-            }
-            if ($request->hasFile('packing_list')) {
-                $filePath = '';
-                $filePath = $request->file('packing_list')->store('uploads/purchase', 'public');
-                $shipment->packing_list = $filePath;
-            }
-            if ($request->hasFile('origin_certificate')) {
-                $filePath = '';
-                $filePath = $request->file('origin_certificate')->store('uploads/purchase', 'public');
-                $shipment->origin_certificate = $filePath;
-            }
-            if ($request->hasFile('phytosanitary')) {
-                $filePath = '';
-                $filePath = $request->file('phytosanitary')->store('uploads/purchase', 'public');
-                $shipment->phytosanitary = $filePath;
-            }
-
+            $shipment = $this->purchaseService->createShipment($request);
             $shipment->save();
-            $shipment_id = $shipment->id;
 
-            for ($c = 1; $c <= 3; $c++) {
-                for ($i = 1; $i <= 5; $i++) {
-
+            for ($c = 1; $c <= 9; $c++) {
+                for ($i = 1; $i <= 9; $i++) {
                     if ($request->input('lot_number')[$c][$i] != '') {
-
-                        $lot = new Lot();
-
-                        $lot->shipment_id = $shipment_id;
-                        $lot->lot_number = $request->input('lot_number')[$c][$i];
-                        $lot->container_no = substr(substr($request->input('lot_unique')[$c][$i], -2), 0, 1);
-                        $lot->lot_unique = $request->input('lot_unique')[$c][$i];
-                        $lot->item_id = $request->input('item_id')[$c][$i];
-                        $lot->package_kg = $request->input('package_kg')[$c][$i];
-                        $lot->type_of_package = $request->input('type_of_package')[$c][$i];
-                        $lot->total_packages = $request->input('total_packages')[$c][$i];
-                        $lot->unit = $request->input('unit')[$c][$i];
-
-                        $lot->total_qty = $request->input('total_qty')[$c][$i];
-                        $lot->price_per_unit = $request->input('price_per_unit')[$c][$i];
-                        $lot->total_price = $request->input('total_price')[$c][$i];
-                        $lot->manufacture_date = $request->input('manufacture_date')[$c][$i];
-                        $lot->crop_year = $request->input('crop_year')[$c][$i];
-                        $lot->shelf_life = $request->input('shelf_life')[$c][$i];
-                        $lot->best_before = $request->input('best_before')[$c][$i];
-                        $lot->surveyor_name = $request->input('surveyor_name')[$c][$i];
-                        $lot->loading_date = $request->input('loading_date')[$c][$i];
-                        $lot->item_description = $request->input('item_description')[$c][$i];
-                        $lot->lot_comment = $request->input('lot_comment')[$c][$i];
-
-                        try {
-                            if ($request->file('loading_report')[$c][$i]) {
-                                $filePath = '';
-                                $filePath = $request->file('loading_report')[$c][$i]->store('uploads/purchase', 'public');
-                                $shipment->loading_report = $filePath;
-                            }
-                        } catch (Exception $exception) {
-                            echo $exception->getMessage();
-                        }
-
+                        $lot = $this->purchaseService->createLot($request, $shipment, $c, $i);
                         $lot->save();
                     }
                 }
@@ -166,7 +89,6 @@ class PurchaseController extends Controller
         return view('admin.purchase.detail', compact('data'));
     }
 
-
     public function upload_lot_photo(Request $request)
     {
         if ($request->hasFile('lot_photos')) {
@@ -180,8 +102,6 @@ class PurchaseController extends Controller
                     $lot_photos->photo_url = $filePath;
                     $lot_photos->save();
                     DB::commit();
-
-
                     return $filePath;
                 }
             }
@@ -189,7 +109,6 @@ class PurchaseController extends Controller
         }
 
     }
-
 
     public function delete_lot_photo()
     {
@@ -213,60 +132,37 @@ class PurchaseController extends Controller
             ->with('lots')
             ->firstOrFail();
 
-//        echo "<pre>";
-//        print_r($shipment);
-//        echo "<pre>";
-//        exit();
-
         return view('admin.purchase.edit', compact('shipment'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Purchase $purchase)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'provider_id' => 'required|integer|max:255',
-            'purchase_no' => 'required|string|max:255',
-            'purchase_date' => 'required|date',
-            'purchase_invoice' => 'file|mimes:jpg,png,pdf|max:20480'
+            'invoice_number' => 'required|string|max:255',
+            'invoice_date' => 'required|date',
+            'commercial_invoice' => 'file|mimes:jpg,png,pdf|max:20480'
         ]);
-
-        if ($request->hasFile('purchase_invoice')) {
-            $filePath = $request->file('purchase_invoice')->store('uploads/purchase', 'public');
-        }
 
         DB::beginTransaction();
         try {
-            $purchase->provider_id = $request->input('provider_id');
-            $purchase->purchase_no = $request->input('purchase_no');
-            $purchase->purchase_date = $request->input('purchase_date');
-            $purchase->purchase_amount = $request->input('purchase_amount');
 
-            if(isset($filePath)){
-                if(!empty($filePath)){
-                    $purchase->purchase_invoice = $filePath;
-                }
-            }
+            $updatedShipment = $this->purchaseService->updateShipment($request, Shipment::where('id', $id)->firstOrFail());
+            $updatedShipment->save();
 
-            $purchase->update();
-            $purchase_id = $purchase->id;
+            // Delete existing lots from the shipment
+            Lot::where('shipment_id', $updatedShipment->id)->delete();
 
-            $purchase->purchasedItems()->delete();
-
-            foreach($request->input('item_id') as $key=> $value){
-                if(($request->input('item_id')[$key]) && ($request->input('item_qty')[$key]) && ($request->input('item_unit_price')[$key]) && ($request->input('item_line_price')[$key])){
-                    $purchaseItems = new PurchaseItem();
-                    $purchaseItems->purchase_id = $purchase_id;
-                    $purchaseItems->item_id = $request->input('item_id')[$key];
-                    $purchaseItems->item_description = $request->input('item_description')[$key];
-                    $purchaseItems->item_hts_code = $request->input('item_hts_code')[$key];
-                    $purchaseItems->item_qty = $request->input('item_qty')[$key];
-                    $purchaseItems->item_unit_price = $request->input('item_unit_price')[$key];
-                    $purchaseItems->item_line_price = $request->input('item_line_price')[$key];
-
-                    $purchaseItems->save();
+            // for debugging purposes : echo "container $container: { lot $lot: value -> {$lotData}}<br>";
+            foreach ($request->input('lot_number') as $container => $containerData) {
+                foreach ($containerData as $lot => $lotData) {
+                    if (!empty($lotData)) {
+                        $lot = $this->purchaseService->createLot($request, $updatedShipment, $container, $lot);
+                        $lot->save();
+                    }
                 }
             }
 
@@ -274,11 +170,10 @@ class PurchaseController extends Controller
 
         } catch (Exception $exception) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'error updating data ' . $purchase->purchase_no . ': ' . $exception->getMessage());
+            return redirect()->back()->with('error', 'error updating ' . $updatedShipment->invoice_number . ': ' . $exception->getMessage());
         }
 
-        return redirect()->route('admin.purchase.index')->with('success', $purchase->purchase_no . ' updated successfully.');
-
+        return redirect()->route('admin.purchase.index')->with('success', $updatedShipment->invoice_number . ' updated successfully.');
     }
 
     /**
