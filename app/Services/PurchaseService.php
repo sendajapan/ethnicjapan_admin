@@ -70,7 +70,7 @@ class PurchaseService
 
     public function createShipment(Request $request): Shipment
     {
-        return $this->prepareDataFromRequest(new Shipment(), $request);
+        return $this->prepareDataFromRequest($request, new Shipment());
     }
 
     public function updateShipment(Request $request, Shipment $shipment): Shipment
