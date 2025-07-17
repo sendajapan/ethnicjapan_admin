@@ -19,6 +19,24 @@
    // \Barryvdh\Debugbar\Facades\Debugbar::info($items);
 @endphp
 
+<style>
+    label {
+        font-family: "Quicksand", sans-serif !important;
+        font-weight: bold !important;
+        text-transform: capitalize;
+    }
+
+    input, select, textarea {
+        padding: 8px !important;
+        margin: 0 !important;
+    }
+
+    select:hover {
+        cursor: pointer;
+    }
+
+</style>
+
 @section('content')
     <link href="{{url('assets/filepond/filepond.css')}}" rel="stylesheet" />
 
@@ -302,9 +320,7 @@
                                                                     <option value="{{ $year }}" {{ $year == $lot->crop_year ? 'selected' : '' }}>{{ $year }}</option>
                                                                 @endfor
                                                             </select>
-
                                                         </div>
-
                                                         <div class="col-lg-2 col-xl-2">
                                                             <label for="shelf_life_{{$containerIndex}}_{{$lotIndex}}" class="form-label">Shelf Life</label>
                                                             <select class="form-select" id="shelf_life_{{$containerIndex}}_{{$lotIndex}}" name="shelf_life[{{$containerIndex}}][{{$lotIndex}}]"  >
@@ -320,7 +336,6 @@
                                                                    name="best_before[{{$containerIndex}}][{{$lotIndex}}]" value="{{ $lot->best_before }}">
                                                         </div>
                                                     </div>
-
                                                     <div class="row mb-2">
                                                         <div class="col-lg-2 col-xl-2">
                                                             <label for="loading_report_{{$containerIndex}}_{{$lotIndex}}" class="form-label">Loading Report</label>
@@ -338,7 +353,12 @@
                                                                    name="loading_date[{{$containerIndex}}][{{$lotIndex}}]" value="{{ $lot->loading_date }}">
                                                         </div>
                                                         <div class="col-lg-6 col-xl-6">
+                                                            <div class="row">
+                                                                <div class="col-sm">col-sm</div>
+                                                                <div class="col-sm">col-sm</div>
+                                                                <div class="col-sm">col-sm</div>
                                                             <input id="lot_photos_{{$containerIndex}}_{{$lotIndex}}" name="lot_photos" value="{{ ($timestamp.$containerIndex.$lotIndex )   }}">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

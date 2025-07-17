@@ -8,8 +8,6 @@ use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
-use Yajra\DataTables\Html\Editor\Editor;
-use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
 class ShipmentsDataTable extends DataTable
@@ -28,16 +26,13 @@ class ShipmentsDataTable extends DataTable
                 return $query->provider->provider_name;
             })
             ->addColumn('action', function ($query) {
-                return '<a target="_blank" href="'. route('admin.purchase.detail', $query->id) .'" class="btn btn-sm font-sm rounded btn-facebook">
-                    <i class="material-icons md-visibility fs-6"></i> View
-                </a>
-                <br><br><br>
-                <a href="' . route('admin.purchase.edit', $query->id) . '" class="btn btn-sm font-sm rounded btn-dark">
-                    <i class="material-icons md-edit fs-6"></i>
-                </a>
-                <a href="' . route('admin.purchase.destroy', $query->id) . '" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
-                    <i class="material-icons md-delete_forever fs-6"></i>
-                </a>';
+                return '<div class="d-flex flex-column gap-2 align-items-center">
+                            <a target="_blank" href="'. route('admin.purchase.detail', $query->id) .'" class="btn btn-sm font-sm rounded btn-facebook"><i class="material-icons md-visibility fs-6 me-2"></i>View</a>
+                            <div class="d-flex justify-content-center gap-2">
+                                <a href="' . route('admin.purchase.edit', $query->id) . '" class="btn btn-sm font-sm rounded btn-dark flex-fill"><i class="material-icons md-edit fs-6 me-2"></i>Edit</a>
+                                <a href="' . route('admin.purchase.destroy', $query->id) . '" class="btn btn-sm delete-part-category font-sm rounded btn-danger flex-fill"><i class="material-icons md-delete_forever fs-6 me-2"></i>Delete</a>
+                            </div>
+                        </div>';
 
             })
             ->rawColumns(['provider_name', 'invoice_date', 'invoice_number', 'action']);
@@ -60,7 +55,7 @@ class ShipmentsDataTable extends DataTable
 
         return $this->builder()
             ->setTableId('purchases-table')
-            ->addTableClass("table table-striped table-light table-border table-hover align-middle table-nowrap mb-0 ")
+            ->addTableClass("table table-striped table-light table-border table-hover align-middle table-nowrap mb-0")
             ->setTableHeadClass("table-light bordered")
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -83,7 +78,7 @@ class ShipmentsDataTable extends DataTable
                     ->addClass('btn btn-primary mr-15 mb-15 fs-6 fst-normal bg-success text-white')
                     ->init('function(api, node, config) { $(node).removeClass("dt-button") }')
                     ->action("window.location = '".route('admin.purchase.create')."';")
-                    ->text('<i class="fas fa-plus"></i> Regsiter New Purchase'),
+                    ->text('<i class="fas fa-plus"></i> Register New Purchase'),
                 Button::make('excel')->addClass('btn btn-primary btn-facebook mr-15  mb-15 fs-6 fst-normal bg-dark text-white')
                     ->init('function(api, node, config) { $(node).removeClass("dt-button") }')
                     ->text('<i class="fas fa-download"></i> Download Report as Excel'),
@@ -115,7 +110,6 @@ class ShipmentsDataTable extends DataTable
             Column::make('vessel')->title('Vessel')->className('text-start')->width(90),
             Column::make('eta')->title('ETA')->className('text-start')->width(90),
             Column::make('etd')->title('ETD')->className('text-start')->width(90),
-
 
             Column::computed('action')
                 ->exportable(true)
