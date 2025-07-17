@@ -63,11 +63,17 @@ class PurchaseController extends Controller
             $shipment = $this->purchaseService->createShipment($request);
             $shipment->save();
 
+            $lotNumbers = $request->input('lot_number', []);
+
             for ($c = 1; $c <= 9; $c++) {
                 for ($i = 1; $i <= 9; $i++) {
-                    if ($request->input('lot_number')[$c][$i] != '') {
-                        $lot = $this->purchaseService->createLot($request, $shipment, $c, $i);
-                        $lot->save();
+                    if (!empty($lotNumbers[$c][$i])) {
+                        try {
+                            $lot = $this->purchaseService->createLot($request, $shipment, $c, $i);
+                            $lot->save();
+                        } catch (Exception $e) {
+                            echo $e->getMessage();
+                        }
                     }
                 }
             }
