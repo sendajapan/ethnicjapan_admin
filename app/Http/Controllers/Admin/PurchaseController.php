@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\DataTables\CategoriesDataTable;
-use App\DataTables\PurchasesDataTable;
 use App\DataTables\ShipmentsDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\lot_photos;
@@ -111,9 +109,7 @@ class PurchaseController extends Controller
                     return $filePath;
                 }
             }
-
         }
-
     }
 
     public function delete_lot_photo()
@@ -136,7 +132,16 @@ class PurchaseController extends Controller
     {
         $shipment = Shipment::where('id', $id)
             ->with('lots')
-            ->firstOrFail();
+            ->firstOrFail()->toArray();
+
+
+        foreach($shipment['lots'] as $key=>$lot){
+            if($lot['lot_unique']!=''){
+                $photos = lot_photos::where('lot_unique', $lot['lot_unique'])->get()->toArray();
+                $shipment['lots'][$key]['photos'] = $photos;
+            }
+
+        }
 
         return view('admin.purchase.edit', compact('shipment'));
     }
@@ -154,6 +159,25 @@ class PurchaseController extends Controller
         ]);
 
         DB::beginTransaction();
+
+        if(isset($_POST['photos'])){
+            if(count($_POST['photos'])>0){
+                foreach($_POST['photos'] as $lot_unique => $photo) {
+                    lot_photos::where('lot_unique', $lot_unique)->delete();
+                }
+
+                foreach($_POST['photos'] as $lot_unique => $photo){
+                    foreach($photo as $p) {
+                        $lot_photos = new lot_photos();
+                        $lot_photos->lot_unique = $lot_unique;
+                        $lot_photos->photo_url = $p;
+                        $lot_photos->save();
+                        DB::commit();
+                    }
+                }
+            }
+        }
+
         try {
 
             $updatedShipment = $this->purchaseService->updateShipment($request, Shipment::where('id', $id)->firstOrFail());

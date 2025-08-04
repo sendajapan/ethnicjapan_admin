@@ -27,9 +27,13 @@ class ShipmentsDataTable extends DataTable
             })
             ->addColumn('action', function ($query) {
                 return '<div class="d-flex flex-column gap-2 align-items-center">
+                            <div class="d-flex justify-content-center gap-2">
                             <a target="_blank" href="'. route('admin.purchase.detail', $query->id) .'" class="btn btn-sm font-sm rounded btn-facebook"><i class="material-icons md-visibility fs-6 me-2"></i>View</a>
+                            </div>
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="' . route('admin.purchase.edit', $query->id) . '" class="btn btn-sm font-sm rounded btn-dark flex-fill"><i class="material-icons md-edit fs-6 me-2"></i>Edit</a>
+                            </div>
+                            <div class="d-flex justify-content-center gap-2">
                                 <a href="' . route('admin.purchase.destroy', $query->id) . '" class="btn btn-sm delete-part-category font-sm rounded btn-danger flex-fill"><i class="material-icons md-delete_forever fs-6 me-2"></i>Delete</a>
                             </div>
                         </div>';

@@ -7,6 +7,7 @@
 @php use App\Models\DataContainerType; @endphp
 @php use App\Models\DataShelflife; @endphp
 @php use App\Models\DataPackageType; @endphp
+@php use App\Models\Ports; @endphp
 
 @php
     $items = array();
@@ -48,14 +49,18 @@
                                     <label for="port_of_loading" class="form-label">Port of Loading</label>
                                     <select class="form-select" id="port_of_loading" name="port_of_loading"  >
                                         <option value="">Select</option>
-                                        <option value="Lima">Lima</option>
+                                        @foreach(Ports::orderBy('port_name')->whereNotIn('country_name', ['Japan'])->get() as $p)
+                                            <option value="{{ $p->port_name }}"  >{{ $p->port_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="port_of_landing" class="form-label">Port of Landing</label>
                                     <select class="form-select" id="port_of_landing" name="port_of_landing"  >
                                         <option value="">Select</option>
-                                        <option value="Yokohama">Yokohama</option>
+                                        @foreach(Ports::orderBy('port_name')->whereIn('country_name', ['Japan'])->get() as $p)
+                                            <option value="{{ $p->port_name }}"  >{{ $p->port_name }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
@@ -145,11 +150,11 @@
                             <div class="row mb-3">
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="freight" class="form-label">Freight</label>
-                                    <input type="text" class="form-control" id="freight" name="freight"  value="{{ old('freight') }}">
+                                    <input type="text" class="form-control" id="freight" name="freight" onkeyup="calc_shipment()" value="{{ old('freight') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="insurance" class="form-label">Insurance</label>
-                                    <input type="text" class="form-control" id="insurance" name="insurance"  value="{{ old('insurance') }}">
+                                    <input type="text" class="form-control" id="insurance" name="insurance"  onkeyup="calc_shipment()" value="{{ old('insurance') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="exchange_rate" class="form-label">Exchange Rate</label>
@@ -157,31 +162,35 @@
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="duties" class="form-label">Duties</label>
-                                    <input type="text" class="form-control" id="duties" name="duties"  value="{{ old('duties') }}">
+                                    <input type="text" class="form-control" id="duties" name="duties"  onkeyup="calc_shipment()" value="{{ old('duties') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="tax" class="form-label">Tax</label>
-                                    <input type="text" class="form-control" id="tax" name="tax"  value="{{ old('tax') }}">
+                                    <input type="text" class="form-control" id="tax" name="tax"  onkeyup="calc_shipment()" value="{{ old('tax') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="unpack" class="form-label">Unpack</label>
-                                    <input type="text" class="form-control" id="unpack" name="unpack"  value="{{ old('unpack') }}">
+                                    <input type="text" class="form-control" id="unpack" name="unpack"  onkeyup="calc_shipment()" value="{{ old('unpack') }}">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="transport" class="form-label">Transport</label>
-                                    <input type="text" class="form-control" id="transport" name="transport"  value="{{ old('transport') }}">
+                                    <input type="text" class="form-control" id="transport" name="transport"  onkeyup="calc_shipment()" value="{{ old('transport') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="penalty" class="form-label">Penalty</label>
-                                    <input type="text" class="form-control" id="penalty" name="penalty"  value="{{ old('penalty') }}">
+                                    <input type="text" class="form-control" id="penalty" name="penalty"  onkeyup="calc_shipment()" value="{{ old('penalty') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="other_fee" class="form-label">Other Fee</label>
-                                    <input type="text" class="form-control" id="other_fee" name="other_fee"  value="{{ old('other_fee') }}">
+                                    <input type="text" class="form-control" id="other_fee" name="other_fee"  onkeyup="calc_shipment()" value="{{ old('other_fee') }}">
                                 </div>
-                                <div class="col-lg-6 col-xl-6">
+                                <div class="col-lg-2 col-xl-2">
+                                    <label for="total_shipment_cost" class="form-label">Total Cost</label>
+                                    <input type="text" class="form-control" id="total_shipment_cost" name="total_shipment_cost"  value="0">
+                                </div>
+                                <div class="col-lg-4 col-xl-4">
                                     <label for="other_fee" class="form-label">Comments</label>
                                     <input type="text" class="form-control" id="shipment_comment" name="shipment_comment"  value="{{ old('shipment_comment') }}">
                                 </div>
@@ -197,7 +206,7 @@
                             <section>&nbsp;</section>
 
 
-                            @for($c=1; $c<=3; $c++)
+                            @for($c=1; $c<=9; $c++)
 
 
                                 <div id="container_{{$c}}" style="display:none;">
@@ -211,7 +220,7 @@
                                     </table>
 
 
-                                    @for($i=1; $i<=5; $i++)
+                                    @for($i=1; $i<=9; $i++)
                                         @php ($i%2)==1 ? $bg ='#ffffff' : $bg ='#fbfbfb'; @endphp
                                         <div id="tr_{{$c}}_{{$i}}" class="p-3" style="border:1px solid #ccc;display:none; background-color:{{$bg}}">
                                             <div class="row">
@@ -233,7 +242,7 @@
                                                         </div>
                                                         <div class="col-lg-2 col-xl-2">
                                                             <label for="package_kg_{{$c}}_{{$i}}" class="form-label">Package KG</label>
-                                                            <input type="text" class="form-control" id="package_kg_{{$c}}_{{$i}}" name="package_kg[{{$c}}][{{$i}}]" value="">
+                                                            <input type="text" class="form-control" id="package_kg_{{$c}}_{{$i}}" name="package_kg[{{$c}}][{{$i}}]" onkeyup="calc_lot({{$c}},{{$i}});" value="">
                                                         </div>
                                                         <div class="col-lg-2 col-xl-2">
                                                             <label for="type_of_package_{{$c}}_{{$i}}" class="form-label">Type of Package</label>
@@ -246,7 +255,7 @@
                                                         </div>
                                                         <div class="col-lg-2 col-xl-2">
                                                             <label for="total_packages" class="form-label">Total Packages</label>
-                                                            <input type="text" class="form-control" id="total_packages_{{$c}}_{{$i}}" name="total_packages[{{$c}}][{{$i}}]" value="">
+                                                            <input type="text" class="form-control" id="total_packages_{{$c}}_{{$i}}" name="total_packages[{{$c}}][{{$i}}]" onkeyup="calc_lot({{$c}},{{$i}});" value="">
                                                         </div>
                                                         <div class="col-lg-1 col-xl-1">
                                                             <label for="unit_{{$c}}_{{$i}}" class="form-label">Unit</label>
@@ -257,7 +266,7 @@
                                                         </div>
                                                         <div class="col-lg-1 col-xl-1">
                                                             <label for="total_qty_{{$c}}_{{$i}}" class="form-label">Total Qty</label>
-                                                            <input type="text" class="form-control  p-1" id="total_qty_{{$c}}_{{$i}}" name="total_qty[{{$c}}][{{$i}}]" value="">
+                                                            <input type="text" class="form-control  p-1" id="total_qty_{{$c}}_{{$i}}" name="total_qty[{{$c}}][{{$i}}]" onkeyup="calc_lot({{$c}},{{$i}});" value="">
                                                         </div>
                                                     </div>
 
@@ -266,7 +275,7 @@
                                                     <div class="row mb-2">
                                                         <div class="col-lg-2 col-xl-2">
                                                             <label for="price_per_unit_{{$c}}_{{$i}}" class="form-label">Price per Unit</label>
-                                                            <input type="text" class="form-control" id="price_per_unit_{{$c}}_{{$i}}" name="price_per_unit[{{$c}}][{{$i}}]" value="">
+                                                            <input type="text" class="form-control" id="price_per_unit_{{$c}}_{{$i}}" name="price_per_unit[{{$c}}][{{$i}}]" onkeyup="calc_lot({{$c}},{{$i}});" value="">
                                                         </div>
                                                         <div class="col-lg-2 col-xl-2">
                                                             <label for="total_price_{{$c}}_{{$i}}" class="form-label">Total Price</label>
@@ -395,14 +404,14 @@
     <script src="{{url('assets/filepond/filepond.min.js')}}"></script>
     <script src="{{url('assets/filepond/filepond.jquery.js')}}"></script>
     <script>
-        for(c=1; c<=3; c++) {
-            for(i=1; i<=5; i++){
+        for(c=1; c<=9; c++) {
+            for(i=1; i<=9; i++){
                 $('#lot_photos_'+c+'_'+i).filepond({
                     allowMultiple: true,
                     allowRemove:false,
                     server: {
                         process: {
-                            url: 'upload_lot_photo?lot_unique={{ $timestamp }}'+c+i,
+                            url: '{{url('admin/purchase')}}/upload_lot_photo?lot_unique={{ $timestamp }}'+c+i,
                             headers: {
                                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
                             },
@@ -420,11 +429,11 @@
 
 
     function show_line(c){
-            for(i=1; i<=5; i++){
+            for(i=1; i<=9; i++){
                 if ($('#tr_'+c+'_'+i).length){
                     if($('#tr_'+c+'_'+i+':visible').length == 0) {
                         $('#tr_'+c+'_'+i).show();
-                        if (i == 5) {
+                        if (i == 9) {
                             $('#add_btn_'+c).hide();
                         }
                         break;
@@ -435,19 +444,31 @@
 
         function hide_line(c, i){
             if(i){
-                $('#tr_'+c+'_'+i).remove();
+                Swal.fire({
+                    title: "Are you sure you want to delete this lot?",
+                    text: "Changes will be finalized when you submit page!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, remove it!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#tr_'+c+'_'+i).remove();
+                    }
+                });
             }
         }
 
         function show_container(){
-            for(i=1; i<=3; i++){
+            for(i=1; i<=9; i++){
                 if ($('#container_'+i).length){
                     if($('#container_'+i+':visible').length == 0) {
                         $('#container_' + i).show();
-                        show_line(i);
-                        if (i == 3) {
+                        if (i == 9) {
                             $('#add_container').hide();
                         }
+                        show_line(i);
                         break;
                     }
                 }
@@ -506,6 +527,35 @@
             @endphp
 
 
+        }
+
+
+        function calc_shipment(){
+            var freight = Number($('#freight').val());
+            var insurance = Number($('#insurance').val());
+            var duties = Number($('#duties').val());
+            var tax = Number($('#tax').val());
+            var unpack = Number($('#unpack').val());
+            var transport = Number($('#transport').val());
+            var penalty = Number($('#penalty').val());
+            var other_fee = Number($('#other_fee').val());
+
+            var total = parseFloat(freight) + parseFloat(insurance) + parseFloat(duties) + parseFloat(tax) + parseFloat(unpack) + parseFloat(transport) + parseFloat(penalty) + parseFloat(other_fee);
+            $('#total_shipment_cost').val(total);
+        }
+        calc_shipment();
+
+        function calc_lot(c, i){
+            var package_kg = Number($('#package_kg_'+c+'_'+i).val());
+            var total_packages = Number($('#total_packages_'+c+'_'+i).val());
+            var total_qty = parseFloat(package_kg) * parseFloat(total_packages);
+            $('#total_qty_'+c+'_'+i).val(total_qty);
+
+            var total_qty = Number($('#total_qty_'+c+'_'+i).val());
+            var price_per_unit = Number($('#price_per_unit_'+c+'_'+i).val());
+
+            var total_lot_price = parseFloat(total_qty) * parseFloat(price_per_unit);
+            $('#total_price_'+c+'_'+i).val(total_lot_price);
         }
 
     </script>
