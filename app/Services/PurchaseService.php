@@ -78,43 +78,46 @@ class PurchaseService
         return $this->prepareDataFromRequest($request, $shipment);
     }
 
-    public function createLot(Request $request, Shipment $shipment, int $c, int $i): Lot
+    public function createLot(Request $request, Shipment $shipment, int $c, int $i): void
     {
-        $lot = new Lot();
+        $lotData = [
+            'shipment_id' => $shipment->id,
+            'lot_number' => $request->input('lot_number')[$c][$i],
+            'container_no' => substr(substr($request->input('lot_unique')[$c][$i], -2), 0, 1),
+            'item_id' => $request->input('item_id')[$c][$i],
+            'package_kg' => $request->input('package_kg')[$c][$i],
+            'type_of_package' => $request->input('type_of_package')[$c][$i],
+            'total_packages' => $request->input('total_packages')[$c][$i],
+            'unit' => $request->input('unit')[$c][$i],
+            'total_qty' => $request->input('total_qty')[$c][$i],
+            'price_per_unit' => $request->input('price_per_unit')[$c][$i],
+            'total_price' => $request->input('total_price')[$c][$i],
+            'manufacture_date' => $request->input('manufacture_date')[$c][$i],
+            'crop_year' => $request->input('crop_year')[$c][$i],
+            'shelf_life' => $request->input('shelf_life')[$c][$i],
+            'best_before' => $request->input('best_before')[$c][$i],
+            'surveyor_name' => $request->input('surveyor_name')[$c][$i],
+            'loading_date' => $request->input('loading_date')[$c][$i],
+            'item_description' => $request->input('item_description')[$c][$i],
+            'lot_comment' => $request->input('lot_comment')[$c][$i],
+        ];
 
-        $lot->shipment_id = $shipment->id;
-        $lot->lot_number = $request->input('lot_number')[$c][$i];
-        $lot->container_no = substr(substr($request->input('lot_unique')[$c][$i], -2), 0, 1);
-        $lot->lot_unique = $request->input('lot_unique')[$c][$i];
-        $lot->item_id = $request->input('item_id')[$c][$i];
-        $lot->package_kg = $request->input('package_kg')[$c][$i];
-        $lot->type_of_package = $request->input('type_of_package')[$c][$i];
-        $lot->total_packages = $request->input('total_packages')[$c][$i];
-        $lot->unit = $request->input('unit')[$c][$i];
-
-        $lot->total_qty = $request->input('total_qty')[$c][$i];
-        $lot->price_per_unit = $request->input('price_per_unit')[$c][$i];
-        $lot->total_price = $request->input('total_price')[$c][$i];
-        $lot->manufacture_date = $request->input('manufacture_date')[$c][$i];
-        $lot->crop_year = $request->input('crop_year')[$c][$i];
-        $lot->shelf_life = $request->input('shelf_life')[$c][$i];
-        $lot->best_before = $request->input('best_before')[$c][$i];
-        $lot->surveyor_name = $request->input('surveyor_name')[$c][$i];
-        $lot->loading_date = $request->input('loading_date')[$c][$i];
-        $lot->item_description = $request->input('item_description')[$c][$i];
-        $lot->lot_comment = $request->input('lot_comment')[$c][$i];
-
-        try {
-            if ($request->file('loading_report')[$c][$i]) {
-                $filePath = '';
-                $filePath = $request->file('loading_report')[$c][$i]->store('uploads/purchase', 'public');
-                $shipment->loading_report = $filePath;
+        // Only add the loading_report to the data array if a new file is uploaded.
+        // This prevents updateOrCreate from overwriting an existing path with null.
+        $fileInputName = "loading_report.{$c}.{$i}";
+        if ($request->hasFile($fileInputName) && $request->file($fileInputName)->isValid()) {
+            try {
+                $filePath = $request->file($fileInputName)->store('uploads/purchase', 'public');
+                $lotData['loading_report'] = $filePath;
+            } catch (Exception $exception) {
+                // Log error
             }
-        } catch (Exception $exception) {
-            echo $exception->getMessage();
         }
 
-        return $lot;
+        Lot::updateOrCreate(
+            ['lot_unique' => $request->input('lot_unique')[$c][$i]],
+            $lotData
+        );
     }
 
 }

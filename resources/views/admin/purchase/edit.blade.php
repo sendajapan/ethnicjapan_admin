@@ -17,7 +17,25 @@
     }
 
    // \Barryvdh\Debugbar\Facades\Debugbar::info($items);
+
+
+    foreach (DataPackageType::orderBy('package_type')->get() as $p){
+        $dataPackagesList[] = $p;
+    }
+
+        foreach (DataShelflife::orderBy('id')->get() as $p){
+        $dataShelflist[] = $p;
+    }
+
+
 @endphp
+
+
+
+
+
+
+
 
 
 @section('content')
@@ -59,7 +77,7 @@
                                         </select>
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="port_of_landing" class="form-label">Port of Landing</label>
+                                        <label for="port_of_landing" class="form-label">Destination</label>
                                         <select class="form-select" id="port_of_landing" name="port_of_landing"  >
                                             <option value="">Select</option>
                                             @foreach(Ports::orderBy('port_name')->whereIn('country_name', ['Japan'])->get() as $p)
@@ -119,76 +137,108 @@
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
                                         <label for="commercial_invoice" class="form-label">Commercial Invoice</label>
-                                        <input type="file" class="form-control" id="commercial_invoice" name="commercial_invoice"  value="{{ $shipment['commercial_invoice'] }}">
+
+                                        @if(!empty($shipment['commercial_invoice']))
+                                            <a target="_blank" href="{{ url('/'.$shipment['commercial_invoice']) }}" class="btn btn-youtube font-sm btn-outline-danger">
+                                                <i class="material-icons md-picture_as_pdf fs-6"></i>
+                                            </a>
+                                        @endif
+
+                                        <input type="file" class="form-control" id="commercial_invoice" name="commercial_invoice">
                                     </div>
+
                                 </div>
                                 <div class="row mb-3">
-                                    <div class="col-lg-2 col-xl-2">
-                                        <label for="eta" class="form-label">ETA</label>
-                                        <input type="date" class="form-control" id="eta" name="eta" value="{{ $shipment['eta'] }}">
-                                    </div>
                                     <div class="col-lg-2 col-xl-2">
                                         <label for="etd" class="form-label">ETD</label>
                                         <input type="date" class="form-control" id="etd" name="etd"  value="{{ $shipment['etd'] }}">
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="bl_telex_release" class="form-label">BL / Telex Release</label>
-                                        <input type="file" class="form-control" id="bl_telex_release" name="bl_telex_release"  value="{{ $shipment['bl_telex_release'] }}">
+                                        <label for="eta" class="form-label">ETA</label>
+                                        <input type="date" class="form-control" id="eta" name="eta" value="{{ $shipment['eta'] }}">
                                     </div>
+                                    <div class="col-lg-2 col-xl-2">
+                                        <label for="bl_telex_release" class="form-label">BL / Telex Release</label>
+                                        @if(!empty($shipment['bl_telex_release']))
+                                            <a target="_blank" href="{{ url('/'.$shipment['bl_telex_release']) }}" class="btn btn-youtube font-sm btn-outline-danger">
+                                                <i class="material-icons md-picture_as_pdf fs-6"></i>
+                                            </a>
+                                        @endif
+                                        <input type="file" class="form-control" id="bl_telex_release" name="bl_telex_release">
+                                    </div>
+
                                     <div class="col-lg-2 col-xl-2">
                                         <label for="packing_list" class="form-label">Packing List</label>
-                                        <input type="file" class="form-control" id="packing_list" name="packing_list"  value="{{ $shipment['packing_list'] }}">
+                                        @if(!empty($shipment['packing_list']))
+                                            <a target="_blank" href="{{ url('/'.$shipment['packing_list']) }}" class="btn btn-youtube font-sm btn-outline-danger">
+                                                <i class="material-icons md-picture_as_pdf fs-6"></i>
+                                            </a>
+                                        @endif
+                                        <input type="file" class="form-control" id="packing_list" name="packing_list">
                                     </div>
+
                                     <div class="col-lg-2 col-xl-2">
                                         <label for="origin_certificate" class="form-label">Origin Certificate</label>
-                                        <input type="file" class="form-control" id="origin_certificate" name="origin_certificate"  value="{{ $shipment['origin_certificate'] }}">
+                                        @if(!empty($shipment['origin_certificate']))
+                                            <a target="_blank" href="{{ url('/'.$shipment['origin_certificate']) }}" class="btn btn-youtube font-sm btn-outline-danger">
+                                                <i class="material-icons md-picture_as_pdf fs-6"></i>
+                                            </a>
+                                        @endif
+                                        <input type="file" class="form-control" id="origin_certificate" name="origin_certificate">
                                     </div>
+
                                     <div class="col-lg-2 col-xl-2">
                                         <label for="phytosanitary" class="form-label">Phytosanitary</label>
-                                        <input type="file" class="form-control" id="phytosanitary" name="phytosanitary"  value="{{ $shipment['phytosanitary'] }}">
+                                        @if(!empty($shipment['phytosanitary']))
+                                            <a target="_blank" href="{{ url('/'.$shipment['phytosanitary']) }}" class="btn btn-youtube font-sm btn-outline-danger">
+                                                <i class="material-icons md-picture_as_pdf fs-6"></i>
+                                            </a>
+                                        @endif
+                                        <input type="file" class="form-control" id="phytosanitary" name="phytosanitary">
                                     </div>
+
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="freight" class="form-label">Freight</label>
+                                        <label for="freight" class="form-label">Freight $</label>
                                         <input type="text" class="form-control" id="freight" name="freight"  value="{{ $shipment['freight'] }}">
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="insurance" class="form-label">Insurance</label>
+                                        <label for="insurance" class="form-label">Insurance $</label>
                                         <input type="text" class="form-control" id="insurance" name="insurance"  value="{{ $shipment['insurance'] }}">
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="exchange_rate" class="form-label">Exchange Rate</label>
+                                        <label for="exchange_rate" class="form-label">Exchange Rate $</label>
                                         <input type="text" class="form-control" id="exchange_rate" name="exchange_rate"  value="{{ $shipment['exchange_rate'] }}">
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="duties" class="form-label">Duties</label>
+                                        <label for="duties" class="form-label">Duties $</label>
                                         <input type="text" class="form-control" id="duties" name="duties"  value="{{ $shipment['duties'] }}">
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="tax" class="form-label">Tax</label>
+                                        <label for="tax" class="form-label">Tax $</label>
                                         <input type="text" class="form-control" id="tax" name="tax"  value="{{ $shipment['tax'] }}">
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="unpack" class="form-label">Unpack</label>
+                                        <label for="unpack" class="form-label">Unpack $</label>
                                         <input type="text" class="form-control" id="unpack" name="unpack"  value="{{ $shipment['unpack'] }}">
                                     </div>
                                 </div>
                                 <div class="row mb-3">
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="transport" class="form-label">Transport</label>
+                                        <label for="transport" class="form-label">Transport $</label>
                                         <input type="text" class="form-control" id="transport" name="transport"  value="{{ $shipment['transport'] }}">
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="penalty" class="form-label">Penalty</label>
+                                        <label for="penalty" class="form-label">Penalty $</label>
                                         <input type="text" class="form-control" id="penalty" name="penalty"  value="{{ $shipment['penalty'] }}">
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="other_fee" class="form-label">Other Fee</label>
+                                        <label for="other_fee" class="form-label">Other Fee $</label>
                                         <input type="text" class="form-control" id="other_fee" name="other_fee"  value="{{ $shipment['other_fee'] }}">
                                     </div>
                                     <div class="col-lg-2 col-xl-2">
-                                        <label for="total_shipment_cost" class="form-label">Total Cost</label>
+                                        <label for="total_shipment_cost" class="form-label">Total Cost $</label>
                                         <input type="text" class="form-control" id="total_shipment_cost" name="total_shipment_cost"  value="0">
                                     </div>
                                     <div class="col-lg-4 col-xl-4">
@@ -252,10 +302,10 @@
                                                 </div>
                                                 <div class="col-lg-2 col-xl-2">
                                                     <label for="item_id_{{$c}}_{{$i}}" class="form-label">Product</label>
-                                                    <select class="form-select" id="item_id_{{$c}}_{{$i}}" name="item_id[{{$c}}][{{$i}}]">
-                                                        <option value="0">Select</option>
+                                                    <select class="form-select" id="item_id_{{$c}}_{{$i}}" name="item_id[{{$c}}][{{$i}}]" onchange="updatePrice({{$c}}, {{$i}})">
+                                                        <option value="" data-price="0">Select</option>
                                                         @foreach($items as $p)
-                                                            <option value="{{ $p['id'] }}" @php if(isset($groupedByContainer[$timestamp][$c][$i]['item_id'])){ if($groupedByContainer[$timestamp][$c][$i]['item_id']== $p['id']){ echo 'selected'; }  } @endphp >{{ $p['item_name'] }}</option>
+                                                            <option value="{{ $p['id'] }}" data-price="{{ $p['default_price'] ?? 0 }}" @php if(isset($groupedByContainer[$timestamp][$c][$i]['item_id'])){ if($groupedByContainer[$timestamp][$c][$i]['item_id']== $p['id']){ echo 'selected'; }  } @endphp >{{ $p['item_name'] }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -267,8 +317,8 @@
                                                     <label for="type_of_package_{{$c}}_{{$i}}" class="form-label">Type of Package</label>
                                                     <select class="form-select" id="type_of_package_{{$c}}_{{$i}}" name="type_of_package[{{$c}}][{{$i}}]"  >
                                                         <option value="">Select</option>
-                                                        @foreach(DataPackageType::orderBy('package_type')->get() as $p)
-                                                            <option value="{{ $p->package_type }}" @php if(isset($groupedByContainer[$timestamp][$c][$i]['package_type'])){ if($groupedByContainer[$timestamp][$c][$i]['package_type']== $p['package_type']){ echo 'selected'; }  } @endphp  >{{ $p->package_type }}</option>
+                                                        @foreach($dataPackagesList as $p)
+                                                            <option value="{{ $p->package_type }}" @php if(isset($groupedByContainer[$timestamp][$c][$i]['type_of_package'])){ if($groupedByContainer[$timestamp][$c][$i]['type_of_package']== $p->package_type){ echo 'selected'; }  } @endphp  >{{ $p->package_type }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -291,11 +341,11 @@
 
                                             <div class="row mb-2">
                                                 <div class="col-lg-2 col-xl-2">
-                                                    <label for="price_per_unit_{{$c}}_{{$i}}" class="form-label">Price per Unit</label>
+                                                    <label for="price_per_unit_{{$c}}_{{$i}}" class="form-label">Price per Unit $</label>
                                                     <input type="text" class="form-control" id="price_per_unit_{{$c}}_{{$i}}" name="price_per_unit[{{$c}}][{{$i}}]" onkeyup="calc_lot({{$c}},{{$i}});" value="@php if(isset($groupedByContainer[$timestamp][$c][$i]['price_per_unit'])){ echo $groupedByContainer[$timestamp][$c][$i]['price_per_unit'];} @endphp">
                                                 </div>
                                                 <div class="col-lg-2 col-xl-2">
-                                                    <label for="total_price_{{$c}}_{{$i}}" class="form-label">Total Price</label>
+                                                    <label for="total_price_{{$c}}_{{$i}}" class="form-label">Total Price $</label>
                                                     <input type="text" class="form-control" id="total_price_{{$c}}_{{$i}}" name="total_price[{{$c}}][{{$i}}]" value="@php if(isset($groupedByContainer[$timestamp][$c][$i]['total_price'])){ echo $groupedByContainer[$timestamp][$c][$i]['total_price'];} @endphp">
                                                 </div>
 
@@ -316,8 +366,8 @@
                                                     <label for="shelf_life_{{$c}}_{{$i}}" class="form-label">Shelf Life</label>
                                                     <select class="form-select" id="shelf_life_{{$c}}_{{$i}}" name="shelf_life[{{$c}}][{{$i}}]"  >
                                                         <option value="">Select</option>
-                                                        @foreach(DataShelflife::orderBy('id')->get() as $p)
-                                                            <option value="{{ $p->shelflife }}" @php if(isset($groupedByContainer[$timestamp][$c][$i]['shelflife'])){ if($groupedByContainer[$timestamp][$c][$i]['shelflife']== $p['shelflife']){ echo 'selected'; }  } @endphp  >{{ $p->shelflife }}</option>
+                                                        @foreach($dataShelflist as $p)
+                                                            <option value="{{ $p->shelflife }}" @php if(isset($groupedByContainer[$timestamp][$c][$i]['shelf_life'])){ if($groupedByContainer[$timestamp][$c][$i]['shelf_life']== $p['shelflife']){ echo 'selected'; }  } @endphp  >{{ $p->shelflife }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -329,15 +379,27 @@
                                             <div class="row mb-2">
                                                 <div class="col-lg-2 col-xl-2">
                                                     <label for="loading_report_{{$c}}_{{$i}}" class="form-label">Loading Report</label>
-                                                    <input type="file" class="form-control" id="loading_report_{{$c}}_{{$i}}" name="loading_report[{{$c}}][{{$i}}]" >
+
+                                                    @if(!empty($groupedByContainer[$timestamp][$c][$i]['loading_report']))
+                                                        <a target="_blank"
+                                                           href="{{ url('/'.$groupedByContainer[$timestamp][$c][$i]['loading_report']) }}"
+                                                           class="btn btn-youtube font-sm btn-outline-danger">
+                                                            <i class="material-icons md-picture_as_pdf fs-6"></i>
+                                                        </a>
+                                                    @endif
+
+                                                    <input type="file" class="form-control"
+                                                           id="loading_report_{{$c}}_{{$i}}"
+                                                           name="loading_report[{{$c}}][{{$i}}]">
                                                 </div>
+
                                                 <div class="col-lg-2 col-xl-2">
                                                     <label for="surveyor_name_{{$c}}_{{$i}}" class="form-label">Surveyor Name</label>
-                                                    <input type="text" class="form-control" id="surveyor_name_{{$c}}_{{$i}}" name="surveyor_name[{{$c}}][{{$i}}]" value="">
+                                                    <input type="text" class="form-control" id="surveyor_name_{{$c}}_{{$i}}" name="surveyor_name[{{$c}}][{{$i}}]"   value="@php if(isset($groupedByContainer[$timestamp][$c][$i]['surveyor_name'])){ echo $groupedByContainer[$timestamp][$c][$i]['surveyor_name']; } @endphp">
                                                 </div>
                                                 <div class="col-lg-2 col-xl-2">
                                                     <label for="loading_date_{{$c}}_{{$i}}" class="form-label">Loading Date</label>
-                                                    <input type="date" class="form-control" id="loading_date_{{$c}}_{{$i}}" name="loading_date[{{$c}}][{{$i}}]" value="">
+                                                    <input type="date" class="form-control" id="loading_date_{{$c}}_{{$i}}" name="loading_date[{{$c}}][{{$i}}]" value="@php if(isset($groupedByContainer[$timestamp][$c][$i]['loading_date'])){ echo $groupedByContainer[$timestamp][$c][$i]['loading_date']; } @endphp">
                                                 </div>
                                                 <div class="col-lg-12 col-xl-12 p-4">
                                                     <?php

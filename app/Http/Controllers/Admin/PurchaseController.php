@@ -20,7 +20,7 @@ class PurchaseController extends Controller
     protected PurchaseService $purchaseService;
 
     /**
-     * Create a new controller instance.
+     * Create a new controllers instance.
      */
     public function __construct(){
         $this->purchaseService = new PurchaseService();
@@ -112,6 +112,8 @@ class PurchaseController extends Controller
         }
     }
 
+
+
     public function delete_lot_photo()
     {
         //
@@ -183,15 +185,12 @@ class PurchaseController extends Controller
             $updatedShipment = $this->purchaseService->updateShipment($request, Shipment::where('id', $id)->firstOrFail());
             $updatedShipment->save();
 
-            // Delete existing lots from the shipment
-            Lot::where('shipment_id', $updatedShipment->id)->delete();
-
-            // for debugging purposes : echo "container $container: { lot $lot: value -> {$lotData}}<br>";
-            foreach ($request->input('lot_number') as $container => $containerData) {
-                foreach ($containerData as $lot => $lotData) {
-                    if (!empty($lotData)) {
-                        $lot = $this->purchaseService->createLot($request, $updatedShipment, $container, $lot);
-                        $lot->save();
+            if ($request->has('lot_number')) {
+                foreach ($request->input('lot_number') as $container => $containerData) {
+                    foreach ($containerData as $lot => $lotData) {
+                        if (!empty($lotData)) {
+                            $this->purchaseService->createLot($request, $updatedShipment, $container, $lot);
+                        }
                     }
                 }
             }

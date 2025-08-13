@@ -55,7 +55,7 @@
                                     </select>
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="port_of_landing" class="form-label">Port of Landing</label>
+                                    <label for="port_of_landing" class="form-label">Destination</label>
                                     <select class="form-select" id="port_of_landing" name="port_of_landing"  >
                                         <option value="">Select</option>
                                         @foreach(Ports::orderBy('port_name')->whereIn('country_name', ['Japan'])->get() as $p)
@@ -120,12 +120,12 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="eta" class="form-label">ETA</label>
-                                    <input type="date" class="form-control" id="eta" name="eta"  value="{{ old('eta') }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
                                     <label for="etd" class="form-label">ETD</label>
                                     <input type="date" class="form-control" id="etd" name="etd"  value="{{ old('etd') }}">
+                                </div>
+                                <div class="col-lg-2 col-xl-2">
+                                    <label for="eta" class="form-label">ETA</label>
+                                    <input type="date" class="form-control" id="eta" name="eta"  value="{{ old('eta') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
                                     <label for="bl_telex_release" class="form-label">BL / Telex Release</label>
@@ -149,45 +149,45 @@
 
                             <div class="row mb-3">
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="freight" class="form-label">Freight</label>
+                                    <label for="freight" class="form-label">Freight $</label>
                                     <input type="text" class="form-control" id="freight" name="freight" onkeyup="calc_shipment()" value="{{ old('freight') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="insurance" class="form-label">Insurance</label>
+                                    <label for="insurance" class="form-label">Insurance $</label>
                                     <input type="text" class="form-control" id="insurance" name="insurance"  onkeyup="calc_shipment()" value="{{ old('insurance') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="exchange_rate" class="form-label">Exchange Rate</label>
+                                    <label for="exchange_rate" class="form-label">Exchange Rate $</label>
                                     <input type="text" class="form-control" id="exchange_rate" name="exchange_rate"  value="{{ old('exchange_rate') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="duties" class="form-label">Duties</label>
+                                    <label for="duties" class="form-label">Duties $</label>
                                     <input type="text" class="form-control" id="duties" name="duties"  onkeyup="calc_shipment()" value="{{ old('duties') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="tax" class="form-label">Tax</label>
+                                    <label for="tax" class="form-label">Tax $</label>
                                     <input type="text" class="form-control" id="tax" name="tax"  onkeyup="calc_shipment()" value="{{ old('tax') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="unpack" class="form-label">Unpack</label>
+                                    <label for="unpack" class="form-label">Unpack $</label>
                                     <input type="text" class="form-control" id="unpack" name="unpack"  onkeyup="calc_shipment()" value="{{ old('unpack') }}">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="transport" class="form-label">Transport</label>
+                                    <label for="transport" class="form-label">Transport $</label>
                                     <input type="text" class="form-control" id="transport" name="transport"  onkeyup="calc_shipment()" value="{{ old('transport') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="penalty" class="form-label">Penalty</label>
+                                    <label for="penalty" class="form-label">Penalty $</label>
                                     <input type="text" class="form-control" id="penalty" name="penalty"  onkeyup="calc_shipment()" value="{{ old('penalty') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="other_fee" class="form-label">Other Fee</label>
+                                    <label for="other_fee" class="form-label">Other Fee $</label>
                                     <input type="text" class="form-control" id="other_fee" name="other_fee"  onkeyup="calc_shipment()" value="{{ old('other_fee') }}">
                                 </div>
                                 <div class="col-lg-2 col-xl-2">
-                                    <label for="total_shipment_cost" class="form-label">Total Cost</label>
+                                    <label for="total_shipment_cost" class="form-label">Total Cost $</label>
                                     <input type="text" class="form-control" id="total_shipment_cost" name="total_shipment_cost"  value="0">
                                 </div>
                                 <div class="col-lg-4 col-xl-4">
@@ -233,10 +233,10 @@
                                                         </div>
                                                         <div class="col-lg-2 col-xl-2">
                                                             <label for="item_id_{{$c}}_{{$i}}" class="form-label">Product</label>
-                                                            <select class="form-select" id="item_id_{{$c}}_{{$i}}" name="item_id[{{$c}}][{{$i}}]">
-                                                                <option value="0">Select</option>
+                                                            <select class="form-select" id="item_id_{{$c}}_{{$i}}" name="item_id[{{$c}}][{{$i}}]" onchange="updatePrice({{$c}}, {{$i}})">
+                                                                <option value="" data-price="0">Select</option>
                                                                 @foreach($items as $p)
-                                                                    <option value="{{ $p['id'] }}" >{{ $p['item_name'] }}</option>
+                                                                    <option value="{{ $p['id'] }}" data-price="{{ $p['default_price'] ?? 0 }}">{{ $p['item_name'] }}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>
@@ -274,11 +274,11 @@
 
                                                     <div class="row mb-2">
                                                         <div class="col-lg-2 col-xl-2">
-                                                            <label for="price_per_unit_{{$c}}_{{$i}}" class="form-label">Price per Unit</label>
+                                                            <label for="price_per_unit_{{$c}}_{{$i}}" class="form-label">Price per Unit $</label>
                                                             <input type="text" class="form-control" id="price_per_unit_{{$c}}_{{$i}}" name="price_per_unit[{{$c}}][{{$i}}]" onkeyup="calc_lot({{$c}},{{$i}});" value="">
                                                         </div>
                                                         <div class="col-lg-2 col-xl-2">
-                                                            <label for="total_price_{{$c}}_{{$i}}" class="form-label">Total Price</label>
+                                                            <label for="total_price_{{$c}}_{{$i}}" class="form-label">Total Price $</label>
                                                             <input type="text" class="form-control" id="total_price_{{$c}}_{{$i}}" name="total_price[{{$c}}][{{$i}}]" value="">
                                                         </div>
 
@@ -545,14 +545,21 @@
         }
         calc_shipment();
 
-        function calc_lot(c, i){
-            var package_kg = Number($('#package_kg_'+c+'_'+i).val());
-            var total_packages = Number($('#total_packages_'+c+'_'+i).val());
+        function updatePrice(c, i) {
+            const selectElement = document.getElementById(`item_id_${c}_${i}`);
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const price = selectedOption.getAttribute('data-price');
+            const priceInputElement = document.getElementById(`price_per_unit_${c}_${i}`);
+            priceInputElement.value = price;
+            calc_lot(c, i);
+        }
+
+        function calc_lot(c,i){
+            var package_kg = parseFloat($('#package_kg_'+c+'_'+i).val());
+            var total_packages = parseFloat($('#total_packages_'+c+'_'+i).val());
+            var price_per_unit = parseFloat($('#price_per_unit_'+c+'_'+i).val());
             var total_qty = parseFloat(package_kg) * parseFloat(total_packages);
             $('#total_qty_'+c+'_'+i).val(total_qty);
-
-            var total_qty = Number($('#total_qty_'+c+'_'+i).val());
-            var price_per_unit = Number($('#price_per_unit_'+c+'_'+i).val());
 
             var total_lot_price = parseFloat(total_qty) * parseFloat(price_per_unit);
             $('#total_price_'+c+'_'+i).val(total_lot_price);
