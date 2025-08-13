@@ -78,7 +78,7 @@ class PurchaseService
         return $this->prepareDataFromRequest($request, $shipment);
     }
 
-    public function createLot(Request $request, Shipment $shipment, int $c, int $i): void
+    public function createLot(Request $request, Shipment $shipment, int $c, int $i): Lot
     {
         $lotData = [
             'shipment_id' => $shipment->id,
@@ -114,7 +114,7 @@ class PurchaseService
             }
         }
 
-        Lot::updateOrCreate(
+        return Lot::updateOrCreate(
             ['lot_unique' => $request->input('lot_unique')[$c][$i]],
             $lotData
         );

@@ -67,8 +67,7 @@ class PurchaseController extends Controller
                 for ($i = 1; $i <= 9; $i++) {
                     if (!empty($lotNumbers[$c][$i])) {
                         try {
-                            $lot = $this->purchaseService->createLot($request, $shipment, $c, $i);
-                            $lot->save();
+                            $this->purchaseService->createLot($request, $shipment, $c, $i);
                         } catch (Exception $e) {
                             echo $e->getMessage();
                         }
