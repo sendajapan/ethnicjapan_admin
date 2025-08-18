@@ -88,12 +88,25 @@ class PurchaseController extends Controller
 
     public function detail(string $id)
     {
-        $data = Shipment::where('id', $id)->firstOrFail();
-        return view('admin.purchase.detail', compact('data'));
+        $shipment = Shipment::where('id', $id)
+            ->with('lots')
+            ->firstOrFail()->toArray();
+
+
+        foreach($shipment['lots'] as $key=>$lot){
+            if($lot['lot_unique']!=''){
+                $photos = lot_photos::where('lot_unique', $lot['lot_unique'])->get()->toArray();
+                $shipment['lots'][$key]['photos'] = $photos;
+            }
+
+        }
+
+        return view('admin.purchase.detail', compact('shipment'));
     }
 
     public function upload_lot_photo(Request $request)
     {
+
         if ($request->hasFile('lot_photos')) {
 
             $filePath = $request->file('lot_photos')->store('uploads/lot_photos', 'public');
@@ -112,11 +125,12 @@ class PurchaseController extends Controller
     }
 
 
-
-    public function delete_lot_photo()
-    {
-        //
+    public function delete_lot_photo(){
+        lot_photos::where('id', $_GET['id'])->delete();
     }
+
+
+
 
     /**
      * Display the specified resource.
@@ -158,6 +172,8 @@ class PurchaseController extends Controller
             'invoice_date' => 'required|date',
             'commercial_invoice' => 'file|mimes:jpg,png,pdf|max:20480'
         ]);
+
+
 
         DB::beginTransaction();
 

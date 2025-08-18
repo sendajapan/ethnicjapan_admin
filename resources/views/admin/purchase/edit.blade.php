@@ -420,7 +420,7 @@
                                                         } ?>
                                                 </div>
                                                 <div class="col-lg-12 col-xl-12 p-4">
-                                                    <input id="lot_photos_{{$c}}_{{$i}}" name="lot_photos_{{$c}}_{{$i}}" value="{{ ($timestamp.$c.$i )   }}">
+                                                    <input id="lot_photos_{{$c}}_{{$i}}" name="lot_photos" value="{{ ($timestamp.$c.$i )   }}">
                                                 </div>
                                             </div>
                                         </div>
@@ -533,7 +533,7 @@
             if(id){
                 Swal.fire({
                     title: "Are you sure you want to delete this image?",
-                    text: "Changes will be finalized when you submit page!",
+                    text: "This photos will be deleted immediately!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",
@@ -542,6 +542,23 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $('#img_container_'+id).remove();
+                        const photo_db_id_split = id.split("_");
+                        const photo_db_id  = photo_db_id_split[photo_db_id_split.length - 1];
+                        console.log(photo_db_id);
+                        $.ajax({
+                            url: '{{url('admin/purchase')}}/delete_lot_photo?id='+photo_db_id,
+                            method: "GET",
+                            success: function (data) {
+                                if (data.code === 200) {
+                                    console.error("Removed photo:", xhr);
+                                }
+                            },
+                            error: function (xhr) {
+                                console.error("Error removing photo:", xhr);
+                            },
+                        });
+
+
                     }
                 });
             }

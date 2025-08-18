@@ -30,7 +30,7 @@ Route::get("item/detail/{id}", [ItemController::class, 'detail'])->name('item.de
 Route::resource('item', ItemController::class);
 
 Route::post("purchase/upload_lot_photo", [PurchaseController::class, 'upload_lot_photo']);
-Route::post("purchase/delete_lot_photo", [PurchaseController::class, 'delete_lot_photo']);
+Route::get("purchase/delete_lot_photo", [PurchaseController::class, 'delete_lot_photo']);
 
 /** Purchase Routes */
 Route::get("purchase/detail/{id}", [PurchaseController::class, 'detail'])->name('purchase.detail');
