@@ -19,7 +19,7 @@
                 </a>
             </li>
 
-            <li class="menu-item has-submenu {{ setActive(['admin.bank.*']) }} {{ setActive(['admin.accounts.*']) }}">
+            <li class="menu-item has-submenu {{ setActive(['admin.bank.*']) }} {{ setActive(['admin.accounts.*']) }} {{ setActive(['admin.transactions.*']) }}">
                 <a class="menu-link" href="#">
                     <i class="icon material-icons md-request_quote text-muted"></i>
                     <span class="text">Finance</span>
