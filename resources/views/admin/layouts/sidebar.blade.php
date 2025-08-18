@@ -19,54 +19,40 @@
                 </a>
             </li>
 
-            <li class="menu-item has-submenu active {{ setActive(['admin.bank.*']) }} {{ setActive(['admin.accounts.*']) }}">
+            <li class="menu-item has-submenu {{ setActive(['admin.bank.*']) }} {{ setActive(['admin.accounts.*']) }}">
                 <a class="menu-link" href="#">
                     <i class="icon material-icons md-request_quote text-muted"></i>
                     <span class="text">Finance</span>
                 </a>
                 <div class="submenu">
-                    <a class="{{ setActive(['admin.bank.index']) }}" href="{{ route('admin.bank.index') }}">Bank Accounts</a>
-                    <a class="{{ setActive(['admin.accounts.index']) }}" href="{{ route('admin.accounts.index') }}">Account Ledgers</a>
-                    <a class="{{ setActive(['admin.transactions.create']) }}" href="{{ route('admin.transactions.create') }}">Make Transactions</a>
+                    <a class="{{ setActive(['admin.bank.index']) }}" href="{{ route('admin.bank.index') }}">
+                        <span class="text">Bank Accounts</span>
+                    </a>
+                    <a class="{{ setActive(['admin.accounts.index']) }}" href="{{ route('admin.accounts.index') }}">
+                        <span class="text">Account Ledgers</span>
+                    </a>
+                    <a class="{{ setActive(['admin.transactions.create']) }}" href="{{ route('admin.transactions.create') }}">
+                        <span class="text">Make Transactions</span>
+                    </a>
                 </div>
             </li>
 
 
 
-            <!--
-            <li class="menu-item {{ setActive(['admin.bank.*']) }}">
-                <a class="menu-link {{ setActive(['admin.bank.index']) }}" href="{{ route('admin.bank.index') }}">
-                    <i class="icon material-icons md-request_quote text-muted"></i>
-                    <span class="text">Bank Accounts</span>
-                </a>
-            </li>
-
-            <li class="menu-item {{ setActive(['admin.accounts.*']) }}">
-                <a class="menu-link {{ setActive(['admin.accounts.index']) }}" href="{{ route('admin.accounts.index') }}">
-                    <i class="icon material-icons md-request_quote text-muted"></i>
-                    <span class="text">Account Ledgers</span>
-                </a>
-            </li>
-
-            <li class="menu-item {{ setActive(['admin.transactions.*']) }}">
-                <a class="menu-link {{ setActive(['admin.transactions.create']) }}" href="{{ route('admin.transactions.create') }}">
-                    <i class="icon material-icons md-request_quote text-muted"></i>
-                    <span class="text">Make Transactions</span>
-                </a>
-            </li>
--->
 
 
-
-
-            <li class="menu-item has-submenu active {{ setActive(['admin.bank.*']) }} {{ setActive(['admin.accounts.*']) }}">
+            <li class="menu-item has-submenu {{ setActive(['admin.provider.*']) }} {{ setActive(['admin.customer.*']) }}">
                 <a class="menu-link" href="#">
                     <i class="icon material-icons md-group text-muted"></i>
                     <span class="text">Contacts</span>
                 </a>
                 <div class="submenu">
-                    <a class="{{ setActive(['admin.provider.index']) }}" href="{{ route('admin.provider.index') }}">Suppliers/Providers List</a>
-                    <a class="{{ setActive(['admin.customer.index']) }}" href="{{ route('admin.customer.index') }}">Customers List</a>
+                    <a class="{{ setActive(['admin.provider.index']) }}" href="{{ route('admin.provider.index') }}">
+                        <span class="text">Suppliers/Providers List</span>
+                    </a>
+                    <a class="{{ setActive(['admin.customer.index']) }}" href="{{ route('admin.customer.index') }}">
+                        <span class="text">Customers List</span>
+                    </a>
                 </div>
             </li>
 
@@ -167,11 +153,11 @@
             <li class="menu-item error">
                 <form method="POST" action="<?php echo e(route('logout')); ?>">
                     <a class="menu-link error"  class="dropdown-item text-danger" href="#"  onclick="event.preventDefault(); this.closest('form').submit();">                    <?php echo csrf_field(); ?>
-                </form>
 
                     <i class="icon material-icons md-log_out text-muted"></i>
-                    <span>Logout</span>
+                    <span class="text">Logout</span>
                 </a>
+                </form>
             </li>
         </ul>
     </nav>
