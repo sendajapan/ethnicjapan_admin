@@ -148,48 +148,48 @@
 
 
                             <div class="row mb-3">
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="freight" class="form-label">Freight $</label>
-                                    <input type="text" class="form-control" id="freight" name="freight" onkeyup="calc_shipment()" value="{{ old('freight') }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="insurance" class="form-label">Insurance $</label>
-                                    <input type="text" class="form-control" id="insurance" name="insurance"  onkeyup="calc_shipment()" value="{{ old('insurance') }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="exchange_rate" class="form-label">Exchange Rate $</label>
-                                    <input type="text" class="form-control" id="exchange_rate" name="exchange_rate"  value="{{ old('exchange_rate') }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="duties" class="form-label">Duties $</label>
-                                    <input type="text" class="form-control" id="duties" name="duties"  onkeyup="calc_shipment()" value="{{ old('duties') }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="tax" class="form-label">Tax $</label>
-                                    <input type="text" class="form-control" id="tax" name="tax"  onkeyup="calc_shipment()" value="{{ old('tax') }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="unpack" class="form-label">Unpack $</label>
-                                    <input type="text" class="form-control" id="unpack" name="unpack"  onkeyup="calc_shipment()" value="{{ old('unpack') }}">
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="transport" class="form-label">Transport $</label>
-                                    <input type="text" class="form-control" id="transport" name="transport"  onkeyup="calc_shipment()" value="{{ old('transport') }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="penalty" class="form-label">Penalty $</label>
-                                    <input type="text" class="form-control" id="penalty" name="penalty"  onkeyup="calc_shipment()" value="{{ old('penalty') }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="other_fee" class="form-label">Other Fee $</label>
-                                    <input type="text" class="form-control" id="other_fee" name="other_fee"  onkeyup="calc_shipment()" value="{{ old('other_fee') }}">
-                                </div>
-                                <div class="col-lg-2 col-xl-2">
-                                    <label for="total_shipment_cost" class="form-label">Total Cost $</label>
-                                    <input type="text" class="form-control" id="total_shipment_cost" name="total_shipment_cost"  value="0">
-                                </div>
+{{--                                <div class="col-lg-2 col-xl-2">--}}
+{{--                                    <label for="freight" class="form-label">Freight $</label>--}}
+{{--                                    <input type="text" class="form-control" id="freight" name="freight" onkeyup="calc_shipment()" value="{{ old('freight') }}">--}}
+{{--                                </div>--}}
+{{--                                <div class="col-lg-2 col-xl-2">--}}
+{{--                                    <label for="insurance" class="form-label">Insurance $</label>--}}
+{{--                                    <input type="text" class="form-control" id="insurance" name="insurance"  onkeyup="calc_shipment()" value="{{ old('insurance') }}">--}}
+{{--                                </div>--}}
+{{--                                <div class="col-lg-2 col-xl-2">--}}
+{{--                                    <label for="exchange_rate" class="form-label">Exchange Rate $</label>--}}
+{{--                                    <input type="text" class="form-control" id="exchange_rate" name="exchange_rate"  value="{{ old('exchange_rate') }}">--}}
+{{--                                </div>--}}
+{{--                                <div class="col-lg-2 col-xl-2">--}}
+{{--                                    <label for="duties" class="form-label">Duties $</label>--}}
+{{--                                    <input type="text" class="form-control" id="duties" name="duties"  onkeyup="calc_shipment()" value="{{ old('duties') }}">--}}
+{{--                                </div>--}}
+{{--                                <div class="col-lg-2 col-xl-2">--}}
+{{--                                    <label for="tax" class="form-label">Tax $</label>--}}
+{{--                                    <input type="text" class="form-control" id="tax" name="tax"  onkeyup="calc_shipment()" value="{{ old('tax') }}">--}}
+{{--                                </div>--}}
+{{--                                <div class="col-lg-2 col-xl-2">--}}
+{{--                                    <label for="unpack" class="form-label">Unpack $</label>--}}
+{{--                                    <input type="text" class="form-control" id="unpack" name="unpack"  onkeyup="calc_shipment()" value="{{ old('unpack') }}">--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                            <div class="row mb-3">--}}
+{{--                                <div class="col-lg-2 col-xl-2">--}}
+{{--                                    <label for="transport" class="form-label">Transport $</label>--}}
+{{--                                    <input type="text" class="form-control" id="transport" name="transport"  onkeyup="calc_shipment()" value="{{ old('transport') }}">--}}
+{{--                                </div>--}}
+{{--                                <div class="col-lg-2 col-xl-2">--}}
+{{--                                    <label for="penalty" class="form-label">Penalty $</label>--}}
+{{--                                    <input type="text" class="form-control" id="penalty" name="penalty"  onkeyup="calc_shipment()" value="{{ old('penalty') }}">--}}
+{{--                                </div>--}}
+{{--                                <div class="col-lg-2 col-xl-2">--}}
+{{--                                    <label for="other_fee" class="form-label">Other Fee $</label>--}}
+{{--                                    <input type="text" class="form-control" id="other_fee" name="other_fee"  onkeyup="calc_shipment()" value="{{ old('other_fee') }}">--}}
+{{--                                </div>--}}
+{{--                                <div class="col-lg-2 col-xl-2">--}}
+{{--                                    <label for="total_shipment_cost" class="form-label">Total Cost $</label>--}}
+{{--                                    <input type="text" class="form-control" id="total_shipment_cost" name="total_shipment_cost"  value="0">--}}
+{{--                                </div>--}}
                                 <div class="col-lg-4 col-xl-4">
                                     <label for="other_fee" class="form-label">Comments</label>
                                     <input type="text" class="form-control" id="shipment_comment" name="shipment_comment"  value="{{ old('shipment_comment') }}">
@@ -205,6 +205,32 @@
 
                             <section>&nbsp;</section>
 
+                            <div class="row mb-3">
+                                <div class="col-lg-12 col-xl-12">
+                                    <h5 class="mb-3">Purchase Costs</h5>
+                                    <table class="table table-bordered" id="purchase-costs-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Cost Date</th>
+                                                <th>Cost Name</th>
+                                                <th>Cost Amount</th>
+                                                <th>Description</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><input type="date" placeholder="Cost Date" class="form-control" name="costs[0][cost_date]"></td>
+                                                <td><input type="text" placeholder="Cost Name" class="form-control" name="costs[0][cost_name]"></td>
+                                                <td><input type="number" placeholder="Cost Amount" class="form-control" name="costs[0][cost_amount]"></td>
+                                                <td><input type="text" placeholder="Description" class="form-control" name="costs[0][description]"></td>
+                                                <td><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" id="add-cost-row">Add New Cost</button>
+                                </div>
+                            </div>
 
                             @for($c=1; $c<=9; $c++)
 
@@ -404,6 +430,26 @@
     <script src="{{url('assets/filepond/filepond.min.js')}}"></script>
     <script src="{{url('assets/filepond/filepond.jquery.js')}}"></script>
     <script>
+        $(document).ready(function() {
+            let costRowIndex = 1;
+            $('#add-cost-row').on('click', function() {
+                let newRow = `
+                <tr>
+                    <td><input type="date" placeholder="Cost Date" class="form-control" name="costs[${costRowIndex}][cost_date]"></td>
+                    <td><input type="text" placeholder="Cost Name" class="form-control" name="costs[${costRowIndex}][cost_name]"></td>
+                    <td><input type="number" placeholder="Cost Amount" class="form-control" name="costs[${costRowIndex}][cost_amount]"></td>
+                    <td><input type="text" placeholder="Description" class="form-control" name="costs[${costRowIndex}][description]"></td>
+                    <td><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
+                </tr>`;
+                $('#purchase-costs-table tbody').append(newRow);
+                costRowIndex++;
+            });
+
+            $('#purchase-costs-table').on('click', '.remove-cost-row', function() {
+                $(this).closest('tr').remove();
+            });
+        });
+
         for(c=1; c<=9; c++) {
             for(i=1; i<=9; i++){
                 $('#lot_photos_'+c+'_'+i).filepond({

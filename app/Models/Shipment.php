@@ -18,4 +18,9 @@ class Shipment extends Model
         return $this->hasMany(Lot::class);
     }
 
+    public function purchase_costs(): HasMany
+    {
+        return $this->hasMany(PurchaseCosts::class, 'shipment_id', 'id');
+    }
+
 }

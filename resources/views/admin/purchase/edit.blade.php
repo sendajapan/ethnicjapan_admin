@@ -199,7 +199,7 @@
 
                                 </div>
                                 <div class="row mb-3">
-                                    <div class="col-lg-2 col-xl-2">
+                                    <!-- <div class="col-lg-2 col-xl-2">
                                         <label for="freight" class="form-label">Freight $</label>
                                         <input type="text" class="form-control" id="freight" name="freight"  value="{{ $shipment['freight'] }}">
                                     </div>
@@ -240,7 +240,7 @@
                                     <div class="col-lg-2 col-xl-2">
                                         <label for="total_shipment_cost" class="form-label">Total Cost $</label>
                                         <input type="text" class="form-control" id="total_shipment_cost" name="total_shipment_cost"  value="0">
-                                    </div>
+                                    </div> -->
                                     <div class="col-lg-4 col-xl-4">
                                         <label for="other_fee" class="form-label">Comments</label>
                                         <input type="text" class="form-control" id="shipment_comment" name="shipment_comment"  value="{{ $shipment['shipment_comment'] }}">
@@ -254,6 +254,50 @@
 
 
 
+
+                    <div class="row mb-3">
+                        <div class="col-lg-12 col-xl-12">
+                            <h5 class="mb-3">Purchase Costs</h5>
+                            <table class="table table-bordered" id="purchase-costs-table">
+                                <thead>
+                                    <tr>
+                                        <th>Cost Date</th>
+                                        <th>Cost Name</th>
+                                        <th>Cost Amount</th>
+                                        <th>Description</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $costs = old('costs', $shipment['purchase_costs'] ?? []);
+                                    @endphp
+
+                                    @forelse($costs as $index => $cost)
+                                        <tr>
+                                            <td>
+                                                <input type="hidden" name="costs[{{ $index }}][id]" value="{{ $cost['id'] ?? '' }}">
+                                                <input type="date" class="form-control" name="costs[{{ $index }}][cost_date]" value="{{ $cost['cost_date'] ?? '' }}">
+                                            </td>
+                                            <td><input type="text" class="form-control" name="costs[{{ $index }}][cost_name]" value="{{ $cost['cost_name'] ?? '' }}"></td>
+                                            <td><input type="number" class="form-control" name="costs[{{ $index }}][cost_amount]" value="{{ $cost['cost_amount'] ?? '' }}"></td>
+                                            <td><input type="text" class="form-control" name="costs[{{ $index }}][description]" value="{{ $cost['description'] ?? '' }}"></td>
+                                            <td><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td><input type="date" placeholder="Cost Date" class="form-control" name="costs[0][cost_date]"></td>
+                                            <td><input type="text" placeholder="Cost Name" class="form-control" name="costs[0][cost_name]"></td>
+                                            <td><input type="number" placeholder="Cost Amount" class="form-control" name="costs[0][cost_amount]"></td>
+                                            <td><input type="text" placeholder="Description" class="form-control" name="costs[0][description]"></td>
+                                            <td><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                            <button type="button" class="btn btn-outline-secondary btn-sm" id="add-cost-row">Add New Cost</button>
+                        </div>
+                    </div>
 
                     <section>&nbsp;</section>
 
@@ -494,6 +538,27 @@
 @endsection
 
 @push('scripts')
+    <script>
+        $(document).ready(function() {
+            let costRowIndex = {{ !empty($shipment['purchase_costs']) ? count($shipment['purchase_costs']) : 1 }};
+            $('#add-cost-row').on('click', function() {
+                let newRow = `
+                <tr>
+                    <td><input type="date" placeholder="Cost Date" class="form-control" name="costs[${costRowIndex}][cost_date]"></td>
+                    <td><input type="text" placeholder="Cost Name" class="form-control" name="costs[${costRowIndex}][cost_name]"></td>
+                    <td><input type="number" placeholder="Cost Amount" class="form-control" name="costs[${costRowIndex}][cost_amount]"></td>
+                    <td><input type="text" placeholder="Description" class="form-control" name="costs[${costRowIndex}][description]"></td>
+                    <td><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
+                </tr>`;
+                $('#purchase-costs-table tbody').append(newRow);
+                costRowIndex++;
+            });
+
+            $('#purchase-costs-table').on('click', '.remove-cost-row', function() {
+                $(this).closest('tr').remove();
+            });
+        });
+    </script>
 
     <script>
         function show_line(c) {

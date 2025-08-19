@@ -84,7 +84,7 @@
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
                                         <label for="provider_id" class="form-label">Provider Name</label>
                                         <br>
-                                        <label class="font-bold">{{ $shipment['provider_id'] }}</label>
+                                        <label class="font-bold">{{ $shipment['provider']['provider_name'] }}</label>
                                     </div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
                                         <label for="container_type" class="form-label">Container Type</label>
@@ -190,7 +190,7 @@
 
                                 </div>
                                 <div class="row mb-0  border-x-1 border-top-0">
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
+                                    <!-- <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
                                         <label for="freight" class="form-label">Freight $</label>
                                         <br>
                                         <label class="font-bold">{{ $shipment['freight'] }}</label>
@@ -241,7 +241,7 @@
                                         <label for="total_shipment_cost" class="form-label">Total Cost $</label>
                                         <br>
                                         <label class="font-bold"></label>
-                                    </div>
+                                    </div> -->
                                     <div class="col-lg-4 col-xl-4 border-1 p-2 border-top-0">
                                         <label for="other_fee" class="form-label">Comments</label>
                                         <br>
@@ -252,11 +252,35 @@
                         </div>
                     </section>
 
-
-
-
-
-
+                    @if(!empty($shipment['purchase_costs']))
+                        <section class="section">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="mb-3">Purchase Costs</h5>
+                                    <div class="row mb-0 border-x-1 border-top-1">
+                                        <div class="col-lg-3 col-xl-3 border-1 p-2 fw-bold">Cost Date</div>
+                                        <div class="col-lg-3 col-xl-3 border-1 p-2 fw-bold">Cost Name</div>
+                                        <div class="col-lg-3 col-xl-3 border-1 p-2 fw-bold">Cost Amount $</div>
+                                        <div class="col-lg-3 col-xl-3 border-1 p-2 fw-bold">Description</div>
+                                    </div>
+                                    @php $totalCost = 0; @endphp
+                                    @foreach($shipment['purchase_costs'] as $cost)
+                                    <div class="row mb-0 border-x-1 border-top-0">
+                                        <div class="col-lg-3 col-xl-3 border-1 p-2 border-top-0">{{ $cost['cost_date'] }}</div>
+                                        <div class="col-lg-3 col-xl-3 border-1 p-2 border-top-0">{{ $cost['cost_name'] }}</div>
+                                        <div class="col-lg-3 col-xl-3 border-1 p-2 border-top-0">$ {{ number_format($cost['cost_amount']) }}</div>
+                                        <div class="col-lg-3 col-xl-3 border-1 p-2 border-top-0">{{ $cost['description'] }}</div>
+                                    </div>
+                                        @php $totalCost += $cost['cost_amount']; @endphp
+                                    @endforeach
+                                    <div class="row mb-0 border-x-1 border-top-0">
+                                        <div class="col-lg-6 col-xl-6 border-1 p-2 border-top-0 text-end fw-bold">Total Costs:</div>
+                                        <div class="col-lg-6 col-xl-6 border-1 p-2 border-top-0 fw-bold">$ {{ number_format($totalCost) }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    @endif
 
                     @php
                         $timestamp = time();
@@ -357,7 +381,7 @@
                                                 <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
                                                     <label for="shelf_life_{{$c}}_{{$i}}" class="form-label">Shelf Life</label>
                                                     <br>
-                                                    <label class="font-bold">@php if(isset($groupedByContainer[$timestamp][$c][$i]['shelflife'])){ echo $groupedByContainer[$timestamp][$c][$i]['shelflife'];} @endphp</label>
+                                                    <label class="font-bold">@php if(isset($groupedByContainer[$timestamp][$c][$i]['shelf_life'])){ echo $groupedByContainer[$timestamp][$c][$i]['shelf_life'];} @endphp</label>
                                                 </div>
                                                 <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
                                                     <label for="best_before_{{$c}}_{{$i}}" class="form-label">Best Before</label>

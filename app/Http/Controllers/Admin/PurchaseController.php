@@ -8,6 +8,7 @@ use App\Models\lot_photos;
 use App\Models\Lot;
 use App\Models\purchase;
 use App\Models\PurchaseItem;
+use App\Models\PurchaseCosts;
 use App\Models\Shipment;
 use App\Services\PurchaseService;
 use Exception;
@@ -61,6 +62,20 @@ class PurchaseController extends Controller
             $shipment = $this->purchaseService->createShipment($request);
             $shipment->save();
 
+            if ($request->has('costs')) {
+                foreach ($request->input('costs') as $costData) {
+                    if (!empty($costData['cost_name']) && !empty($costData['cost_amount'])) {
+                        PurchaseCosts::create([
+                            'shipment_id' => $shipment->id,
+                            'cost_date' => $costData['cost_date'],
+                            'cost_name' => $costData['cost_name'],
+                            'cost_amount' => $costData['cost_amount'],
+                            'description' => $costData['description'],
+                        ]);
+                    }
+                }
+            }
+
             $lotNumbers = $request->input('lot_number', []);
 
             for ($c = 1; $c <= 9; $c++) {
@@ -89,8 +104,9 @@ class PurchaseController extends Controller
     public function detail(string $id)
     {
         $shipment = Shipment::where('id', $id)
-            ->with('lots')
-            ->firstOrFail()->toArray();
+            ->with(['lots', 'purchase_costs', 'provider'])
+            ->firstOrFail()
+            ->toArray();
 
 
         foreach($shipment['lots'] as $key=>$lot){
@@ -146,7 +162,7 @@ class PurchaseController extends Controller
     public function edit(string $id): View
     {
         $shipment = Shipment::where('id', $id)
-            ->with('lots')
+            ->with(['lots', 'purchase_costs'])
             ->firstOrFail()->toArray();
 
 
@@ -199,6 +215,38 @@ class PurchaseController extends Controller
 
             $updatedShipment = $this->purchaseService->updateShipment($request, Shipment::where('id', $id)->firstOrFail());
             $updatedShipment->save();
+
+            if ($request->has('costs')) {
+                $submittedCostIds = [];
+                foreach ($request->input('costs') as $costData) {
+                    if (!empty($costData['cost_name']) && !empty($costData['cost_amount'])) {
+                        if (!empty($costData['id'])) {
+                            // Update existing cost
+                            $cost = PurchaseCosts::find($costData['id']);
+                            if ($cost) {
+                                $cost->update($costData);
+                                $submittedCostIds[] = $costData['id'];
+                            }
+                        } else {
+                            // Create new cost
+                            $newCost = new PurchaseCosts($costData);
+                            $newCost->shipment_id = $updatedShipment->id;
+                            $newCost->save();
+                            $submittedCostIds[] = $newCost->id;
+                        }
+                    }
+                }
+
+                // Delete removed costs
+                $existingCostIds = PurchaseCosts::where('shipment_id', $updatedShipment->id)->pluck('id')->toArray();
+                $costsToDelete = array_diff($existingCostIds, $submittedCostIds);
+                if (!empty($costsToDelete)) {
+                    PurchaseCosts::destroy($costsToDelete);
+                }
+            } else {
+                // If no costs are submitted, delete all existing costs for this shipment
+                PurchaseCosts::where('shipment_id', $updatedShipment->id)->delete();
+            }
 
             if ($request->has('lot_number')) {
                 foreach ($request->input('lot_number') as $container => $containerData) {
