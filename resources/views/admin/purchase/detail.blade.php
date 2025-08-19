@@ -267,7 +267,7 @@
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Cost Date</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Cost Name</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold text-center">Cost Amount $</div>
-                                    <div class="col-lg-5 col-xl-5 border-1 p-2 fw-bold text-center">Description</div>
+                                    <div class="col-lg-5 col-xl-5 border-1 p-2 fw-bold">Description</div>
                                 </div>
                                 @foreach($shipment['purchase_costs'] as $cost)
                                 <div class="row mb-0 border-x-1 border-top-0">
@@ -292,7 +292,7 @@
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Cost Date</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Product Name</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold text-center">Cost Amount $</div>
-                                    <div class="col-lg-5 col-xl-5 border-1 p-2 fw-bold text-center">Container Details</div>
+                                    <div class="col-lg-5 col-xl-5 border-1 p-2 fw-bold">Container Details</div>
                                 </div>
                                 @foreach($shipment['lots'] as $lot)
                                     @php
