@@ -717,6 +717,15 @@
         }
         calc_shipment();
 
+        function updatePrice(c, i) {
+            const selectElement = document.getElementById(`item_id_${c}_${i}`);
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const price = selectedOption.getAttribute('data-price');
+            const priceInputElement = document.getElementById(`price_per_unit_${c}_${i}`);
+            priceInputElement.value = price;
+            calc_lot(c, i);
+        }
+
         function calc_lot(c, i){
             var package_kg = Number($('#package_kg_'+c+'_'+i).val());
             var total_packages = Number($('#total_packages_'+c+'_'+i).val());

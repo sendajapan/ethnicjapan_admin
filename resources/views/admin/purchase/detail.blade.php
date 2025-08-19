@@ -327,7 +327,7 @@
                                                 <div class="col-lg-2 col-xl-2 border-1 p-2">
                                                     <label class="form-label">Product</label>
                                                     <br>
-                                                    <label class="font-bold">@php if(isset($groupedByContainer[$timestamp][$c][$i]['item_id'])){ echo $groupedByContainer[$timestamp][$c][$i]['item_id'];} @endphp</label>
+                                                    <label class="font-bold">@php if(isset($groupedByContainer[$timestamp][$c][$i]['item']['item_name'])){ echo $groupedByContainer[$timestamp][$c][$i]['item']['item_name'];} @endphp</label>
                                                 </div>
                                                 <div class="col-lg-2 col-xl-2 border-1 p-2">
                                                     <label class="form-label">Package KG</label>

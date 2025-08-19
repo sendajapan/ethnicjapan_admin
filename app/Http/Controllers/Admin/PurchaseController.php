@@ -104,7 +104,7 @@ class PurchaseController extends Controller
     public function detail(string $id)
     {
         $shipment = Shipment::where('id', $id)
-            ->with(['lots', 'purchase_costs', 'provider'])
+            ->with(['lots.item', 'purchase_costs', 'provider'])
             ->firstOrFail()
             ->toArray();
 
