@@ -147,8 +147,9 @@ class PurchaseController extends Controller
 
 
     public function delete_complete_lot(){
+        lot_photos::where('lot_unique', $_GET['id'])->delete();
 //        lot::where('lot_unique', $_GET['id'])->delete();
-        echo $_GET('id');
+//        echo $_GET('id');
 
     }
 
