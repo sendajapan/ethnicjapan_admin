@@ -266,9 +266,8 @@
 
                                 <div class="row mb-0 border-x-1 border-top-1" style="background-color:rgb(208, 234, 255);">
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">#</div>
-                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Cost Date</div>
+                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Cost Date</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Product Name (KG)</div>
-                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Total Packages</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold text-center">Cost Amount $</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Container</div>
                                     <div class="col-lg-3 col-xl-3 border-1 p-2 fw-bold">Lot</div>
@@ -281,9 +280,8 @@
                                     @endphp
                                     <div class="row mb-0 border-x-1 border-top-0">
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $rowNumber++ }}</div>
-                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $shipment['invoice_date'] }}</div>
-                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $lot['item']['item_name'] ?? 'N/A' }}, ({{ $lot['total_qty'] }} KG)</div>
-                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $lot['total_packages'] }}</div>
+                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $shipment['invoice_date'] }}</div>
+                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $lot['item']['item_name'] ?? 'N/A' }}, ({{ $lot['total_packages'] }} {{ $lot['type_of_package'] }} x {{ $lot['package_kg'] }} KG )</div>
                                         <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0 text-center">$ {{ number_format($lot['total_price'], 2) }}</div>
                                         <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">Container {{ $containerIndex }}</div>
                                         <div class="col-lg-3 col-xl-3 border-1 p-2 border-top-0">Lot {{ $lotIndex }}</div>
