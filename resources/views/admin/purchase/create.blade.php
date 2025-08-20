@@ -156,10 +156,10 @@
 {{--                                    <label for="insurance" class="form-label">Insurance $</label>--}}
 {{--                                    <input type="text" class="form-control" id="insurance" name="insurance"  onkeyup="calc_shipment()" value="{{ old('insurance') }}">--}}
 {{--                                </div>--}}
-{{--                                <div class="col-lg-2 col-xl-2">--}}
-{{--                                    <label for="exchange_rate" class="form-label">Exchange Rate $</label>--}}
-{{--                                    <input type="text" class="form-control" id="exchange_rate" name="exchange_rate"  value="{{ old('exchange_rate') }}">--}}
-{{--                                </div>--}}
+                                <div class="col-lg-2 col-xl-2">
+                                    <label for="exchange_rate" class="form-label">Exchange Rate $</label>
+                                    <input type="text" class="form-control" id="exchange_rate" name="exchange_rate"  value="{{ old('exchange_rate') }}">
+                                </div>
 {{--                                <div class="col-lg-2 col-xl-2">--}}
 {{--                                    <label for="duties" class="form-label">Duties $</label>--}}
 {{--                                    <input type="text" class="form-control" id="duties" name="duties"  onkeyup="calc_shipment()" value="{{ old('duties') }}">--}}

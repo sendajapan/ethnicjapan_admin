@@ -199,48 +199,48 @@
 
                                 </div>
                                 <div class="row mb-3">
-                                    <!-- <div class="col-lg-2 col-xl-2">
-                                        <label for="freight" class="form-label">Freight $</label>
-                                        <input type="text" class="form-control" id="freight" name="freight"  value="{{ $shipment['freight'] }}">
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2">
-                                        <label for="insurance" class="form-label">Insurance $</label>
-                                        <input type="text" class="form-control" id="insurance" name="insurance"  value="{{ $shipment['insurance'] }}">
-                                    </div>
+{{--                                    <!-- <div class="col-lg-2 col-xl-2">--}}
+{{--                                        <label for="freight" class="form-label">Freight $</label>--}}
+{{--                                        <input type="text" class="form-control" id="freight" name="freight"  value="{{ $shipment['freight'] }}">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2">--}}
+{{--                                        <label for="insurance" class="form-label">Insurance $</label>--}}
+{{--                                        <input type="text" class="form-control" id="insurance" name="insurance"  value="{{ $shipment['insurance'] }}">--}}
+{{--                                    </div>--}}
                                     <div class="col-lg-2 col-xl-2">
                                         <label for="exchange_rate" class="form-label">Exchange Rate $</label>
                                         <input type="text" class="form-control" id="exchange_rate" name="exchange_rate"  value="{{ $shipment['exchange_rate'] }}">
                                     </div>
-                                    <div class="col-lg-2 col-xl-2">
-                                        <label for="duties" class="form-label">Duties $</label>
-                                        <input type="text" class="form-control" id="duties" name="duties"  value="{{ $shipment['duties'] }}">
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2">
-                                        <label for="tax" class="form-label">Tax $</label>
-                                        <input type="text" class="form-control" id="tax" name="tax"  value="{{ $shipment['tax'] }}">
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2">
-                                        <label for="unpack" class="form-label">Unpack $</label>
-                                        <input type="text" class="form-control" id="unpack" name="unpack"  value="{{ $shipment['unpack'] }}">
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-2 col-xl-2">
-                                        <label for="transport" class="form-label">Transport $</label>
-                                        <input type="text" class="form-control" id="transport" name="transport"  value="{{ $shipment['transport'] }}">
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2">
-                                        <label for="penalty" class="form-label">Penalty $</label>
-                                        <input type="text" class="form-control" id="penalty" name="penalty"  value="{{ $shipment['penalty'] }}">
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2">
-                                        <label for="other_fee" class="form-label">Other Fee $</label>
-                                        <input type="text" class="form-control" id="other_fee" name="other_fee"  value="{{ $shipment['other_fee'] }}">
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2">
-                                        <label for="total_shipment_cost" class="form-label">Total Cost $</label>
-                                        <input type="text" class="form-control" id="total_shipment_cost" name="total_shipment_cost"  value="0">
-                                    </div> -->
+{{--                                    <div class="col-lg-2 col-xl-2">--}}
+{{--                                        <label for="duties" class="form-label">Duties $</label>--}}
+{{--                                        <input type="text" class="form-control" id="duties" name="duties"  value="{{ $shipment['duties'] }}">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2">--}}
+{{--                                        <label for="tax" class="form-label">Tax $</label>--}}
+{{--                                        <input type="text" class="form-control" id="tax" name="tax"  value="{{ $shipment['tax'] }}">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2">--}}
+{{--                                        <label for="unpack" class="form-label">Unpack $</label>--}}
+{{--                                        <input type="text" class="form-control" id="unpack" name="unpack"  value="{{ $shipment['unpack'] }}">--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="row mb-3">--}}
+{{--                                    <div class="col-lg-2 col-xl-2">--}}
+{{--                                        <label for="transport" class="form-label">Transport $</label>--}}
+{{--                                        <input type="text" class="form-control" id="transport" name="transport"  value="{{ $shipment['transport'] }}">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2">--}}
+{{--                                        <label for="penalty" class="form-label">Penalty $</label>--}}
+{{--                                        <input type="text" class="form-control" id="penalty" name="penalty"  value="{{ $shipment['penalty'] }}">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2">--}}
+{{--                                        <label for="other_fee" class="form-label">Other Fee $</label>--}}
+{{--                                        <input type="text" class="form-control" id="other_fee" name="other_fee"  value="{{ $shipment['other_fee'] }}">--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2">--}}
+{{--                                        <label for="total_shipment_cost" class="form-label">Total Cost $</label>--}}
+{{--                                        <input type="text" class="form-control" id="total_shipment_cost" name="total_shipment_cost"  value="0">--}}
+{{--                                    </div> -->--}}
                                     <div class="col-lg-4 col-xl-4">
                                         <label for="other_fee" class="form-label">Comments</label>
                                         <input type="text" class="form-control" id="shipment_comment" name="shipment_comment"  value="{{ $shipment['shipment_comment'] }}">
@@ -580,7 +580,7 @@
             if(i){
                 Swal.fire({
                     title: "Are you sure you want to delete this lot?",
-                    text: "Changes will be finalized when you submit page!",
+                    text: "This Lot will be deleted immediately!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",

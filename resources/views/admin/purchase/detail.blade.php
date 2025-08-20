@@ -190,59 +190,59 @@
 
                                 </div>
                                 <div class="row mb-0  border-x-1 border-top-0">
-                                    <!-- <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
-                                        <label for="freight" class="form-label">Freight $</label>
-                                        <br>
-                                        <label class="font-bold">{{ $shipment['freight'] }}</label>
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
-                                        <label for="insurance" class="form-label">Insurance $</label>
-                                        <br>
-                                        <label class="font-bold">{{ $shipment['insurance'] }}</label>
-                                    </div>
+{{--                                    <!-- <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+{{--                                        <label for="freight" class="form-label">Freight $</label>--}}
+{{--                                        <br>--}}
+{{--                                        <label class="font-bold">{{ $shipment['freight'] }}</label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+{{--                                        <label for="insurance" class="form-label">Insurance $</label>--}}
+{{--                                        <br>--}}
+{{--                                        <label class="font-bold">{{ $shipment['insurance'] }}</label>--}}
+{{--                                    </div>--}}
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
                                         <label for="exchange_rate" class="form-label">Exchange Rate $</label>
                                         <br>
                                         <label class="font-bold">{{ $shipment['exchange_rate'] }}</label>
                                     </div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
-                                        <label for="duties" class="form-label">Duties $</label>
-                                        <br>
-                                        <label class="font-bold">{{ $shipment['duties'] }}</label>
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
-                                        <label for="tax" class="form-label">Tax $</label>
-                                        <br>
-                                        <label class="font-bold">{{ $shipment['tax'] }}</label>
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
-                                        <label for="unpack" class="form-label">Unpack $</label>
-                                        <br>
-                                        <label class="font-bold">{{ $shipment['unpack'] }}</label>
-                                    </div>
-                                </div>
-                                <div class="row mb-0  border-x-1 border-top-0">
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
-                                        <label for="transport" class="form-label">Transport $</label>
-                                        <br>
-                                        <label class="font-bold">{{ $shipment['transport'] }}</label>
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
-                                        <label for="penalty" class="form-label">Penalty $</label>
-                                        <br>
-                                        <label class="font-bold">{{ $shipment['penalty'] }}</label>
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
-                                        <label for="other_fee" class="form-label">Other Fee $</label>
-                                        <br>
-                                        <label class="font-bold">{{ $shipment['other_fee'] }}</label>
-                                    </div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
-                                        <label for="total_shipment_cost" class="form-label">Total Cost $</label>
-                                        <br>
-                                        <label class="font-bold"></label>
-                                    </div> -->
-                                    <div class="col-lg-12 col-xl-12 border-1 p-2 border-top-0">
+{{--                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+{{--                                        <label for="duties" class="form-label">Duties $</label>--}}
+{{--                                        <br>--}}
+{{--                                        <label class="font-bold">{{ $shipment['duties'] }}</label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+{{--                                        <label for="tax" class="form-label">Tax $</label>--}}
+{{--                                        <br>--}}
+{{--                                        <label class="font-bold">{{ $shipment['tax'] }}</label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+{{--                                        <label for="unpack" class="form-label">Unpack $</label>--}}
+{{--                                        <br>--}}
+{{--                                        <label class="font-bold">{{ $shipment['unpack'] }}</label>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="row mb-0  border-x-1 border-top-0">--}}
+{{--                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+{{--                                        <label for="transport" class="form-label">Transport $</label>--}}
+{{--                                        <br>--}}
+{{--                                        <label class="font-bold">{{ $shipment['transport'] }}</label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+{{--                                        <label for="penalty" class="form-label">Penalty $</label>--}}
+{{--                                        <br>--}}
+{{--                                        <label class="font-bold">{{ $shipment['penalty'] }}</label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+{{--                                        <label for="other_fee" class="form-label">Other Fee $</label>--}}
+{{--                                        <br>--}}
+{{--                                        <label class="font-bold">{{ $shipment['other_fee'] }}</label>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+{{--                                        <label for="total_shipment_cost" class="form-label">Total Cost $</label>--}}
+{{--                                        <br>--}}
+{{--                                        <label class="font-bold"></label>--}}
+{{--                                    </div> -->--}}
+                                    <div class="col-lg-10 col-xl-10 border-1 p-2 border-top-0">
                                         <label for="other_fee" class="form-label">Comments</label>
                                         <br>
                                         <label class="font-bold">{{ $shipment['shipment_comment'] }}</label>
@@ -295,7 +295,7 @@
                             </div>
                             @endif
 
-                           
+
                             @if(!empty($shipment['purchase_costs']))
                             <div class="card-body pt-0">
                                 <div class="row mb-0 border-x-1 border-top-1" style="background-color:rgb(208, 234, 255);">
@@ -324,7 +324,7 @@
                                     <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0 text-end fw-bold">Grand Total:</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0 fw-bold text-center">$ {{ number_format($grandTotal, 0) }}</div>
                                 </div>
-                                
+
                             </div>
                             @endif
                         </div>
