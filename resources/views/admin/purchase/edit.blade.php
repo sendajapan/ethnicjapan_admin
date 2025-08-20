@@ -589,7 +589,26 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $('#tr_'+c+'_'+i).remove();
+                        // const photo_db_id_split = id.split("_");
+                        // const photo_db_id  = photo_db_id_split[photo_db_id_split.length - 1];
+                        console.log({{$timestamp}});
+                        $.ajax({
+                            url: '{{url('admin/purchase')}}/delete_complete_lot?id='{{$timestamp}}+c+i,
+                            method: "GET",
+                            success: function (data) {
+                                if (data.code === 200) {
+                                    console.error("Removed Lot:", xhr);
+                                }
+                            },
+                            error: function (xhr) {
+                                console.error("Error removing photo:", xhr);
+                            },
+                        });
+
+
                     }
+
+
                 });
             }
         }
