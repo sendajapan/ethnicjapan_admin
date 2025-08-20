@@ -593,7 +593,7 @@
                         // const photo_db_id  = photo_db_id_split[photo_db_id_split.length - 1];
                         console.log({{$timestamp}});
                         $.ajax({
-                            url: '{{url('admin/purchase')}}/delete_complete_lot?id='+{{$timestamp}}+c+i,
+                            url: '{{url('admin/purchase')}}/delete_complete_lot?id='{{$timestamp}}'+c+i,
                             method: "GET",
                             success: function (data) {
                                 if (data.code === 200) {
