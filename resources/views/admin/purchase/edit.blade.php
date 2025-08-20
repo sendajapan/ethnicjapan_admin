@@ -261,11 +261,11 @@
                             <table class="table table-bordered" id="purchase-costs-table">
                                 <thead>
                                     <tr>
-                                        <th>Cost Date</th>
-                                        <th>Cost Name</th>
-                                        <th>Cost Amount</th>
-                                        <th>Description</th>
-                                        <th>Action</th>
+                                        <th width="10%">Cost Date</th>
+                                        <th width="10%">Cost Name</th>
+                                        <th width="10%">Cost Amount</th>
+                                        <th width="50%">Description</th>
+                                        <th width="10%">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -275,22 +275,22 @@
 
                                     @forelse($costs as $index => $cost)
                                         <tr>
-                                            <td>
+                                            <td width="10%">
                                                 <input type="hidden" name="costs[{{ $index }}][id]" value="{{ $cost['id'] ?? '' }}">
                                                 <input type="date" class="form-control" name="costs[{{ $index }}][cost_date]" value="{{ $cost['cost_date'] ?? '' }}">
                                             </td>
-                                            <td><input type="text" class="form-control" name="costs[{{ $index }}][cost_name]" value="{{ $cost['cost_name'] ?? '' }}"></td>
-                                            <td><input type="number" class="form-control" name="costs[{{ $index }}][cost_amount]" value="{{ $cost['cost_amount'] ?? '' }}"></td>
-                                            <td><input type="text" class="form-control" name="costs[{{ $index }}][description]" value="{{ $cost['description'] ?? '' }}"></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
+                                            <td width="10%"><input type="text" class="form-control" name="costs[{{ $index }}][cost_name]" value="{{ $cost['cost_name'] ?? '' }}"></td>
+                                            <td width="10%"><input type="number" class="form-control" name="costs[{{ $index }}][cost_amount]" value="{{ $cost['cost_amount'] ?? '' }}"></td>
+                                            <td width="50%"><input type="text" class="form-control" name="costs[{{ $index }}][description]" value="{{ $cost['description'] ?? '' }}"></td>
+                                            <td width="10%"><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td><input type="date" placeholder="Cost Date" class="form-control" name="costs[0][cost_date]"></td>
-                                            <td><input type="text" placeholder="Cost Name" class="form-control" name="costs[0][cost_name]"></td>
-                                            <td><input type="number" placeholder="Cost Amount" class="form-control" name="costs[0][cost_amount]"></td>
-                                            <td><input type="text" placeholder="Description" class="form-control" name="costs[0][description]"></td>
-                                            <td><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
+                                            <td width="10%"><input type="date" placeholder="Cost Date" class="form-control" name="costs[0][cost_date]"></td>
+                                            <td width="10%"><input type="text" placeholder="Cost Name" class="form-control" name="costs[0][cost_name]"></td>
+                                            <td width="10%"><input type="number" placeholder="Cost Amount" class="form-control" name="costs[0][cost_amount]"></td>
+                                            <td width="50%"><input type="text" placeholder="Description" class="form-control" name="costs[0][description]"></td>
+                                            <td width="10%"><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -544,11 +544,11 @@
             $('#add-cost-row').on('click', function() {
                 let newRow = `
                 <tr>
-                    <td><input type="date" placeholder="Cost Date" class="form-control" name="costs[${costRowIndex}][cost_date]"></td>
-                    <td><input type="text" placeholder="Cost Name" class="form-control" name="costs[${costRowIndex}][cost_name]"></td>
-                    <td><input type="number" placeholder="Cost Amount" class="form-control" name="costs[${costRowIndex}][cost_amount]"></td>
-                    <td><input type="text" placeholder="Description" class="form-control" name="costs[${costRowIndex}][description]"></td>
-                    <td><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
+                    <td width="10%"><input type="date" placeholder="Cost Date" class="form-control" name="costs[${costRowIndex}][cost_date]"></td>
+                    <td width="10%"><input type="text" placeholder="Cost Name" class="form-control" name="costs[${costRowIndex}][cost_name]"></td>
+                    <td width="10%"><input type="number" placeholder="Cost Amount" class="form-control" name="costs[${costRowIndex}][cost_amount]"></td>
+                    <td width="50%"><input type="text" placeholder="Description" class="form-control" name="costs[${costRowIndex}][description]"></td>
+                    <td width="10%"><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
                 </tr>`;
                 $('#purchase-costs-table tbody').append(newRow);
                 costRowIndex++;
