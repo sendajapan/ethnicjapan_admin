@@ -274,9 +274,29 @@ class PurchaseController extends Controller
     public function destroy(string $id)
     {
         try {
-            $purchase = Purchase::where('id', $id)->firstOrFail();
-            $purchase->purchasedItems()->delete();
-            $purchase->delete();
+            DB::transaction(function () use ($id) {
+                $shipment = Shipment::where('id', $id)->firstOrFail();
+
+                // Gather lot_uniques for this shipment
+                $lotUniques = Lot::where('shipment_id', $shipment->id)
+                    ->pluck('lot_unique')
+                    ->filter()
+                    ->toArray();
+
+                // Delete lot photos for all lots in this shipment
+                if (!empty($lotUniques)) {
+                    lot_photos::whereIn('lot_unique', $lotUniques)->delete();
+                }
+
+                // Delete purchase costs for this shipment
+                PurchaseCosts::where('shipment_id', $shipment->id)->delete();
+
+                // Delete lots for this shipment
+                Lot::where('shipment_id', $shipment->id)->delete();
+
+                // Finally delete the shipment
+                $shipment->delete();
+            });
         } catch (Exception $exception) {
             return response(array('code' => 403, 'status' => 'failed', 'message' => $exception->getMessage()), 403, array('Content-Type' => 'application/json'));
         }
