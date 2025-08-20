@@ -31,6 +31,7 @@ Route::resource('item', ItemController::class);
 
 Route::post("purchase/upload_lot_photo", [PurchaseController::class, 'upload_lot_photo']);
 Route::get("purchase/delete_lot_photo", [PurchaseController::class, 'delete_lot_photo']);
+Route::get("purchase/delete_complete_lot", [PurchaseController::class, 'delete_complete_lot']);
 
 /** Purchase Routes */
 Route::get("purchase/detail/{id}", [PurchaseController::class, 'detail'])->name('purchase.detail');
