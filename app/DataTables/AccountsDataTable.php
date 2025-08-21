@@ -4,6 +4,12 @@ namespace App\DataTables;
 
 use App\Models\Accounts;
 use App\Models\BankTransaction;
+use App\Models\Provider;
+use App\Models\Customer;
+use App\Models\Shipment;
+use App\Models\Lot;
+use App\Models\PurchaseCosts;
+use App\Models\Sale;
 use App\Utils\ColorUtils;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
@@ -32,29 +38,51 @@ class AccountsDataTable extends DataTable
                 </a>';
             })
             ->addColumn('balance', function ($query) {
-                $balance=0;
-                $bank_currency = '';
-                $transactions = BankTransaction::select('bank_transactions.type', 'bank_transactions.final_amount', 'bank_accounts.bank_currency')
-                    ->leftJoin('bank_accounts', 'bank_accounts.id', 'bank_transactions.bank_account_id')
-                    ->where('accounts_id', $query->id)->get()->toArray();
-                foreach($transactions as $t) {
-                    if($t['type']=='CR') {
-                        $balance += $t['final_amount'];
-                    }elseif($t['type']=='DR') {
-                        $balance -= $t['final_amount'];
+                $balance = 0;
+                $bank_currency = 'USD';
+                
+                if ($query->source_type == 'account') {
+                    // Calculate balance for accounts
+                    $transactions = BankTransaction::select('bank_transactions.type', 'bank_transactions.final_amount', 'bank_accounts.bank_currency')
+                        ->leftJoin('bank_accounts', 'bank_accounts.id', 'bank_transactions.bank_account_id')
+                        ->where('accounts_id', $query->id)->get()->toArray();
+                    
+                    foreach($transactions as $t) {
+                        if($t['type']=='CR') {
+                            $balance += $t['final_amount'];
+                        }elseif($t['type']=='DR') {
+                            $balance -= $t['final_amount'];
+                        }
+                        $bank_currency = $t['bank_currency'];
                     }
-                    $bank_currency = $t['bank_currency'];
+                } else if ($query->source_type == 'provider') {
+                    $shipments = Shipment::where('provider_id', $query->id)->get();
+                    foreach($shipments as $shipment) {
+                        $lotsTotal = Lot::where('shipment_id', $shipment->id)->sum('total_price') ?? 0;
+                        $costsTotal = PurchaseCosts::where('shipment_id', $shipment->id)->sum('cost_amount') ?? 0;
+                        $balance += ($lotsTotal + $costsTotal);
+                    }
+                } else if ($query->source_type == 'customer') {
+                    $sales = Sale::where('customer_id', $query->id)->sum('sale_amount') ?? 0;
+                    $balance = $sales;
                 }
+                
                 return '<span class="float-start">'.$bank_currency. '</span>'. number_format($balance,0);
             })
             ->addColumn('action', function ($query) {
-                return '<a href="'. route('admin.accounts.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
-                    <i class="material-icons md-edit fs-6"></i>
-                </a>
-                <a href="'. route('admin.accounts.destroy', $query->id) .'" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
-                    <i class="material-icons md-delete_forever fs-6"></i>
-                </a>';
-
+                if ($query->source_type == 'account') {
+                    return '<a href="'. route('admin.accounts.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
+                        <i class="material-icons md-edit fs-6"></i>
+                    </a>';
+                } else if ($query->source_type == 'provider') {
+                    return '<a href="'. route('admin.provider.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
+                        <i class="material-icons md-edit fs-6"></i>
+                    </a>';
+                } else if ($query->source_type == 'customer') {
+                    return '<a href="'. route('admin.customer.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
+                        <i class="material-icons md-edit fs-6"></i>
+                    </a>';
+                }
             })
             ->rawColumns(['view', 'balance',  'action']);
     }
@@ -64,8 +92,25 @@ class AccountsDataTable extends DataTable
      */
     public function query(Accounts $model): QueryBuilder
     {
-        return $query = $model->newQuery();
-
+        $accounts = $model->newQuery()->select(
+            'id',
+            'account_name as name',
+            'account_type as type',
+            \DB::raw("'account' as source_type")
+        );
+        $providers = Provider::select(
+            'id',
+            'provider_name as name',
+            \DB::raw("'provider' as type"),
+            \DB::raw("'provider' as source_type")
+        );
+        $customers = Customer::select(
+            'id',
+            'customer_name as name',
+            \DB::raw("'customer' as type"),
+            \DB::raw("'customer' as source_type")
+        );
+        return $accounts->union($providers)->union($customers);
     }
 
     /**
@@ -120,8 +165,8 @@ class AccountsDataTable extends DataTable
     {
         return [
             Column::computed('DT_RowIndex')->className('text-start')->title('S/N')->width(20),
-            Column::make('account_name')->className('text-start')->width(140),
-            Column::make('account_type')->className('text-start')->width(140),
+            Column::make('name')->className('text-start')->width(140)->title('Account Name'),
+            Column::make('type')->className('text-start text-capitalize')->width(140)->title('Account Type'),
             Column::make('balance')->title('Balance')->className('text-end')->width(110),
             Column::make('view')->className('text-start')->width(140),
             Column::computed('action')
@@ -144,3 +189,6 @@ class AccountsDataTable extends DataTable
 
 
 
+// <a href="'. route('admin.customer.destroy', $query->id) .'" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
+// <i class="material-icons md-delete_forever fs-6"></i>
+// </a>

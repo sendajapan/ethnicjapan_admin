@@ -47,7 +47,9 @@
                     <section class="section">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="mb-3">Purchase information</h5>
+                            <h4>Purchase information <a href="{{ route('admin.purchase.edit', $shipment['id']) }}" class="btn btn-sm font-sm rounded btn-dark">
+                                <i class="material-icons md-edit fs-6"></i> Edit
+                            </a></h4>
                                 <div class="row mb-0  border-x-1 border-top-1">
                                     <div class="col-lg-2 col-xl-2 border-1 p-2">
                                         <label class="form-label">Purchase/Invoice No.</label>
@@ -190,7 +192,7 @@
 
                                 </div>
                                 <div class="row mb-0  border-x-1 border-top-0">
-{{--                                    <!-- <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+<!-- {{--                                    <!-- <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
 {{--                                        <label for="freight" class="form-label">Freight $</label>--}}
 {{--                                        <br>--}}
 {{--                                        <label class="font-bold">{{ $shipment['freight'] }}</label>--}}
@@ -199,13 +201,13 @@
 {{--                                        <label for="insurance" class="form-label">Insurance $</label>--}}
 {{--                                        <br>--}}
 {{--                                        <label class="font-bold">{{ $shipment['insurance'] }}</label>--}}
-{{--                                    </div>--}}
+{{--                                    </div>--}} -->
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">
                                         <label for="exchange_rate" class="form-label">Exchange Rate $</label>
                                         <br>
                                         <label class="font-bold">{{ $shipment['exchange_rate'] }}</label>
                                     </div>
-{{--                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
+<!-- {{--                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">--}}
 {{--                                        <label for="duties" class="form-label">Duties $</label>--}}
 {{--                                        <br>--}}
 {{--                                        <label class="font-bold">{{ $shipment['duties'] }}</label>--}}
@@ -241,7 +243,7 @@
 {{--                                        <label for="total_shipment_cost" class="form-label">Total Cost $</label>--}}
 {{--                                        <br>--}}
 {{--                                        <label class="font-bold"></label>--}}
-{{--                                    </div> -->--}}
+{{--                                    </div> -->--}} -->
                                     <div class="col-lg-10 col-xl-10 border-1 p-2 border-top-0">
                                         <label for="other_fee" class="form-label">Comments</label>
                                         <br>
@@ -258,6 +260,7 @@
                         @php
                                 $totalCost = 0;
                                 $totalLotsCost = 0;
+                                $totalcif = 0;
                                 $rowNumber = 1;
                             @endphp
                             @if(!empty($shipment['lots']) && count($shipment['lots']) > 0)
@@ -266,32 +269,49 @@
 
                                 <div class="row mb-0 border-x-1 border-top-1" style="background-color:rgb(208, 234, 255);">
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">#</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Cost Date</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Product Name (KG)</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold text-center">Cost Amount $</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Container</div>
-                                    <div class="col-lg-3 col-xl-3 border-1 p-2 fw-bold">Lot</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Cost Date</div>
+                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Product Name</div>
+                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Total Packages</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Total Qty</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost Amount $</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">CIF Total</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">CIF Yen</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Container</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Lot</div>
                                 </div>
                                 @foreach($shipment['lots'] as $lot)
                                     @php
                                         $lastTwo = substr($lot['lot_unique'], -2);
                                         $containerIndex = (int) substr($lastTwo, 0, 1);
                                         $lotIndex = (int) substr($lastTwo, 1, 1);
+
                                     @endphp
+                                    @php $cif = $lot['total_price'] * number_format($shipment['exchange_rate'], 2);
+                                    $cifyen = $cif / $lot['total_qty'];
+                                    @endphp
+
                                     <div class="row mb-0 border-x-1 border-top-0">
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $rowNumber++ }}</div>
-                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $shipment['invoice_date'] }}</div>
-                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $lot['item']['item_name'] ?? 'N/A' }}, ({{ $lot['total_packages'] }} {{ $lot['type_of_package'] }} x {{ $lot['package_kg'] }} KG )</div>
-                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0 text-center">$ {{ number_format($lot['total_price'], 2) }}</div>
-                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">Container {{ $containerIndex }}</div>
-                                        <div class="col-lg-3 col-xl-3 border-1 p-2 border-top-0">Lot {{ $lotIndex }}</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $shipment['invoice_date'] }}</div>
+                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $lot['item']['item_name'] ?? 'N/A' }}</div>
+                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $lot['total_packages'] }} {{ $lot['type_of_package'] }}</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $lot['total_qty'] }} Kg</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">$ {{ number_format($lot['total_price'], 0) }}</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cif, 0) }}</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cifyen, 0) }}</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">Container {{ $containerIndex }}</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">Lot {{ $lotIndex }}</div>
                                     </div>
-                                    @php $totalLotsCost += $lot['total_price']; @endphp
+                                    @php $totalLotsCost += $lot['total_price']; 
+                                    $totalcif += $cif;
+                                    @endphp
                                 @endforeach
                                 <div class="row mb-0 border-x-1 border-top-0" style="background-color:rgb(230, 230, 230);">
-                                    <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0 text-end fw-bold">Purchase Costs:</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0 fw-bold text-center">$ {{ number_format($totalLotsCost, 0) }}</div>
+                                    <div class="col-lg-7 col-xl-7 border-1 p-2 border-top-0 text-end fw-bold">Purchase Costs:</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">$ {{ number_format($totalLotsCost, 0) }}</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">¥ {{ number_format($totalcif, 0) }}</div>
                                 </div>
+                             
                             </div>
                             @endif
 
@@ -310,7 +330,7 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $rowNumber++ }}</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $cost['cost_date'] }}</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $cost['cost_name'] }}</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0 text-center">$ {{ number_format($cost['cost_amount'], 2) }}</div>
+                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0 text-center">$ {{ number_format($cost['cost_amount'], 0) }}</div>
                                     <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0">{{ $cost['description'] }}</div>
                                 </div>
                                     @php $totalCost += $cost['cost_amount']; @endphp
@@ -324,9 +344,12 @@
                                     <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0 text-end fw-bold">Grand Total:</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0 fw-bold text-center">$ {{ number_format($grandTotal, 0) }}</div>
                                 </div>
-
+                                <a href="{{ route('admin.purchase.edit', $shipment['id']) }}" class="btn mt-2 btn-sm font-sm rounded btn-dark">
+                                <i class="material-icons md-edit fs-6"></i> Add New Cost
+                            </a>
                             </div>
                             @endif
+                            
                         </div>
                     </section>
                     @endif

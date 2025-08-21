@@ -93,19 +93,25 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1.</td>
-                            <td>Ethnic Payable, Coke Expense</td>
-                            <td class="text-end">$ 3,600</td>
-                        </tr>
+                        @forelse($loanAccounts as $index => $account)
+                            <tr>
+                                <td>{{ $index + 1 }}.</td>
+                                <td>{{ $account->account_name }}</td>
+                                <td class="text-end">$ {{ number_format($account->total_amount, 0) }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="3" class="text-center">No loan accounts found</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
                     <tfoot>
                     <tr>
                         <th></th>
                         <th>Total</th>
-                        <th class="text-end">$ 3,600</th>
+                        <th class="text-end">$ {{ number_format($totalLoanAmount, 0) }}</th>
                     </tr>
                     </tfoot>
-                    </tbody>
                 </table>
             </div>
         </div>

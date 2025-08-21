@@ -26,6 +26,8 @@
                                     <option value="">Select</option>
                                     <option value="Account">Account</option>
                                     <option value="Expense">Expense</option>
+                                    <option value="Loan">Loan</option>
+
                                 </select>
                             </div>
 
