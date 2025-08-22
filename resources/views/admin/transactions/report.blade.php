@@ -121,7 +121,7 @@
                                                 <td class="text-end">{{ $row->type == 'DR' ? $row->bank_currency.' '.number_format($row->final_amount,0) : '' }}</td>
                                                 <td class="text-end">{{$row->bank_currency}} {{number_format($row->final_amount,0)}}</td>
                                                 @php
-                                                    if($row->type == 'CR') {
+                                                    if($row->type == 'DR') {
                                                         $balance_amount += $row->final_amount;
                                                     } else {
                                                         $balance_amount -= $row->final_amount;
@@ -203,7 +203,7 @@
                                                     <td class="text-end">{{$row->bank_charges >= 0 ? $row->bank_currency : ''}} {{number_format($row->bank_charges,0)}}</td>
                                                     <td class="text-end">{{ $row->type == 'DR' ? $row->bank_currency.' '.number_format($row->final_amount,0) : '' }}</td>
                                                     <td class="text-end">{{ $row->type == 'CR' ? $row->bank_currency.' '.number_format($row->final_amount,0) : '' }}</td>
-                                                    <td class="text-end">{{$row->bank_currency }} {{ $row->type == 'CR' ? number_format($balance_amount += $row->final_amount,0) : number_format($balance_amount-=$row->final_amount,0) }}</td>
+                                                    <td class="text-end">{{$row->bank_currency }} {{ $row->type == 'DR' ? number_format($balance_amount += $row->final_amount,0) : number_format($balance_amount-=$row->final_amount,0) }}</td>
                                                     <td class="text-end">
                                                         <a target="_blank" href="{{route('admin.transactions.edit',$row->bank_transaction_id)}}" class="btn btn-sm font-sm rounded btn-dark">
                                                             <i class="material-icons md-edit fs-6"></i>
