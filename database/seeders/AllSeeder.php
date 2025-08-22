@@ -263,18 +263,6 @@ class AllSeeder extends Seeder
                 'provider_physical_address' => 'test',
                 'provider_country_name' => 'Colombia',
             ],
-            [
-                'provider_name' => 'Nick',
-                'provider_company_name' => 'RIKI CO., LTD',
-                'provider_physical_address' => 'test',
-                'provider_country_name' => 'Japan',
-            ],
-            [
-                'provider_name' => 'Flo Trading',
-                'provider_company_name' => 'FLO TRADING',
-                'provider_physical_address' => 'test',
-                'provider_country_name' => 'Peru',
-            ],
         ]);
 
 
@@ -452,7 +440,7 @@ class AllSeeder extends Seeder
             $random_date = date("Y-m-d", rand(strtotime(date('2023-01-01')), strtotime(date('Y-m-d'))));
             $purchase['purchase_date'] = $random_date;
             $purchase['purchase_invoice'] = 'uploads/purchase/4012Wz89aKMaFds1kzaTvXTj7imWpBNG5NoDSXo4.pdf';
-            $purchase['provider_id'] = rand(1,4);
+            $purchase['provider_id'] = rand(1,2);
             $purchases[] = $purchase;
         }
         DB::table('purchases')->insert($purchases);
