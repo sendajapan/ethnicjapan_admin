@@ -120,10 +120,18 @@
                                                 <td class="text-end">{{ $row->type == 'CR' ? $row->bank_currency.' '.number_format($row->final_amount,0) : '' }}</td>
                                                 <td class="text-end">{{ $row->type == 'DR' ? $row->bank_currency.' '.number_format($row->final_amount,0) : '' }}</td>
                                                 @php
-                                                    if($row->type == 'CR') {
-                                                        $balance_amount += $row->final_amount;
-                                                    } else {
-                                                        $balance_amount -= $row->final_amount;
+                                                    if($type == 'bank'){
+                                                        if($row->type == 'DR') {
+                                                            $balance_amount += $row->final_amount;
+                                                        } else {
+                                                            $balance_amount -= $row->final_amount;
+                                                        }
+                                                    }else if($type == 'account'){
+                                                        if($row->type == 'CR') {
+                                                            $balance_amount += $row->final_amount;
+                                                        } else {
+                                                            $balance_amount -= $row->final_amount;
+                                                        }
                                                     }
                                                 @endphp
                                                 <td class="text-end">{{ $balance_amount }}</td>
