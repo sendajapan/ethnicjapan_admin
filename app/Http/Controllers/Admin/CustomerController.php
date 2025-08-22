@@ -143,6 +143,11 @@ class CustomerController extends Controller
     {
         try {
             Customer::where('id', $id)->firstOrFail()->delete();
+                        // Delete corresponding account record
+            $account = Accounts::where('id', $id)->first();
+            if($account) {
+                $account->delete();
+            }
         } catch (Exception $exception){
             return response(array('code' => 403, 'status' => 'failed', 'message' => $exception->getMessage()), 403, array('Content-Type' => 'application/json'));
         }
