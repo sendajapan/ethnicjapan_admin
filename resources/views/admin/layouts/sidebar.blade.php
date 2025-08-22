@@ -102,6 +102,12 @@
                 <a class="menu-link {{ setActive(['admin.purchase.index']) }}" href="{{ route('admin.purchase.index') }}">
                     <i class="icon material-icons md-request_quote text-muted"></i>
                     <span class="text">Purchase Shipments</span>
+                    @php
+                        $shipmentCount = \App\Models\Shipment::count();
+                    @endphp
+                    @if($shipmentCount > 0)
+                        <span class="badge bg-primary rounded-pill ms-2">{{ $shipmentCount }}</span>
+                    @endif
                 </a>
             </li>
 
