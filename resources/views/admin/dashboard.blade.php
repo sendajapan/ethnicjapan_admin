@@ -83,25 +83,42 @@
 
             </div>
             <div class="col-lg-4 col-xl-4 offset-1 ">
-                <h1>Loan</h1>
+                <h1>Accounts</h1>
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
                         <th scope="col">No.</th>
                         <th scope="col">Reference</th>
+                        <th scope="col">Account Type</th>
                         <th scope="col" class="text-end">Amount</th>
                     </tr>
                     </thead>
                     <tbody>
-                        @forelse($loanAccounts as $index => $account)
+                        @forelse($accountsWithBalance as $index => $account)
                             <tr>
                                 <td>{{ $index + 1 }}.</td>
                                 <td>{{ $account->account_name }}</td>
-                                <td class="text-end">$ {{ number_format($account->total_amount, 0) }}</td>
+                                <td>{{ $account->account_type }}</td>
+                                <td class="text-end">
+                                    @php
+                                        $amount = $account->total_amount;
+                                        $sign = '';
+                                        $color = '';
+                                        
+                                        if ($amount > 0) {
+                                            $sign = '+';
+                                            $color = 'text-success';
+                                        } elseif ($amount < 0) {
+                                            $sign = '-';
+                                            $color = 'text-danger';
+                                        }
+                                    @endphp
+                                    <span class="{{ $color }}">{{ $sign }}$ {{ number_format(abs($amount), 0) }}</span>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="text-center">No loan accounts found</td>
+                                <td colspan="4" class="text-center">No accounts found</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -109,7 +126,22 @@
                     <tr>
                         <th></th>
                         <th>Total</th>
-                        <th class="text-end">$ {{ number_format($totalLoanAmount, 0) }}</th>
+                        <th></th>
+                        <th class="text-end">
+                            @php
+                                $totalSign = '';
+                                $totalColor = '';
+                                
+                                if ($totalAmount > 0) {
+                                    $totalSign = '+';
+                                    $totalColor = 'text-success';
+                                } elseif ($totalAmount < 0) {
+                                    $totalSign = '-';
+                                    $totalColor = 'text-danger';
+                                }
+                            @endphp
+                            <span class="{{ $totalColor }}">{{ $totalSign }}$ {{ number_format(abs($totalAmount), 0) }}</span>
+                        </th>
                     </tr>
                     </tfoot>
                 </table>
