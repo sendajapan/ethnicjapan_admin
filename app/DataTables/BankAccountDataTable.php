@@ -40,7 +40,7 @@ class BankAccountDataTable extends DataTable
                 foreach($transactions as $t) {
                     if($t['type']=='DR') {
                         $balance += $t['final_amount'];
-                    }elseif($t['type']=='DR') {
+                    }elseif($t['type']=='CR') {
                         $balance -= $t['final_amount'];
                     }
                     $bank_currency = $t['bank_currency'];
