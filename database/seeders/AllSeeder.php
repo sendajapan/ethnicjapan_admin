@@ -270,8 +270,8 @@ class AllSeeder extends Seeder
                 'provider_country_name' => 'Japan',
             ],
             [
-                'provider_name' => 'Will',
-                'provider_company_name' => 'GANSO SHOKUHIN',
+                'provider_name' => 'Flo Trading',
+                'provider_company_name' => 'FLO TRADING',
                 'provider_physical_address' => 'test',
                 'provider_country_name' => 'Peru',
             ],
@@ -322,7 +322,41 @@ class AllSeeder extends Seeder
                 'password' => bcrypt('123'),
                 'role' => 'admin',
                 'status' => 'active',
+            ],
+            [
+                'name' => 'Admin',
+                'username' => 'admin',
+                'email' => 'motohashi@ethnicjapan.com',
+                'password' => bcrypt('motohashi22333'),
+                'role' => 'admin',
+                'status' => 'active',
+            ],
+            [
+                'name' => 'Admin',
+                'username' => 'admin',
+                'email' => 'nakamori@ethnicjapan.com',
+                'password' => bcrypt('nakamori33666'),
+                'role' => 'admin',
+                'status' => 'active',
+            ],
+            [
+                'name' => 'Admin',
+                'username' => 'admin',
+                'email' => 'amir@ethnicjapan.com',
+                'password' => bcrypt('amir4567'),
+                'role' => 'admin',
+                'status' => 'active',
+            ],
+            [
+                'name' => 'Admin',
+                'username' => 'admin',
+                'email' => 'jorge@ethnicjapan.com',
+                'password' => bcrypt('jorge4680'),
+                'role' => 'admin',
+                'status' => 'active',
             ]
+
+
         ]);
 
 
@@ -344,8 +378,8 @@ class AllSeeder extends Seeder
                 'category_id' => '1',
                 'item_origin' => 'Peru',
                 'item_photo' => 'uploads/item_photos/quinoa.webp',
-                'hts_code' => 'HTS 1805.00.00.00',
-                'default_price' => '9.50'
+                'hts_code' => 'HTS 1008.50.90.00',
+                'default_price' => '3.35'
             ),
             '2' => array(
                 'item_name' => 'AMARANTH',
@@ -353,8 +387,8 @@ class AllSeeder extends Seeder
                 'category_id' => '1',
                 'item_origin' => 'Peru',
                 'item_photo' => 'uploads/item_photos/amaranth2.webp',
-                'hts_code' => 'HTS 1801.00.20.00',
-                'default_price' => '15.90'
+                'hts_code' => 'HTS 1008.50.90.00',
+                'default_price' => '3.22'
             ),
             '3' => array(
                 'item_name' => 'CACAO',
@@ -505,7 +539,11 @@ class AllSeeder extends Seeder
             '2' => array(
                 'port_name' => 'Cartagena',
                 'country_name' => 'Colombia'
-            )
+            ),
+            '3' => array(
+             'port_name' => 'Callao',
+             'country_name' => 'Peru'
+             ),
         );
         DB::table('ports')->insert($portsData);
 
@@ -517,7 +555,7 @@ class AllSeeder extends Seeder
         DB::table('data_incoterms')->insert($incotermData);
 
         $packagetypeData = array(
-            '0' => array('package_type' => 'Bag'),
+            '0' => array('package_type' => 'TRILAMINADO KRAFT/PP'),
             '1' => array('package_type' => 'Box')
         );
         DB::table('data_package_types')->insert($packagetypeData);

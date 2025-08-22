@@ -270,12 +270,14 @@
                                 <div class="row mb-0 border-x-1 border-top-1" style="background-color:rgb(208, 234, 255);">
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">#</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Cost Date</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Product Name</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Product Name</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Total Packages</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Total Qty</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost Amount $</div>
-                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">CIF Total</div>
-                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">CIF Yen</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost in Yen ¥</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Exchange Rate</div>
+
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost Per Kg</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Container</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Lot</div>
                                 </div>
@@ -293,11 +295,12 @@
                                     <div class="row mb-0 border-x-1 border-top-0">
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $rowNumber++ }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $shipment['invoice_date'] }}</div>
-                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $lot['item']['item_name'] ?? 'N/A' }}</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $lot['item']['item_name'] ?? 'N/A' }}</div>
                                         <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $lot['total_packages'] }} {{ $lot['type_of_package'] }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $lot['total_qty'] }} Kg</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">$ {{ number_format($lot['total_price'], 0) }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cif, 0) }}</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">$ {{ $shipment['exchange_rate'] }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cifyen, 0) }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">Container {{ $containerIndex }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">Lot {{ $lotIndex }}</div>
@@ -307,7 +310,7 @@
                                     @endphp
                                 @endforeach
                                 <div class="row mb-0 border-x-1 border-top-0" style="background-color:rgb(230, 230, 230);">
-                                    <div class="col-lg-7 col-xl-7 border-1 p-2 border-top-0 text-end fw-bold">Purchase Costs:</div>
+                                    <div class="col-lg-6 col-xl-6 border-1 p-2 border-top-0 text-end fw-bold">Purchase Costs:</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">$ {{ number_format($totalLotsCost, 0) }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">¥ {{ number_format($totalcif, 0) }}</div>
                                 </div>
@@ -320,36 +323,40 @@
                             <div class="card-body pt-0">
                                 <div class="row mb-0 border-x-1 border-top-1" style="background-color:rgb(208, 234, 255);">
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">#</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Cost Date</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Cost Name</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold text-center">Cost Amount $</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Cost Date</div>
+                                    <div class="col-lg-4 col-xl-4 border-1 p-2 fw-bold">Cost Name</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost Amount $</div>
                                     <div class="col-lg-5 col-xl-5 border-1 p-2 fw-bold">Description</div>
                                 </div>
                                 @foreach($shipment['purchase_costs'] as $cost)
                                 <div class="row mb-0 border-x-1 border-top-0">
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $rowNumber++ }}</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $cost['cost_date'] }}</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $cost['cost_name'] }}</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0 text-center">$ {{ number_format($cost['cost_amount'], 0) }}</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $cost['cost_date'] }}</div>
+                                    <div class="col-lg-4 col-xl-4 border-1 p-2 border-top-0">{{ $cost['cost_name'] }}</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">$ {{ number_format($cost['cost_amount'], 0) }}</div>
                                     <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0">{{ $cost['description'] }}</div>
                                 </div>
                                     @php $totalCost += $cost['cost_amount']; @endphp
                                 @endforeach
                                 <div class="row mb-0 border-x-1 border-top-0"style="background-color:rgb(230, 230, 230);">
-                                    <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0 text-end fw-bold">Shipment Costs:</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0 fw-bold text-center">$ {{$totalCost}}</div>
+                                    <div class="col-lg-6 col-xl-6 border-1 p-2 border-top-0 text-end fw-bold">Shipment Costs:</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">$ {{$totalCost}}</div>
                                 </div>
                                 @php $grandTotal = $totalCost + $totalLotsCost; @endphp
                                 <div class="row mb-0 border-x-1 border-top-0" style="background-color:rgb(214, 214, 214);">
-                                    <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0 text-end fw-bold">Grand Total:</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0 fw-bold text-center">$ {{ number_format($grandTotal, 0) }}</div>
+                                    <div class="col-lg-6 col-xl-6 border-1 p-2 border-top-0 text-end fw-bold">Grand Total:</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">$ {{ number_format($grandTotal, 0) }}</div>
                                 </div>
-                                <a href="{{ route('admin.purchase.edit', $shipment['id']) }}" class="btn mt-2 btn-sm font-sm rounded btn-dark">
-                                <i class="material-icons md-edit fs-6"></i> Add New Cost
-                            </a>
+                              
                             </div>
+                           
                             @endif
-                            
+                            <div class="row">
+                                    <div class="col-lg-2 col-xl-2">
+                                        <a href="{{ route('admin.purchase.edit', $shipment['id']) }}" class="btn mt-2 btn-sm font-sm rounded btn-dark">
+                                            <i class="material-icons md-edit fs-6"></i> Add New Cost</a>
+                                    </div>
+                                </div>
                         </div>
                     </section>
                     @endif
