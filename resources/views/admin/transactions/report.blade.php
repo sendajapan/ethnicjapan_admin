@@ -119,7 +119,6 @@
                                                 <td class="text-end">{{$row->bank_charges >= 0 ? $row->bank_currency : ''}} {{number_format($row->bank_charges,0)}}</td>
                                                 <td class="text-end">{{ $row->type == 'CR' ? $row->bank_currency.' '.number_format($row->final_amount,0) : '' }}</td>
                                                 <td class="text-end">{{ $row->type == 'DR' ? $row->bank_currency.' '.number_format($row->final_amount,0) : '' }}</td>
-                                                <td class="text-end">{{$row->bank_currency}} {{number_format($row->final_amount,0)}}</td>
                                                 @php
                                                     if($row->type == 'CR') {
                                                         $balance_amount += $row->final_amount;
@@ -127,6 +126,7 @@
                                                         $balance_amount -= $row->final_amount;
                                                     }
                                                 @endphp
+                                                <td class="text-end">{{$balance_amount,0)}}</td>
                                                 <td class="text-end">
                                                     @if(isset($row->is_debt) && $row->is_debt)
                                                         <a target="_blank" href="{{route('admin.purchase.edit', $row->shipment_id)}}" class="btn btn-sm font-sm rounded btn-dark">
