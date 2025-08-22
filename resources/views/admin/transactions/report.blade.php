@@ -126,7 +126,7 @@
                                                         $balance_amount -= $row->final_amount;
                                                     }
                                                 @endphp
-                                                <td class="text-end">{{$balance_amount}}</td>
+                                                <td class="text-end">{{ $balance_amount }}</td>
                                                 <td class="text-end">
                                                     @if(isset($row->is_debt) && $row->is_debt)
                                                         <a target="_blank" href="{{route('admin.purchase.edit', $row->shipment_id)}}" class="btn btn-sm font-sm rounded btn-dark">
