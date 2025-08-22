@@ -132,6 +132,12 @@
                                                         } else {
                                                             $balance_amount -= $row->final_amount;
                                                         }
+                                                    } else{
+                                                        if($row->type == 'CR') {
+                                                            $balance_amount += $row->final_amount;
+                                                        } else {
+                                                            $balance_amount -= $row->final_amount;
+                                                        }
                                                     }
                                                 @endphp
                                                 <td class="text-end">{{ $balance_amount }}</td>
