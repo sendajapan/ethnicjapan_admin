@@ -18,17 +18,17 @@
                                 @method('PUT')
                             <div class="mb-4">
                                 <label for="account_name" class="form-label">Account Title</label>
-                                <input type="text" placeholder="" class="form-control" id="account_name" name="account_name"  value="{{ old('account_name') }}" required>
+                                <input type="text" placeholder="" class="form-control" id="account_name" name="account_name"  value="{{ old('account_name', $data->account_name) }}" required>
                             </div>
 
                             <div class="mb-4">
                                 <label for="account_type" class="form-label">Account Type</label>
                                 <select class="form-select" id="account_type" name="account_type" required >
                                     <option value="">Select</option>
-                                    <option value="Account">Account</option>
-                                    <option value="Expense">Expense</option>
-                                    <option value="Customer">Customer</option>
-                                    <option value="Provider">Provider</option>
+                                    <option value="Account" {{ old('account_type', $data->account_type) == 'Account' ? 'selected' : '' }}>Account</option>
+                                    <option value="Expense" {{ old('account_type', $data->account_type) == 'Expense' ? 'selected' : '' }}>Expense</option>
+                                    <option value="Customer" {{ old('account_type', $data->account_type) == 'Customer' ? 'selected' : '' }}>Customer</option>
+                                    <option value="Provider" {{ old('account_type', $data->account_type) == 'Provider' ? 'selected' : '' }}>Provider</option>
                                 </select>
                             </div>
 
