@@ -34,6 +34,7 @@ return new class extends Migration
             $table->string('social_certification_smeta')->nullable();
             $table->string('fda_registration')->nullable();
             $table->string('supplier_questionary_sheet')->nullable();
+            $table->integer('account_id')->nullable();
 
             $table->timestamps();
         });

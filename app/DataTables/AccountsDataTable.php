@@ -40,34 +40,63 @@ class AccountsDataTable extends DataTable
             ->addColumn('balance', function ($query) {
                 $balance = 0;
                 $bank_currency = 'USD';
-                
+
                 if ($query->source_type == 'account') {
-                    // Calculate balance for accounts
+                    // Calculate base balance based on account type
+                    if ($query->type == 'Customer') {
+                        // Get customer and calculate sales total (what they owe us)
+                        $customer = Customer::where('account_id', $query->id)->first();
+                        if ($customer) {
+                            $balance = Sale::where('customer_id', $customer->id)->sum('sale_amount') ?? 0;
+                        }
+                    } elseif ($query->type == 'Provider') {
+                        // Get provider and calculate shipments total (what we owe them)
+                        $provider = Provider::where('account_id', $query->id)->first();
+                        if ($provider) {
+                            $shipments = Shipment::where('provider_id', $provider->id)->get();
+                            foreach($shipments as $shipment) {
+                                $lotsTotal = Lot::where('shipment_id', $shipment->id)->sum('total_price') ?? 0;
+                                $costsTotal = PurchaseCosts::where('shipment_id', $shipment->id)->sum('cost_amount') ?? 0;
+                                $balance -= ($lotsTotal + $costsTotal); // Negative = we owe them
+                            }
+                        }
+                    }
+                    
+                    // Add bank transactions for all account types to get net balance
                     $transactions = BankTransaction::select('bank_transactions.type', 'bank_transactions.final_amount', 'bank_accounts.bank_currency')
                         ->leftJoin('bank_accounts', 'bank_accounts.id', 'bank_transactions.bank_account_id')
                         ->where('accounts_id', $query->id)->get()->toArray();
-                    
+
                     foreach($transactions as $t) {
                         if($t['type']=='CR') {
                             $balance += $t['final_amount'];
                         }elseif($t['type']=='DR') {
                             $balance -= $t['final_amount'];
                         }
-                        $bank_currency = $t['bank_currency'];
+                        $bank_currency = $t['bank_currency'] ?? 'USD';
                     }
-                } else if ($query->source_type == 'provider') {
-                    $shipments = Shipment::where('provider_id', $query->id)->get();
-                    foreach($shipments as $shipment) {
-                        $lotsTotal = Lot::where('shipment_id', $shipment->id)->sum('total_price') ?? 0;
-                        $costsTotal = PurchaseCosts::where('shipment_id', $shipment->id)->sum('cost_amount') ?? 0;
-                        $balance += ($lotsTotal + $costsTotal);
-                    }
-                } else if ($query->source_type == 'customer') {
-                    $sales = Sale::where('customer_id', $query->id)->sum('sale_amount') ?? 0;
-                    $balance = $sales;
+                } 
+                
+                // Format balance with appropriate sign and color
+                $formattedBalance = number_format(abs($balance), 0);
+                $sign = '';
+                $color = '';
+                
+                if ($query->type == 'Customer' && $balance > 0) {
+                    $sign = '+';
+                    $color = 'text-success'; // Green for credit
+                } elseif ($query->type == 'Provider' && $balance < 0) {
+                    $sign = '-';
+                    $color = 'text-danger'; // Red for debt
+                } elseif ($balance < 0) {
+                    $sign = '-';
+                    $color = 'text-danger';
+                } elseif ($balance > 0) {
+                    $sign = '+';
+                    $color = 'text-success';
                 }
                 
-                return '<span class="float-start">'.$bank_currency. '</span>'. number_format($balance,0);
+                return '<span class="float-start">'.$bank_currency. '</span><span class="'.$color.'">'.$sign. $formattedBalance.'</span>';
             })
             ->addColumn('action', function ($query) {
                 if ($query->source_type == 'account') {
@@ -98,19 +127,8 @@ class AccountsDataTable extends DataTable
             'account_type as type',
             \DB::raw("'account' as source_type")
         );
-        $providers = Provider::select(
-            'id',
-            'provider_name as name',
-            \DB::raw("'provider' as type"),
-            \DB::raw("'provider' as source_type")
-        );
-        $customers = Customer::select(
-            'id',
-            'customer_name as name',
-            \DB::raw("'customer' as type"),
-            \DB::raw("'customer' as source_type")
-        );
-        return $accounts->union($providers)->union($customers);
+
+        return $accounts;
     }
 
     /**

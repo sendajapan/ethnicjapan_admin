@@ -280,15 +280,7 @@ class AllSeeder extends Seeder
 
         $customerData = array(
             array('Elias Thorne', 'A quiet, thoughtful architect often seen sketching in his notebook.', 'Prague, Czech Republic'),
-            array('Seraphina Bellweather', 'A vibrant street artist known for her colorful murals and spontaneous performances.', 'Valparaíso, Chile'),
-            array('Jasper Finch', 'A meticulous antique book restorer with a fondness for forgotten stories.', 'Hay-on-Wye, Wales'),
-            array('Aurora Vance', 'A passionate marine biologist dedicated to coral reef conservation.', 'Cairns, Australia'),
-            array('Silas Blackwood', 'A reclusive composer who creates hauntingly beautiful melodies in his secluded studio.', 'Reykjavik, Iceland'),
-            array('Genevieve Hawthorne', 'A charismatic food blogger who explores the diverse culinary scene of her city.', 'New Orleans, USA'),
-            array('Finnigan Grey', 'An adventurous travel photographer always seeking the perfect shot in remote locations.', 'Kathmandu, Nepal'),
-            array('Isabelle Sterling', 'A talented ceramic artist whose delicate creations are inspired by nature.', 'Kyoto, Japan'),
-            array('Caspian Rivers', 'A lively bookstore owner who always has a recommendation for the curious reader.', 'Buenos Aires, Argentina'),
-            array('Willow Briar', 'A skilled herbalist who cultivates rare and medicinal plants in her rooftop garden.', 'Marrakech, Morocco')
+            array('Seraphina Bellweather', 'A vibrant street artist known for her colorful murals and spontaneous performances.', 'Valparaíso, Chile')
         );
         foreach($customerData as $c){
             $customer['customer_name'] = $c[0];
@@ -463,7 +455,7 @@ class AllSeeder extends Seeder
             $random_date = date("Y-m-d", rand(strtotime(date('2023-01-01')), strtotime(date('Y-m-d'))));
             $sale['sale_date'] = $random_date;
             $sale['sale_invoice'] = 'uploads/sale/4012Wz89aKMaFds1kzaTvXTj7imWpBNG5NoDSXo4.pdf';
-            $sale['customer_id'] = rand(1,10);
+            $sale['customer_id'] = rand(1,2);
             $sales[] = $sale;
         }
         DB::table('sales')->insert($sales);

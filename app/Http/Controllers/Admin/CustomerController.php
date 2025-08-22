@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\DataTables\CustomersDataTable;
 use App\Http\Controllers\Controller;
+use App\Models\Accounts;
 use App\Models\Customer;
 use Exception;
 use Illuminate\Contracts\View\View;
@@ -47,6 +48,12 @@ class CustomerController extends Controller
         DB::beginTransaction();
 
         try {
+            $row = new Accounts();
+            $row->account_name = $request->input('customer_name');
+            $row->account_type = 'Customer';
+            $row->save();
+            $row_insert_id = $row->id;
+
             $customer = new Customer();
             $customer->customer_name = $request->input('customer_name');
             $customer->customer_country_name = $request->input('customer_country_name');
@@ -55,8 +62,13 @@ class CustomerController extends Controller
             $customer->customer_primary_contact_email = $request->input('customer_primary_contact_email');
             $customer->customer_address = $request->input('customer_address');
             $customer->customer_description = $request->input('customer_description');
+            $customer->account_id = $row_insert_id;
 
             $customer->save();
+
+
+
+
             DB::commit();
 
         } catch (Exception $exception) {
@@ -104,6 +116,16 @@ class CustomerController extends Controller
             $customer->customer_description = $request->input('customer_description');
 
             $customer->save();
+            
+            // Update corresponding account record
+            if($customer->account_id) {
+                $account = Accounts::where('id', $customer->account_id)->first();
+                if($account) {
+                    $account->account_name = $request->input('customer_name');
+                    $account->save();
+                }
+            }
+            
             DB::commit();
 
         } catch (Exception $exception) {

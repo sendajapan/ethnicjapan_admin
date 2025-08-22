@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\DataTables\ProvidersDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Provider;
+use App\Models\Accounts;
 use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\View;
@@ -56,6 +57,13 @@ class ProviderController extends Controller
         DB::beginTransaction();
 
         try {
+
+            $row = new Accounts();
+            $row->account_name = $request->input('provider_name');
+            $row->account_type = 'Provider';
+            $row->save();
+            $row_insert_id = $row->id;
+
             $provider = new Provider();
             $provider->provider_name = $request->input('provider_name');
             $provider->provider_country_name = $request->input('provider_country_name');
@@ -73,6 +81,7 @@ class ProviderController extends Controller
             $provider->provider_emergency_recall_contact_email = $request->input('provider_emergency_recall_contact_email');
             $provider->provider_list_of_products = $request->input('provider_list_of_products');
             $provider->gfsi_processing_plant_certification_type = $request->input('gfsi_processing_plant_certification_type');
+            $provider->account_id = $row_insert_id;
 
 
             if ($request->hasFile('gfsi_processing_plant_certification_file')) {
@@ -181,6 +190,16 @@ class ProviderController extends Controller
             }
 
             $provider->save();
+            
+            // Update corresponding account record
+            if($provider->account_id) {
+                $account = Accounts::where('id', $provider->account_id)->first();
+                if($account) {
+                    $account->account_name = $request->input('provider_name');
+                    $account->save();
+                }
+            }
+            
             DB::commit();
 
         } catch (Exception $exception) {
@@ -198,6 +217,12 @@ class ProviderController extends Controller
     {
         try {
             Provider::where('id', $id)->firstOrFail()->delete();
+            
+            // Delete corresponding account record
+            $account = Accounts::where('id', $id)->first();
+            if($account) {
+                $account->delete();
+            }
         } catch (Exception $exception){
             return response(array('code' => 403, 'status' => 'failed', 'message' => $exception->getMessage()), 403, array('Content-Type' => 'application/json'));
         }

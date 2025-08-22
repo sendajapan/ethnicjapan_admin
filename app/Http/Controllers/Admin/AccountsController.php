@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\DataTables\AccountsDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\Accounts;
+use App\Models\Customer;
+use App\Models\Provider;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -48,6 +50,20 @@ class AccountsController extends Controller
             $row->account_name = $request->input('account_name');
             $row->account_type = $request->input('account_type');
             $row->save();
+
+            // Create corresponding records based on account type
+            if($request->input('account_type') == 'Customer') {
+                $customer = new Customer();
+                $customer->customer_name = $request->input('account_name');
+                $customer->account_id = $row->id;
+                $customer->save();
+            } elseif($request->input('account_type') == 'Provider') {
+                $provider = new Provider();
+                $provider->provider_name = $request->input('account_name');
+                $provider->account_id = $row->id;
+                $provider->save();
+            }
+
             DB::commit();
 
         } catch (Exception $exception) {
@@ -89,6 +105,16 @@ class AccountsController extends Controller
             $row->account_name = $request->input('account_name');
             $row->account_type = $request->input('account_type');
             $row->save();
+
+            if($request->input('account_type') == 'Customer') {
+                $customer = Customer::where('account_id', $id)->firstOrFail();
+                $customer->customer_name = $request->input('account_name');
+                $customer->save();
+            } elseif($request->input('account_type') == 'Provider') {
+                $provider = Provider::where('account_id', $id)->firstOrFail();
+                $provider->provider_name = $request->input('account_name');
+                $provider->save();
+            }
             DB::commit();
 
         } catch (Exception $exception) {
@@ -106,6 +132,15 @@ class AccountsController extends Controller
     {
         try {
             Accounts::where('id', $id)->firstOrFail()->delete();
+            
+            if(Accounts::where('id', $id)->firstOrFail()->account_type == 'Customer') {
+                $customer = Customer::where('account_id', $id)->firstOrFail();
+                $customer->delete();
+            } elseif(Accounts::where('id', $id)->firstOrFail()->account_type == 'Provider') {
+                $provider = Provider::where('account_id', $id)->firstOrFail();
+                $provider->delete();
+            }
+            
         } catch (Exception $exception){
             return response(array('code' => 403, 'status' => 'failed', 'message' => $exception->getMessage()), 403, array('Content-Type' => 'application/json'));
         }

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('customer_primary_contact_email')->nullable();
             $table->string('customer_address')->nullable();
             $table->string('customer_description')->nullable();
+            $table->integer('account_id')->nullable();
             $table->timestamps();
         });
     }
