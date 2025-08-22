@@ -38,7 +38,7 @@ class BankAccountDataTable extends DataTable
                     ->leftJoin('bank_accounts', 'bank_accounts.id', 'bank_transactions.bank_account_id')
                     ->where('bank_account_id', $query->id)->get()->toArray();
                 foreach($transactions as $t) {
-                    if($t['type']=='CR') {
+                    if($t['type']=='DR') {
                         $balance += $t['final_amount'];
                     }elseif($t['type']=='DR') {
                         $balance -= $t['final_amount'];
