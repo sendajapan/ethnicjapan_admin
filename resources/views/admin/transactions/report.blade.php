@@ -100,8 +100,14 @@
                                         @php
                                             $balance_amount = 0;
                                             $i=1;
+                                            // Merge provider debts with bank transactions and sort by date
+                                            $allTransactions = collect($data);
+                                            if(isset($providerDebts) && $providerDebts->count() > 0) {
+                                                $allTransactions = $allTransactions->merge($providerDebts);
+                                            }
+                                            $allTransactions = $allTransactions->sortBy('transaction_date');
                                         @endphp
-                                        @foreach($data as $row)
+                                        @foreach($allTransactions as $row)
                                             <tr>
                                                 <td>{{$i++}}</td>
                                                 <td>{{$row->transaction_date}}</td>
@@ -113,14 +119,27 @@
                                                 <td class="text-end">{{$row->bank_charges >= 0 ? $row->bank_currency : ''}} {{number_format($row->bank_charges,0)}}</td>
                                                 <td class="text-end">{{ $row->type == 'DR' ? $row->bank_currency.' '.number_format($row->final_amount,0) : '' }}</td>
                                                 <td class="text-end">{{ $row->type == 'CR' ? $row->bank_currency.' '.number_format($row->final_amount,0) : '' }}</td>
-                                                <td class="text-end">{{$row->bank_currency }} {{ $row->type == 'CR' ? number_format($balance_amount += $row->final_amount,0) : number_format($balance_amount-=$row->final_amount,0) }}</td>
+                                                <td class="text-end">{{$row->bank_currency}} {{number_format($row->final_amount,0)}}</td>
+                                                @php
+                                                    if($row->type == 'CR') {
+                                                        $balance_amount += $row->final_amount;
+                                                    } else {
+                                                        $balance_amount -= $row->final_amount;
+                                                    }
+                                                @endphp
                                                 <td class="text-end">
-                                                    <a target="_blank" href="{{route('admin.transactions.edit',$row->bank_transaction_id)}}" class="btn btn-sm font-sm rounded btn-dark">
-                                                        <i class="material-icons md-edit fs-6"></i>
-                                                    </a>
-                                                    <a href="{{route('admin.transactions.destroy', $row->bank_transaction_id)}}" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
-                                                        <i class="material-icons md-delete_forever fs-6"></i>
-                                                    </a>
+                                                    @if(isset($row->is_debt) && $row->is_debt)
+                                                        <a target="_blank" href="{{route('admin.purchase.edit', $row->shipment_id)}}" class="btn btn-sm font-sm rounded btn-dark">
+                                                            <i class="material-icons md-edit fs-6"></i>
+                                                        </a>
+                                                    @else
+                                                        <a target="_blank" href="{{route('admin.transactions.edit',$row->bank_transaction_id)}}" class="btn btn-sm font-sm rounded btn-dark">
+                                                            <i class="material-icons md-edit fs-6"></i>
+                                                        </a>
+                                                        <a href="{{route('admin.transactions.destroy', $row->bank_transaction_id)}}" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
+                                                            <i class="material-icons md-delete_forever fs-6"></i>
+                                                        </a>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @php

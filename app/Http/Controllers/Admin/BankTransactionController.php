@@ -2,6 +2,11 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\BankTransaction;
+use App\Models\Accounts;
+use App\Models\Provider;
+use App\Models\Shipment;
+use App\Models\Lot;
+use App\Models\PurchaseCosts;
 use Exception;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\View\View;
@@ -23,6 +28,8 @@ class BankTransactionController extends Controller
     public function report(string $type, string $id)
     {
         $data2 = [];
+        $providerDebts = collect();
+        
         if($type == 'bank'){
             $data = BankTransaction::select('*', 'bank_transactions.id AS bank_transaction_id')
                 ->leftJoin('accounts', 'accounts.id', 'bank_transactions.accounts_id')
@@ -39,6 +46,39 @@ class BankTransactionController extends Controller
                 ->leftJoin('accounts', 'accounts.id', 'bank_transactions.accounts_id')
                 ->leftJoin('bank_accounts', 'bank_accounts.id', 'bank_transactions.bank_account_id')
                 ->orderBy('bank_transactions.transaction_date', 'ASC')->where('bank_transactions.accounts_id', $id)->where('bank_currency', 'JPY')->get();
+            
+            // Add provider debt data if this is a provider account
+            $account = Accounts::find($id);
+            $providerDebts = collect();         
+            if ($account && $account->account_type == 'Provider') {
+                $provider = Provider::where('account_id', $id)->first();
+                if ($provider) {
+                    $shipments = Shipment::where('provider_id', $provider->id)->get();                
+                    foreach ($shipments as $shipment) {
+                        $lotsTotal = Lot::where('shipment_id', $shipment->id)->sum('total_price') ?? 0;
+                        $costsTotal = PurchaseCosts::where('shipment_id', $shipment->id)->sum('cost_amount') ?? 0;
+                        $totalAmount = $lotsTotal + $costsTotal;                       
+                        if ($totalAmount > 0) {
+                            $providerDebts->push((object)[
+                                'bank_transaction_id' => 'debt_' . $shipment->id,
+                                'transaction_date' => $shipment->invoice_date,
+                                'bank_account_title' => 'N/A',
+                                'bank_name' => '',
+                                'account_name' => $account->account_name,
+                                'reference' => 'Purchase Costs',
+                                'transaction_pdf' => '',
+                                'transaction_amount' => $totalAmount,
+                                'bank_charges' => 0,
+                                'type' => 'DR',
+                                'final_amount' => $totalAmount,
+                                'bank_currency' => 'USD',
+                                'is_debt' => true,
+                                'shipment_id' => $shipment->id
+                            ]);
+                        }
+                    }
+                }
+            }
         }
         else if($type == 'search'){
 
@@ -99,7 +139,7 @@ class BankTransactionController extends Controller
 
         }
 
-        return view('admin.transactions.report', compact('data', 'data2', 'type'));
+        return view('admin.transactions.report', compact('data', 'data2', 'type', 'providerDebts'));
     }
 
     /**
