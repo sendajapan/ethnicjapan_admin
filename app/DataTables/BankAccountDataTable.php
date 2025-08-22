@@ -45,7 +45,12 @@ class BankAccountDataTable extends DataTable
                     }
                     $bank_currency = $t['bank_currency'];
                 }
-                return '<span class="float-start">'.$bank_currency. '</span>'. number_format($balance,0);
+                
+                if($balance >= 0) {
+                    return '<span class="text-success">+' . $bank_currency . ' ' . number_format($balance, 0) . '</span>';
+                } else {
+                    return '<span class="text-danger">-' . $bank_currency . ' ' . number_format(abs($balance), 0) . '</span>';
+                }
             })
             ->addColumn('action', function ($query) {
                 return '<a href="'. route('admin.bank.edit', $query->id) .'" class="btn btn-sm font-sm rounded btn-dark">
