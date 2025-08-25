@@ -293,6 +293,8 @@
                                     @endphp
                                     @php $cif = $lot['total_price'] * number_format($shipment['exchange_rate'], 2);
                                     $cifyen = $cif / $lot['total_qty'];
+                                    $alltotalqty += $lot['total_qty'];
+
                                     @endphp
 
                                     <div class="row mb-0 border-x-1 border-top-0">
@@ -300,7 +302,7 @@
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $shipment['invoice_date'] }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $lot['item']['item_name'] ?? 'N/A' }}</div>
                                         <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $lot['total_packages'] }} {{ $lot['type_of_package'] }}</div>
-                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">{{ number_format($lot['total_qty'], 2) }} Kg</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">{{ number_format($lot['total_qty'], 0) }} Kg</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">$ {{ number_format($lot['total_price'], 0) }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">{{ $shipment['exchange_rate'] }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cif, 0) }}</div>
@@ -309,11 +311,11 @@
                                     </div>
                                     @php $totalLotsCost += $lot['total_price']; 
                                     $totalcif += $cif;
-                                    $alltotalqty += $lot['total_qty'];
                                     @endphp
                                 @endforeach
                                 <div class="row mb-0 border-x-1 border-top-0" style="background-color:rgb(230, 230, 230);">
-                                    <div class="col-lg-6 col-xl-6 border-1 p-2 border-top-0 text-end fw-bold">Purchase Costs:</div>
+                                    <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0 text-end fw-bold">Purchase Costs:</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">{{ number_format($alltotalqty, 0) }} Kg</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">$ {{ number_format($totalLotsCost, 0) }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center"></div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">¥ {{ number_format($totalcif, 0) }}</div>
