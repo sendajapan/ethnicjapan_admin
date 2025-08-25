@@ -214,7 +214,8 @@
                                                 <th width="10%">Cost Date</th>
                                                 <th width="10%">Cost Name</th>
                                                 <th width="10%">Cost Amount</th>
-                                                <th width="50%">Description</th>
+                                                <th width="10%">Exchange Rate</th>
+                                                <th width="40%">Description</th>
                                                 <th width="10%">Action</th>
                                             </tr>
                                         </thead>
@@ -223,7 +224,8 @@
                                                 <td width="10%"><input type="date" placeholder="Cost Date" class="form-control" name="costs[0][cost_date]"></td>
                                                 <td width="10%"><input type="text" placeholder="Cost Name" class="form-control" name="costs[0][cost_name]"></td>
                                                 <td width="10%"><input type="number" placeholder="Cost Amount" class="form-control" name="costs[0][cost_amount]"></td>
-                                                <td width="50%"><input type="text" placeholder="Description" class="form-control" name="costs[0][description]"></td>
+                                                <td width="10%"><input type="number" placeholder="Exchange Rate" class="form-control exchange-rate-field" name="costs[0][exchange_rate]" readonly></td>
+                                                <td width="40%"><input type="text" placeholder="Description" class="form-control" name="costs[0][description]"></td>
                                                 <td width="10%"><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
                                             </tr>
                                         </tbody>
@@ -438,7 +440,8 @@
                     <td width="10%"><input type="date" placeholder="Cost Date" class="form-control" name="costs[${costRowIndex}][cost_date]"></td>
                     <td width="10%"><input type="text" placeholder="Cost Name" class="form-control" name="costs[${costRowIndex}][cost_name]"></td>
                     <td width="10%"><input type="number" placeholder="Cost Amount" class="form-control" name="costs[${costRowIndex}][cost_amount]"></td>
-                    <td width="50%"><input type="text" placeholder="Description" class="form-control" name="costs[${costRowIndex}][description]"></td>
+                    <td width="10%"><input type="number" placeholder="Exchange Rate" class="form-control exchange-rate-field" name="costs[${costRowIndex}][exchange_rate]" readonly></td>
+                    <td width="40%"><input type="text" placeholder="Description" class="form-control" name="costs[${costRowIndex}][description]"></td>
                     <td width="10%"><button type="button" class="btn btn-danger btn-sm remove-cost-row">Remove</button></td>
                 </tr>`;
                 $('#purchase-costs-table tbody').append(newRow);
@@ -448,6 +451,27 @@
             $('#purchase-costs-table').on('click', '.remove-cost-row', function() {
                 $(this).closest('tr').remove();
             });
+
+            // Function to update all exchange rate fields
+            function updateExchangeRateFields() {
+                var exchangeRate = $('#exchange_rate').val();
+                $('.exchange-rate-field').val(exchangeRate);
+            }
+
+            // Update exchange rate fields when the main exchange rate changes
+            $('#exchange_rate').on('input', function() {
+                updateExchangeRateFields();
+            });
+
+            // Update exchange rate fields when new rows are added
+            $('#add-cost-row').on('click', function() {
+                setTimeout(function() {
+                    updateExchangeRateFields();
+                }, 100);
+            });
+
+            // Initialize exchange rate fields on page load
+            updateExchangeRateFields();
         });
 
         for(c=1; c<=9; c++) {
