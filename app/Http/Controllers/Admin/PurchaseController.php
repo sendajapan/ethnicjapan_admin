@@ -199,7 +199,7 @@ class PurchaseController extends Controller
 
 
         DB::beginTransaction();
-
+/*
         if(isset($_POST['photos'])){
             if(count($_POST['photos'])>0){
                 foreach($_POST['photos'] as $lot_unique => $photo) {
@@ -217,6 +217,7 @@ class PurchaseController extends Controller
                 }
             }
         }
+        */
 
         try {
 
