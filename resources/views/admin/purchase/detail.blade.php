@@ -262,6 +262,8 @@
                                 $totalLotsCost = 0;
                                 $totalcif = 0;
                                 $alltotalqty = 0;
+                                $totalCostYen = 0;
+                                $totalCostPerKg = 0;
 
                                 $rowNumber = 1;
                             @endphp
@@ -346,8 +348,8 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cost['cost_amount'] * $shipment['exchange_rate'] / $alltotalqty, 0) }}</div>
                                 </div>
                                     @php $totalCost += $cost['cost_amount'];
-                                    $totalCostYen = 0;
                                     $totalCostYen += $cost['cost_amount'] * $shipment['exchange_rate'];
+                                    $totalCostPerKg += $cost['cost_amount'] * $shipment['exchange_rate'] / $alltotalqty;
                                     @endphp
                                 @endforeach
                                 <div class="row mb-0 border-x-1 border-top-0"style="background-color:rgb(230, 230, 230);">
@@ -355,7 +357,8 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">$ {{number_format($totalCost, 0)}}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center"></div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">¥ {{number_format($totalCostYen, 0)}}</div>
-                                    <div class="col-lg-3 col-xl-3 border-1 p-2 border-top-0"></div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">¥ {{number_format($totalCostPerKg, 0)}}</div>
+                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0"></div>
                                 </div>
                                 @php $grandTotal = $totalCost + $totalLotsCost;
                                 $grandTotalYen = $totalCostYen + $totalcif;
@@ -365,7 +368,7 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">$ {{ number_format($grandTotal, 0) }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center"></div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">¥ {{ number_format($grandTotalYen, 0) }}</div>
-                                    <div class="col-lg-3 col-xl-3 border-1 p-2 border-top-0"></div>
+                                    <div class="col-lg-3 col-xl- border-1 p-2 border-top-0"></div>
                                 </div>
                               
                             </div>
