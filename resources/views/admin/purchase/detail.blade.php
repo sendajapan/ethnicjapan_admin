@@ -327,6 +327,9 @@
                                     <div class="col-lg-3 col-xl-3 border-1 p-2 fw-bold">Description</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost Amount $</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Exchange Rate</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost in Yen</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost per kg</div>
+
                                 </div>
                                 @foreach($shipment['purchase_costs'] as $cost)
                                 <div class="row mb-0 border-x-1 border-top-0">
@@ -336,6 +339,8 @@
                                     <div class="col-lg-3 col-xl-3 border-1 p-2 border-top-0">{{ $cost['description'] }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">$ {{ number_format($cost['cost_amount'], 0) }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">{{ $cost['exchange_rate'] ?? $shipment['exchange_rate'] ?? 'N/A' }}</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cost['cost_amount'] * $shipment['exchange_rate'], 0) }}</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cifyen, 0) }}</div>
                                 </div>
                                     @php $totalCost += $cost['cost_amount']; @endphp
                                 @endforeach
