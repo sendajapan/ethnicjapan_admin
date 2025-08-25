@@ -261,6 +261,7 @@
                                 $totalCost = 0;
                                 $totalLotsCost = 0;
                                 $totalcif = 0;
+                                $alltotalqty = 0;
                                 $rowNumber = 1;
                             @endphp
                             @if(!empty($shipment['lots']) && count($shipment['lots']) > 0)
@@ -305,6 +306,7 @@
                                     </div>
                                     @php $totalLotsCost += $lot['total_price']; 
                                     $totalcif += $cif;
+                                    $alltotalqty += $lot['total_qty'];
                                     @endphp
                                 @endforeach
                                 <div class="row mb-0 border-x-1 border-top-0" style="background-color:rgb(230, 230, 230);">
@@ -340,7 +342,7 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">$ {{ number_format($cost['cost_amount'], 0) }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">{{ $cost['exchange_rate'] ?? $shipment['exchange_rate'] ?? 'N/A' }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cost['cost_amount'] * $shipment['exchange_rate'], 0) }}</div>
-                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cifyen, 0) }}</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cost['cost_amount'] * $shipment['exchange_rate'] / $alltotalqty, 0) }}</div>
                                 </div>
                                     @php $totalCost += $cost['cost_amount']; @endphp
                                 @endforeach
