@@ -324,7 +324,7 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">#</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Cost Date</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Cost Name</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Description</div>
+                                    <div class="col-lg-3 col-xl-3 border-1 p-2 fw-bold">Description</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost Amount $</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Exchange Rate</div>
                                 </div>
@@ -333,24 +333,24 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $rowNumber++ }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $cost['cost_date'] }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $cost['cost_name'] }}</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $cost['description'] }}</div>
+                                    <div class="col-lg-3 col-xl-3 border-1 p-2 border-top-0">{{ $cost['description'] }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">$ {{ number_format($cost['cost_amount'], 0) }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">{{ $cost['exchange_rate'] ?? $shipment['exchange_rate'] ?? 'N/A' }}</div>
                                 </div>
                                     @php $totalCost += $cost['cost_amount']; @endphp
                                 @endforeach
                                 <div class="row mb-0 border-x-1 border-top-0"style="background-color:rgb(230, 230, 230);">
-                                    <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0 text-end fw-bold">Shipment Costs:</div>
+                                    <div class="col-lg-6 col-xl-6 border-1 p-2 border-top-0 text-end fw-bold">Shipment Costs:</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">$ {{$totalCost}}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center"></div>
-                                    <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0"></div>
+                                    <div class="col-lg-4 col-xl-4 border-1 p-2 border-top-0"></div>
                                 </div>
                                 @php $grandTotal = $totalCost + $totalLotsCost; @endphp
                                 <div class="row mb-0 border-x-1 border-top-0" style="background-color:rgb(214, 214, 214);">
-                                    <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0 text-end fw-bold">Grand Total:</div>
+                                    <div class="col-lg-6 col-xl-6 border-1 p-2 border-top-0 text-end fw-bold">Grand Total:</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">$ {{ number_format($grandTotal, 0) }}</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center"></div>
-                                    <div class="col-lg-5 col-xl-5 border-1 p-2 border-top-0"></div>
+                                    <div class="col-lg-4 col-xl-4 border-1 p-2 border-top-0"></div>
                                 </div>
                               
                             </div>
