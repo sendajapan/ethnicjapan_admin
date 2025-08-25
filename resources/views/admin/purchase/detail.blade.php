@@ -271,8 +271,8 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">#</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Cost Date</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Product Name</div>
-                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Total Packages</div>
-                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">Total Qty</div>
+                                    <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold ">Total Packages</div>
+                                    <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Total Qty</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost Amount $</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Exchange Rate</div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost in Yen ¥</div>
@@ -296,7 +296,7 @@
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $shipment['invoice_date'] }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $lot['item']['item_name'] ?? 'N/A' }}</div>
                                         <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">{{ $lot['total_packages'] }} {{ $lot['type_of_package'] }}</div>
-                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ number_format($lot['total_qty'], 2) }} Kg</div>
+                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">{{ number_format($lot['total_qty'], 2) }} Kg</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">$ {{ number_format($lot['total_price'], 0) }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">{{ $shipment['exchange_rate'] }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cif, 0) }}</div>
