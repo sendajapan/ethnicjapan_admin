@@ -77,8 +77,8 @@
                         $lastTwo = substr($lot['lot_unique'], -2);
                         $containerIndex = (int) substr($lastTwo, 0, 1);
                         $lotIndexNum = (int) substr($lastTwo, 1, 1);
-                        $cif = $lot['total_price'] * ($lot->shipment->exchange_rate ?? 1);
-                        $cifyen = $lot['total_qty'] > 0 ? $cif / $lot['total_qty'] : 0;
+                        $cif = $lot['total_price'] * number_format($lot->shipment->exchange_rate ?? 1, 2);
+                        $cifyen = $cif / $lot['total_qty'];
                         
                         // Final cost per kg including extra shipment charges
                         $finalCostPerKg = $cifyen + $extra_shipment_charges;
@@ -125,7 +125,7 @@
                             foreach($invItem['lots'] as $invLot) {
                                 $totalQty += $invLot['total_qty'];
                                 $totalCost += $invLot['total_price'];
-                                $totalCifYen += $invLot['total_price'] * ($invLot->shipment->exchange_rate ?? 1);
+                                $totalCifYen += $invLot['total_price'] * number_format($invLot->shipment->exchange_rate ?? 1, 2);
                             }
                         }
                     @endphp
