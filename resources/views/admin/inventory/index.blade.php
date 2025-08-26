@@ -52,7 +52,37 @@
         </thead>
         <tbody>
             @forelse($inventory as $index => $item)
+                @php
+                    // Calculate extra shipment charges for this shipment
+                    $totalOtherExtra = 0;
+                    $totalOtherExtra_qty = 0;
+                    
+                    // Get all lots for this shipment to calculate total qty
+                    foreach($item['lots'] as $lot) {
+                        $totalOtherExtra_qty += $lot['total_qty'];
+                    }
+                    
+                    // Calculate total purchase costs in Yen
+                    if(!empty($item['lots'][0]->shipment->purchase_costs)) {
+                        foreach($item['lots'][0]->shipment->purchase_costs as $cost) {
+                            $totalOtherExtra += $cost['cost_amount'] * ($item['lots'][0]->shipment->exchange_rate ?? 1);
+                        }
+                        $extra_shipment_charges = $totalOtherExtra_qty > 0 ? round($totalOtherExtra / $totalOtherExtra_qty) : 0;
+                    } else {
+                        $extra_shipment_charges = 0;
+                    }
+                @endphp
                 @foreach($item['lots'] as $lotIndex => $lot)
+                    @php
+                        $lastTwo = substr($lot['lot_unique'], -2);
+                        $containerIndex = (int) substr($lastTwo, 0, 1);
+                        $lotIndexNum = (int) substr($lastTwo, 1, 1);
+                        $cif = $lot['total_price'] * ($lot->shipment->exchange_rate ?? 1);
+                        $cifyen = $lot['total_qty'] > 0 ? $cif / $lot['total_qty'] : 0;
+                        
+                        // Final cost per kg including extra shipment charges
+                        $finalCostPerKg = $cifyen + $extra_shipment_charges;
+                    @endphp
                     <tr>
                         @if($lotIndex == 0)
                             <td rowspan="{{ count($item['lots']) }}">{{ $index + 1 }}.</td>
@@ -73,24 +103,38 @@
                         <td>{{ number_format($lot['total_qty'], 0) }} Kg</td>
                         <td>$ {{ number_format($lot['total_price'], 0) }}</td>
                         <td>{{ $lot->shipment->exchange_rate ?? 'N/A' }}</td>
-                        <td>¥ {{ number_format($lot['cif'], 0) }}</td>
+                        <td>¥ {{ number_format($cif, 0) }}</td>
                         <td>
-                            @if($lot['extra_shipment_charges'] > 0)
-                                ¥ ({{ number_format($lot['cifyen'], 0) }} + {{ number_format($lot['extra_shipment_charges'], 0) }}) = {{ number_format($lot['final_cost_per_kg'], 0) }}
+                            @if($extra_shipment_charges > 0)
+                                ¥ ({{ number_format($cifyen, 0) }} + {{ number_format($extra_shipment_charges, 0) }}) = {{ number_format($finalCostPerKg, 0) }}
                             @else
-                                ¥ {{ number_format($lot['cifyen'], 0) }}
+                                ¥ {{ number_format($cifyen, 0) }}
                             @endif
                         </td>
-                        <td>Cont. {{ $lot['container_index'] }} / Lot {{ $lot['lot_index_num'] }}</td>
+                        <td>Cont. {{ $containerIndex }} / Lot {{ $lotIndexNum }}</td>
                     </tr>
                 @endforeach
                 @if($index == count($inventory) - 1)
+                    @php
+                        // Calculate totals for all inventory
+                        $totalQty = 0;
+                        $totalCost = 0;
+                        $totalCifYen = 0;
+                        
+                        foreach($inventory as $invItem) {
+                            foreach($invItem['lots'] as $invLot) {
+                                $totalQty += $invLot['total_qty'];
+                                $totalCost += $invLot['total_price'];
+                                $totalCifYen += $invLot['total_price'] * ($invLot->shipment->exchange_rate ?? 1);
+                            }
+                        }
+                    @endphp
                     <tr class="td-footer" style="background-color: rgb(168, 168, 168); font-weight: 600;">
                         <td colspan="4" class="text-end">Purchase Costs:</td>
-                        <td>{{ number_format($totals['total_qty'], 0) }} Kg</td>
-                        <td>$ {{ number_format($totals['total_cost'], 0) }}</td>
+                        <td>{{ number_format($totalQty, 0) }} Kg</td>
+                        <td>$ {{ number_format($totalCost, 0) }}</td>
                         <td></td>
-                        <td>¥ {{ number_format($totals['total_cif_yen'], 0) }}</td>
+                        <td>¥ {{ number_format($totalCifYen, 0) }}</td>
                         <td></td>
                         <td></td>
                     </tr>
