@@ -296,7 +296,7 @@
                                 @if(!empty($shipment['purchase_costs']))
                                     @foreach($shipment['purchase_costs'] as $cost)
                                         @php
-                                            $totalOtherExtra += $cost['cost_amount'] * $shipment['exchange_rate'] / $totalOtherExtra_qty;
+                                            $totalOtherExtra += $cost['cost_amount'] * $shipment['exchange_rate'];
                                         @endphp
                                     @endforeach
                                     @php
@@ -336,7 +336,7 @@
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cif, 0) }}</div>
 
                                         @if($extra_shipment_charges>0)
-                                            <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ ({{ number_format($cifyen, 0) }} + {{ number_format($extra_shipment_charges, 0) }})</div>
+                                            <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ ({{ number_format($cifyen, 0) }} + {{ number_format($extra_shipment_charges, 0) }}) = {{number_format($cifyen+$extra_shipment_charges, 0)}}</div>
                                         @else
                                             <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cifyen, 0) }}</div>
                                         @endif
