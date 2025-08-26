@@ -264,7 +264,7 @@
                                 $alltotalqty = 0;
                                 $totalCostYen = 0;
                                 $totalCostPerKg = 0;
-
+                                $totalOtherExtra_qty=0;
                                 $rowNumber = 1;
                             @endphp
                             @if(!empty($shipment['lots']) && count($shipment['lots']) > 0)
@@ -301,7 +301,7 @@
                                     @php
                                         $extra_shipment_charges = round($totalOtherExtra / $totalOtherExtra_qty);
                                     @endphp
-                                @elseif
+                                @else
                                     @php
                                         $extra_shipment_charges = 0;
                                     @endphp
@@ -336,7 +336,7 @@
 
                                         @if($extra_shipment_charges>0)
                                             <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ ({{ number_format($cifyen, 0) }} + {{ number_format($extra_shipment_charges, 0) }})</div>
-                                        @elseif
+                                        @else
                                             <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cifyen, 0) }}</div>
                                         @endif
 
