@@ -264,6 +264,7 @@
                                 $alltotalqty = 0;
                                 $totalCostYen = 0;
                                 $totalCostPerKg = 0;
+                                $totalOtherExtra=0;
                                 $totalOtherExtra_qty=0;
                                 $rowNumber = 1;
                             @endphp
