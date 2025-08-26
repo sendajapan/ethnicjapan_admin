@@ -284,7 +284,31 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold text-center">Cost Per Kg</div>
                                     <div class="col-lg-2 col-xl-2 border-1 p-2 fw-bold">Container / Lot</div>
                                 </div>
+
+
                                 @foreach($shipment['lots'] as $lot)
+                                    @php
+                                        $totalOtherExtra_qty += $lot['total_qty'];
+                                    @endphp
+                                @endforeach
+
+                                @if(!empty($shipment['purchase_costs']))
+                                    @foreach($shipment['purchase_costs'] as $cost)
+                                        @php
+                                            $totalOtherExtra += $cost['cost_amount'] * $shipment['exchange_rate'] / $alltotalqty;
+                                        @endphp
+                                    @endforeach
+                                    @php
+                                        $extra_shipment_charges = round($totalOtherExtra / $totalOtherExtra_qty);
+                                    @endphp
+                                @else
+                                    @php
+                                        $extra_shipment_charges = 0;
+                                    @endphp
+                                @endif
+
+
+                            @foreach($shipment['lots'] as $lot)
                                     @php
                                         $lastTwo = substr($lot['lot_unique'], -2);
                                         $containerIndex = (int) substr($lastTwo, 0, 1);
@@ -297,6 +321,9 @@
 
                                     @endphp
 
+
+
+
                                     <div class="row mb-0 border-x-1 border-top-0">
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $rowNumber++ }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0">{{ $shipment['invoice_date'] }}</div>
@@ -306,10 +333,16 @@
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">$ {{ number_format($lot['total_price'], 0) }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">{{ $shipment['exchange_rate'] }}</div>
                                         <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cif, 0) }}</div>
-                                        <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cifyen, 0) }}</div>
+
+                                        @if($extra_shipment_charges>0)
+                                            <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ ({{ number_format($cifyen, 0) }} + {{ number_format($extra_shipment_charges, 0) }})</div>
+                                        @else
+                                            <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cifyen, 0) }}</div>
+                                        @endif
+
                                         <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">Cont. {{ $containerIndex }} / Lot {{ $lotIndex }}</div>
                                     </div>
-                                    @php $totalLotsCost += $lot['total_price']; 
+                                    @php $totalLotsCost += $lot['total_price'];
                                     $totalcif += $cif;
                                     @endphp
                                 @endforeach
@@ -320,12 +353,15 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center"></div>
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">¥ {{ number_format($totalcif, 0) }}</div>
                                 </div>
-                             
+
                             </div>
                             @endif
 
 
                             @if(!empty($shipment['purchase_costs']))
+
+
+
                             <div class="card-body pt-0">
                                 <div class="row mb-0 border-x-1 border-top-1" style="background-color:rgb(208, 234, 255);">
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 fw-bold">#</div>
@@ -372,9 +408,9 @@
                                     <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 fw-bold text-center">¥ {{ number_format($grandTotalYen, 0) }}</div>
                                     <div class="col-lg-3 col-xl- border-1 p-2 border-top-0"></div>
                                 </div>
-                              
+
                             </div>
-                           
+
                             @endif
                             <div class="row">
                                     <div class="col-lg-2 col-xl-2">
