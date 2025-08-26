@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\BankTransactionController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\PortsController;
 use App\Http\Controllers\Admin\ProviderController;
@@ -50,6 +51,7 @@ Route::resource('ports', PortsController::class);
 Route::get("accounts/detail/{id}", [AccountsController::class, 'detail'])->name('accounts.detail');
 Route::resource('accounts', AccountsController::class);
 
+Route::resource('inventory', InventoryController::class);
 
 Route::resource('sale', SaleController::class);
 Route::resource('stock', StockController::class);

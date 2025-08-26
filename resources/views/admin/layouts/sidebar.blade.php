@@ -111,6 +111,13 @@
                 </a>
             </li>
 
+            <li class="menu-item {{ setActive(['admin.inventory.*']) }}"> 
+                <a class="menu-link {{ setActive(['admin.inventory.index']) }}" href="{{ route('admin.inventory.index') }}">
+                    <i class="icon material-icons md-production_quantity_limits text-muted"></i>
+                    <span class="text">Inventory</span>
+                </a>
+            </li>
+
 
 
 
