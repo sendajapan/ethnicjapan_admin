@@ -301,7 +301,7 @@
                                     @php
                                         $extra_shipment_charges = round($totalOtherExtra / $totalOtherExtra_qty);
                                     @endphp
-                                @else
+                                @elseif
                                     @php
                                         $extra_shipment_charges = 0;
                                     @endphp
@@ -336,7 +336,7 @@
 
                                         @if($extra_shipment_charges>0)
                                             <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ ({{ number_format($cifyen, 0) }} + {{ number_format($extra_shipment_charges, 0) }})</div>
-                                        @else
+                                        @elseif
                                             <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cifyen, 0) }}</div>
                                         @endif
 
