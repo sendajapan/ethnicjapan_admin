@@ -11,12 +11,8 @@ use Illuminate\View\View;
 
 class InventoryController extends Controller
 {
-    /**
-     * Display a listing of the inventory.
-     */
     public function index(): View
     {
-        // Get all lots with their related item, shipment and photos
         $inventory = Lot::with(['item', 'shipment.purchase_costs'])
             ->selectRaw('
                 item_id,
@@ -25,16 +21,11 @@ class InventoryController extends Controller
             ->groupBy('item_id')
             ->get();
 
-        // Add detailed lots and photos for each inventory item
         foreach ($inventory as $key => $item) {
-            // Get all lots for this item with shipment and purchase costs
             $lots = Lot::with(['shipment.purchase_costs'])
                 ->where('item_id', $item->item_id)
-                ->get();
-            
+                ->get();           
             $inventory[$key]['lots'] = $lots;
-            
-            // Get photo for this item
             $photo = lot_photos::where('lot_unique', $item->sample_lot_unique)->first();
             $inventory[$key]['photo'] = $photo;
         }

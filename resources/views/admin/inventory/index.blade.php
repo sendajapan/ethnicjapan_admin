@@ -51,26 +51,37 @@
             </tr>
         </thead>
         <tbody>
+            @php
+                $shipmentCharges = [];
+                foreach($inventory as $item) {
+                    $shipmentId = $item['lots'][0]->shipment->id ?? 0;
+                    if (!isset($shipmentCharges[$shipmentId])) {
+                        $totalOtherExtra = 0;
+                        $totalOtherExtra_qty = 0;
+                        
+                        foreach($inventory as $invItem) {
+                            if(($invItem['lots'][0]->shipment->id ?? 0) == $shipmentId) {
+                                foreach($invItem['lots'] as $lot) {
+                                    $totalOtherExtra_qty += $lot['total_qty'];
+                                }
+                            }
+                        }
+                        
+                        if(!empty($item['lots'][0]->shipment->purchase_costs)) {
+                            foreach($item['lots'][0]->shipment->purchase_costs as $cost) {
+                                $totalOtherExtra += $cost['cost_amount'] * $item['lots'][0]->shipment->exchange_rate;
+                            }
+                            $shipmentCharges[$shipmentId] = round($totalOtherExtra / $totalOtherExtra_qty);
+                        } else {
+                            $shipmentCharges[$shipmentId] = 0;
+                        }
+                    }
+                }
+            @endphp
             @forelse($inventory as $index => $item)
                 @php
-                    // Calculate extra shipment charges for this shipment
-                    $totalOtherExtra = 0;
-                    $totalOtherExtra_qty = 0;
-                    
-                    // Get all lots for this shipment to calculate total qty
-                    foreach($item['lots'] as $lot) {
-                        $totalOtherExtra_qty += $lot['total_qty'];
-                    }
-                    
-                    // Calculate total purchase costs in Yen
-                    if(!empty($item['lots'][0]->shipment->purchase_costs)) {
-                        foreach($item['lots'][0]->shipment->purchase_costs as $cost) {
-                            $totalOtherExtra += $cost['cost_amount'] * ($item['lots'][0]->shipment->exchange_rate ?? 1);
-                        }
-                        $extra_shipment_charges = $totalOtherExtra_qty > 0 ? round($totalOtherExtra / $totalOtherExtra_qty) : 0;
-                    } else {
-                        $extra_shipment_charges = 0;
-                    }
+                    $shipmentId = $item['lots'][0]->shipment->id ?? 0;
+                    $extra_shipment_charges = $shipmentCharges[$shipmentId] ?? 0;
                 @endphp
                 @foreach($item['lots'] as $lotIndex => $lot)
                     @php
@@ -79,8 +90,7 @@
                         $lotIndexNum = (int) substr($lastTwo, 1, 1);
                         $cif = $lot['total_price'] * number_format($lot->shipment->exchange_rate ?? 1, 2);
                         $cifyen = $cif / $lot['total_qty'];
-                        
-                        // Final cost per kg including extra shipment charges
+
                         $finalCostPerKg = $cifyen + $extra_shipment_charges;
                     @endphp
                     <tr>
@@ -89,12 +99,12 @@
                             <td rowspan="{{ count($item['lots']) }}">{{ $lot->shipment->invoice_date ?? 'N/A' }}</td>
                             <td rowspan="{{ count($item['lots']) }}">
                                 @if(isset($item['photo']) && $item['photo'])
-                                    <img src="{{ url('/storage/'.$item['photo']->photo_url) }}" 
-                                         alt="Product Image" 
+                                    <img src="{{ url('/storage/'.$item['photo']->photo_url) }}"
+                                         alt="Product Image"
                                          class="inventory-image">
                                 @else
-                                    <img src="{{ url('/assets/imgs/item_placeholder.jpg') }}" 
-                                         alt="No Image" 
+                                    <img src="{{ url('/assets/imgs/item_placeholder.jpg') }}"
+                                         alt="No Image"
                                          class="inventory-image">
                                 @endif
                             </td>
@@ -116,11 +126,10 @@
                 @endforeach
                 @if($index == count($inventory) - 1)
                     @php
-                        // Calculate totals for all inventory
                         $totalQty = 0;
                         $totalCost = 0;
                         $totalCifYen = 0;
-                        
+
                         foreach($inventory as $invItem) {
                             foreach($invItem['lots'] as $invLot) {
                                 $totalQty += $invLot['total_qty'];
