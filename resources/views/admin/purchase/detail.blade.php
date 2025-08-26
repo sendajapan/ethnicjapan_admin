@@ -295,7 +295,7 @@
                                 @if(!empty($shipment['purchase_costs']))
                                     @foreach($shipment['purchase_costs'] as $cost)
                                         @php
-                                            $totalOtherExtra += $cost['cost_amount'] * $shipment['exchange_rate'] / $alltotalqty;
+                                            $totalOtherExtra += $cost['cost_amount'] * $shipment['exchange_rate'] / $totalOtherExtra_qty;
                                         @endphp
                                     @endforeach
                                     @php
