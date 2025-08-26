@@ -18,13 +18,15 @@
         padding: 8px 12px;
     }
     .inventory-table th {
-        background-color: #f8f9fa;
+        background-color:rgba(199, 212, 226, 0.01);
         font-weight: bold;
     }
 
-    table tfoot tr td, {
-    background-color: transparent !important;
-}
+    .total-row td, .grand-row td{
+        background-color:rgba(199, 212, 226, 0.01);
+
+    }
+
 
 </style>
 
@@ -39,120 +41,98 @@
         <thead>
             <tr>
                 <th>No.</th>
-                <th>Cost Date</th>
                 <th>Product Pic</th>
                 <th>Product Name</th>
-                <th>Total Qty</th>
-                <th>Cost Amount $</th>
-                <th>Exchange Rate</th>
-                <th>Cost in Yen ¥</th>
-                <th>Cost Per Kg</th>
-                <th>Container / Lot</th>
+                <th>Shipment Cost Details</th>
             </tr>
         </thead>
         <tbody>
-            @php
-                $shipmentCharges = [];
-                foreach($inventory as $item) {
-                    $shipmentId = $item['lots'][0]->shipment->id ?? 0;
-                    if (!isset($shipmentCharges[$shipmentId])) {
-                        $totalOtherExtra = 0;
-                        $totalOtherExtra_qty = 0;
-                        
-                        foreach($inventory as $invItem) {
-                            if(($invItem['lots'][0]->shipment->id ?? 0) == $shipmentId) {
-                                foreach($invItem['lots'] as $lot) {
-                                    $totalOtherExtra_qty += $lot['total_qty'];
-                                }
-                            }
-                        }
-                        
-                        if(!empty($item['lots'][0]->shipment->purchase_costs)) {
-                            foreach($item['lots'][0]->shipment->purchase_costs as $cost) {
-                                $totalOtherExtra += $cost['cost_amount'] * $item['lots'][0]->shipment->exchange_rate;
-                            }
-                            $shipmentCharges[$shipmentId] = round($totalOtherExtra / $totalOtherExtra_qty);
-                        } else {
-                            $shipmentCharges[$shipmentId] = 0;
-                        }
-                    }
-                }
-            @endphp
             @forelse($inventory as $index => $item)
-                @php
-                    $shipmentId = $item['lots'][0]->shipment->id ?? 0;
-                    $extra_shipment_charges = $shipmentCharges[$shipmentId] ?? 0;
-                @endphp
-                @foreach($item['lots'] as $lotIndex => $lot)
-                    @php
-                        $lastTwo = substr($lot['lot_unique'], -2);
-                        $containerIndex = (int) substr($lastTwo, 0, 1);
-                        $lotIndexNum = (int) substr($lastTwo, 1, 1);
-                        $cif = $lot['total_price'] * number_format($lot->shipment->exchange_rate ?? 1, 2);
-                        $cifyen = $cif / $lot['total_qty'];
-
-                        $finalCostPerKg = $cifyen + $extra_shipment_charges;
-                    @endphp
-                    <tr>
-                        @if($lotIndex == 0)
-                            <td rowspan="{{ count($item['lots']) }}">{{ $index + 1 }}.</td>
-                            <td rowspan="{{ count($item['lots']) }}">{{ $lot->shipment->invoice_date ?? 'N/A' }}</td>
-                            <td rowspan="{{ count($item['lots']) }}">
-                                @if(isset($item['photo']) && $item['photo'])
-                                    <img src="{{ url('/storage/'.$item['photo']->photo_url) }}"
-                                         alt="Product Image"
-                                         class="inventory-image">
-                                @else
-                                    <img src="{{ url('/assets/imgs/item_placeholder.jpg') }}"
-                                         alt="No Image"
-                                         class="inventory-image">
-                                @endif
-                            </td>
-                            <td rowspan="{{ count($item['lots']) }}">{{ $item->item->item_name ?? 'N/A' }}</td>
+                <tr>
+                    <td>{{ $index + 1 }}.</td>
+                    <td>
+                        @if(isset($item['photo']) && $item['photo'])
+                            <img src="{{ url('/storage/'.$item['photo']->photo_url) }}"
+                                 alt="Product Image"
+                                 class="inventory-image">
+                        @else
+                            <img src="{{ url('/assets/imgs/item_placeholder.jpg') }}"
+                                 alt="No Image"
+                                 class="inventory-image">
                         @endif
-                        <td>{{ number_format($lot['total_qty'], 0) }} Kg</td>
-                        <td>$ {{ number_format($lot['total_price'], 0) }}</td>
-                        <td>{{ $lot->shipment->exchange_rate ?? 'N/A' }}</td>
-                        <td>¥ {{ number_format($cif, 0) }}</td>
-                        <td>
-                            @if($extra_shipment_charges > 0)
-                                ¥ ({{ number_format($cifyen, 0) }} + {{ number_format($extra_shipment_charges, 0) }}) = {{ number_format($finalCostPerKg, 0) }}
-                            @else
-                                ¥ {{ number_format($cifyen, 0) }}
-                            @endif
-                        </td>
-                        <td>Cont. {{ $containerIndex }} / Lot {{ $lotIndexNum }}</td>
-                    </tr>
-                @endforeach
-                @if($index == count($inventory) - 1)
-                    @php
-                        $totalQty = 0;
-                        $totalCost = 0;
-                        $totalCifYen = 0;
-
-                        foreach($inventory as $invItem) {
-                            foreach($invItem['lots'] as $invLot) {
-                                $totalQty += $invLot['total_qty'];
-                                $totalCost += $invLot['total_price'];
-                                $totalCifYen += $invLot['total_price'] * number_format($invLot->shipment->exchange_rate ?? 1, 2);
-                            }
-                        }
-                    @endphp
-                    <tr class="td-footer" style="background-color: rgb(168, 168, 168); font-weight: 600;">
-                        <td colspan="4" class="text-end">Purchase Costs:</td>
-                        <td>{{ number_format($totalQty, 0) }} Kg</td>
-                        <td>$ {{ number_format($totalCost, 0) }}</td>
-                        <td></td>
-                        <td>¥ {{ number_format($totalCifYen, 0) }}</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                @endif
+                    </td>
+                    <td>{{ $item->item->item_name ?? 'N/A' }}</td>
+                    <td style="padding: 0;">
+                        <table class="table table-bordered mb-0" style="border: 1px solid #000; table-layout: fixed; width: 100%;">
+                            <thead>
+                                <tr style="background-color:rgb(208, 234, 255);">
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 8%;">No.</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%;">Cost Date</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%;">Total Qty</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%;">Cost Amount $</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%;">Exchange Rate</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 16%;">Total Cost in Yen ¥</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%;">Other Costs</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%;">Cost Per Kg</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($item['lots'] as $lotIndex => $lot)
+                                    @php
+                                        $lastTwo = substr($lot['lot_unique'], -2);
+                                        $containerIndex = (int) substr($lastTwo, 0, 1);
+                                        $lotNum = (int) substr($lastTwo, 1, 1);
+                                    @endphp
+                                    <tr>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 8%; word-wrap: break-word;">{{ $lotIndex + 1 }}.</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;">{{ $lot->shipment->invoice_date ?? 'N/A' }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;">{{ number_format($lot['total_qty'], 0) }} Kg</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%; word-wrap: break-word;">$ {{ number_format($lot['total_price'], 0) }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;">{{ $lot->shipment->exchange_rate ?? 'N/A' }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 16%; word-wrap: break-word;">¥ {{ number_format($lot['cif'], 0) }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%; word-wrap: break-word;">¥ {{ number_format($lot['lot_other_costs'], 0) }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;">¥ {{ number_format($lot['final_cost_per_kg'], 0) }}</td>
+                                    </tr>
+                                @endforeach
+                                <tr class="total-row" style="background-color: #ebebeb; font-weight: 600;">
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 8%; word-wrap: break-word;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; text-align: center; word-wrap: break-word;">Total:</td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;">{{ number_format($item['product_totals']['qty'], 0) }} Kg</td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%; word-wrap: break-word;">$ {{ number_format($item['product_totals']['cost'], 0) }}</td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 16%; word-wrap: break-word;">¥ {{ number_format($item['product_totals']['cif_yen'], 0) }}</td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%; word-wrap: break-word;">¥ {{ number_format($item['product_totals']['other_costs'], 0) }}</td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
             @empty
                 <tr>
-                    <td colspan="10" class="text-center">No inventory items found</td>
+                    <td colspan="4" class="text-center">No inventory items found</td>
                 </tr>
             @endforelse
+            @if($inventory->count() > 0)
+                <tr>
+                    <td colspan="3"></td>
+                    <td style="padding: 0;">
+                        <table class="table table-bordered mb-0" style="border: 1px solid #000; table-layout: fixed; width: 100%;">
+                            <tbody>
+                                <tr class="grand-row" style="background-color:#cfcfcf; font-weight: 600;">
+                                    <td style="border: 1px solid #000; font-size: 13px; text-align: center; width: 20%; word-wrap: break-word;">Purchase Grand Costs:</td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 12%; word-wrap: break-word;">{{ number_format($grandTotals['qty'], 0) }} Kg</td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 14%; word-wrap: break-word;">$ {{ number_format($grandTotals['cost'], 0) }}</td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 12%; word-wrap: break-word;"></td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 16%; word-wrap: break-word;">¥ {{ number_format($grandTotals['cif_yen'], 0) }}</td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 14%; word-wrap: break-word;">¥ {{ number_format($grandTotals['other_costs'], 0) }}</td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 12%; word-wrap: break-word;"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            @endif
         </tbody>
     </table>
 
