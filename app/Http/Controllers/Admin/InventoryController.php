@@ -16,21 +16,25 @@ class InventoryController extends Controller
      */
     public function index(): View
     {
-        // Get all lots with their related item and photos
-        $inventory = Lot::with(['item'])
+        // Get all lots with their related item, shipment and photos
+        $inventory = Lot::with(['item', 'shipment.purchase_costs'])
             ->selectRaw('
                 item_id,
-                SUM(total_packages) as total_packages,
-                SUM(total_qty) as total_qty,
-                SUM(total_price) as total_cost,
-                type_of_package,
                 MAX(lot_unique) as sample_lot_unique
             ')
-            ->groupBy('item_id', 'type_of_package')
+            ->groupBy('item_id')
             ->get();
 
-        // Add photos for each inventory item
+        // Add detailed lots and photos for each inventory item
         foreach ($inventory as $key => $item) {
+            // Get all lots for this item with shipment and purchase costs
+            $lots = Lot::with(['shipment.purchase_costs'])
+                ->where('item_id', $item->item_id)
+                ->get();
+            
+            $inventory[$key]['lots'] = $lots;
+            
+            // Get photo for this item
             $photo = lot_photos::where('lot_unique', $item->sample_lot_unique)->first();
             $inventory[$key]['photo'] = $photo;
         }

@@ -22,7 +22,7 @@
         font-weight: bold;
     }
 
-    table tfoot tr td {
+    table tfoot tr td, {
     background-color: transparent !important;
 }
 
@@ -39,49 +39,68 @@
         <thead>
             <tr>
                 <th>No.</th>
+                <th>Cost Date</th>
                 <th>Product Pic</th>
                 <th>Product Name</th>
-                <th>Total Packages</th>
-                <th>Total Quantity</th>
-                <th>Purchase Cost</th>
+                <th>Total Qty</th>
+                <th>Cost Amount $</th>
+                <th>Exchange Rate</th>
+                <th>Cost in Yen ¥</th>
+                <th>Cost Per Kg</th>
+                <th>Container / Lot</th>
             </tr>
         </thead>
         <tbody>
             @forelse($inventory as $index => $item)
-                <tr>
-                    <td>{{ $index + 1 }}.</td>
-                    <td>
-                        @if(isset($item['photo']) && $item['photo'])
-                            <img src="{{ url('/storage/'.$item['photo']->photo_url) }}" 
-                                 alt="Product Image" 
-                                 class="inventory-image">
-                        @else
-                            <img src="{{ url('/assets/imgs/item_placeholder.jpg') }}" 
-                                 alt="No Image" 
-                                 class="inventory-image">
+                @foreach($item['lots'] as $lotIndex => $lot)
+                    <tr>
+                        @if($lotIndex == 0)
+                            <td rowspan="{{ count($item['lots']) }}">{{ $index + 1 }}.</td>
+                            <td rowspan="{{ count($item['lots']) }}">{{ $lot->shipment->invoice_date ?? 'N/A' }}</td>
+                            <td rowspan="{{ count($item['lots']) }}">
+                                @if(isset($item['photo']) && $item['photo'])
+                                    <img src="{{ url('/storage/'.$item['photo']->photo_url) }}" 
+                                         alt="Product Image" 
+                                         class="inventory-image">
+                                @else
+                                    <img src="{{ url('/assets/imgs/item_placeholder.jpg') }}" 
+                                         alt="No Image" 
+                                         class="inventory-image">
+                                @endif
+                            </td>
+                            <td rowspan="{{ count($item['lots']) }}">{{ $item->item->item_name ?? 'N/A' }}</td>
                         @endif
-                    </td>
-                    <td>{{ $item->item->item_name ?? 'N/A' }}</td>
-                    <td>{{ number_format($item->total_packages) }} {{ $item->type_of_package }}</td>
-                    <td>{{ number_format($item->total_qty, 0) }} Kg</td>
-                    <td>${{ number_format($item->total_cost, 0) }}</td>
-                </tr>
+                        <td>{{ number_format($lot['total_qty'], 0) }} Kg</td>
+                        <td>$ {{ number_format($lot['total_price'], 0) }}</td>
+                        <td>{{ $lot->shipment->exchange_rate ?? 'N/A' }}</td>
+                        <td>¥ {{ number_format($lot['cif'], 0) }}</td>
+                        <td>
+                            @if($lot['extra_shipment_charges'] > 0)
+                                ¥ ({{ number_format($lot['cifyen'], 0) }} + {{ number_format($lot['extra_shipment_charges'], 0) }}) = {{ number_format($lot['final_cost_per_kg'], 0) }}
+                            @else
+                                ¥ {{ number_format($lot['cifyen'], 0) }}
+                            @endif
+                        </td>
+                        <td>Cont. {{ $lot['container_index'] }} / Lot {{ $lot['lot_index_num'] }}</td>
+                    </tr>
+                @endforeach
+                @if($index == count($inventory) - 1)
+                    <tr class="td-footer" style="background-color: rgb(168, 168, 168); font-weight: 600;">
+                        <td colspan="4" class="text-end">Purchase Costs:</td>
+                        <td>{{ number_format($totals['total_qty'], 0) }} Kg</td>
+                        <td>$ {{ number_format($totals['total_cost'], 0) }}</td>
+                        <td></td>
+                        <td>¥ {{ number_format($totals['total_cif_yen'], 0) }}</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                @endif
             @empty
                 <tr>
-                    <td colspan="6" class="text-center">No inventory items found</td>
+                    <td colspan="10" class="text-center">No inventory items found</td>
                 </tr>
             @endforelse
         </tbody>
-        @if($inventory->count() > 0)
-        <tfoot>
-            <tr style="background-color: rgb(230, 230, 230); font-size: 15px; font-weight:600;">
-                <td colspan="3" class="text-end">Total</td>
-                <td><strong>{{ number_format($inventory->sum('total_packages')) }}</strong></td>
-                <td><strong>{{ number_format($inventory->sum('total_qty'), 0) }} Kg</strong></td>
-                <td><strong>${{ number_format($inventory->sum('total_cost'), 0) }}</strong></td>
-            </tr>
-        </tfoot>
-        @endif
     </table>
 
     <!-- Summary Cards -->
