@@ -136,17 +136,17 @@
                         <table class="table table-bordered mb-0" style="border: 1px solid #000; table-layout: fixed; width: 100%;">
                             <tbody>
                                 <tr class="grand-row" style="background-color:#cfcfcf; font-weight: 600;">
-                                    <td style="border: 1px solid #000; font-size: 13px; text-align: center; width: 19%; word-wrap: break-word;">Total All:</td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 9%; text-align: center;">{{ number_format($grandTotals['qty'], 0) }} Kg</td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 9%; text-align: center;">$ {{ number_format($grandTotals['cost'], 0) }}</td>
+                                    <td style="border: 1px solid #000; font-size: 15px; text-align: center; width: 19%; word-wrap: break-word;">Total All:</td>
+                                    <td style="border: 1px solid #000; font-size: 15px; width: 9%; text-align: center;">{{ number_format($grandTotals['qty'], 0) }} Kg</td>
+                                    <td style="border: 1px solid #000; font-size: 15px; width: 9%; text-align: center;">$ {{ number_format($grandTotals['cost'], 0) }}</td>
                                     <td style="border: 1px solid #000; width: 6%;"></td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($grandTotals['cif_yen'], 0) }}</td>
+                                    <td style="border: 1px solid #000; font-size: 15px; width: 10%; text-align: center;">¥ {{ number_format($grandTotals['cif_yen'], 0) }}</td>
                                     <td style="background-color:rgb(255, 255, 255); width: 3%;"></td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 10%; text-align: center;"></td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($grandTotals['other_costs'], 0) }}</td>
+                                    <td style="border: 1px solid #000; font-size: 15px; width: 10%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; font-size: 15px; width: 10%; text-align: center;">¥ {{ number_format($grandTotals['other_costs'], 0) }}</td>
                                     <td style="background-color:rgb(255, 255, 255); width: 3%;"></td>
                                     <td style="border: 1px solid #000; width: 10%;"></td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 10%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; font-size: 15px; width: 10%; text-align: center;"></td>
                                 </tr>
                             </tbody>
                         </table>
