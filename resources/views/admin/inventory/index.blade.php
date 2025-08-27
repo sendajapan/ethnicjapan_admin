@@ -95,7 +95,7 @@
                                         <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 6%; text-align: center;">{{ $lot->shipment->exchange_rate ?? 'N/A' }}</td>
                                         <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($lot['cif'], 0) }}</td>
                                         <th style="background-color:rgb(255, 255, 255);width: 3%;"></th>
-                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">$ {{ number_format($item['cost_amount'], 0) }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">$ {{ number_format($lot['lot_other_costs_usd'], 0) }}</td>
                                         <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($lot['lot_other_costs'], 0) }}</td>
                                         <th style="background-color:rgb(255, 255, 255);width: 3%;"></th>
                                         <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($lot['total_cost'], 0) }}</td>
@@ -110,10 +110,10 @@
                                     <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 11%; text-align: center;"></td>
                                     <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 16%; text-align: center;">¥ {{ number_format($item['product_totals']['cif_yen'], 0) }}</td>
                                     <td style="background-color:rgb(255, 255, 255);width: 3%; text-align: center;"></td>
-                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; text-align: center;">$ {{ number_format($item['product_totals']['other_costs_usd'], 0) }}</td>
                                     <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%; text-align: center;">¥ {{ number_format($item['product_totals']['other_costs'], 0) }}</td>
                                     <td style="background-color:rgb(255, 255, 255);width: 3%; text-align: center;"></td>
-                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 11%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 11%; text-align: center;">¥ {{ number_format($item['product_totals']['total_cost_yen'], 0) }}</td>
                                     <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 11%; text-align: center;"></td>
 
                                 </tr>
@@ -142,10 +142,10 @@
                                     <td style="border: 1px solid #000; width: 6%;"></td>
                                     <td style="border: 1px solid #000; font-size: 15px; width: 10%; text-align: center;">¥ {{ number_format($grandTotals['cif_yen'], 0) }}</td>
                                     <td style="background-color:rgb(255, 255, 255); width: 3%;"></td>
-                                    <td style="border: 1px solid #000; font-size: 15px; width: 10%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; font-size: 15px; width: 10%; text-align: center;">$ {{ number_format($grandTotals['other_costs_usd'], 0) }}</td>
                                     <td style="border: 1px solid #000; font-size: 15px; width: 10%; text-align: center;">¥ {{ number_format($grandTotals['other_costs'], 0) }}</td>
                                     <td style="background-color:rgb(255, 255, 255); width: 3%;"></td>
-                                    <td style="border: 1px solid #000; width: 10%;"></td>
+                                    <td style="border: 1px solid #000; font-size: 15px; width: 10%; text-align: center;">¥ {{ number_format($grandTotals['total_cost_yen'], 0) }}</td>
                                     <td style="border: 1px solid #000; font-size: 15px; width: 10%; text-align: center;"></td>
                                 </tr>
                             </tbody>

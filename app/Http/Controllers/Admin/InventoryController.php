@@ -76,39 +76,61 @@ class InventoryController extends Controller
                     $totalPurchaseCostsUSD += $cost['cost_amount'];
                 }
             }
-            $inventory[$key]['cost_amount'] = $totalPurchaseCostsUSD;
+            
+            // Calculate total qty for this shipment to get per-kg other costs in USD
+            $shipmentTotalQty = 0;
+            foreach($inventory as $invItem) {
+                if(($invItem['lots'][0]->shipment->id ?? 0) == $shipmentId) {
+                    foreach($invItem['lots'] as $lot) {
+                        $shipmentTotalQty += $lot['total_qty'];
+                    }
+                }
+            }
+            
+            // Other costs per kg in USD (without exchange rate)
+            $otherCostsPerKgUSD = $shipmentTotalQty > 0 ? $totalPurchaseCostsUSD / $shipmentTotalQty : 0;
+            $inventory[$key]['other_costs_per_kg_usd'] = $otherCostsPerKgUSD;
             
             foreach($item['lots'] as $lotIndex => $lot) {
                 $cif = $lot['total_price'] * number_format($lot->shipment->exchange_rate ?? 1, 2);
                 $cifyen = $cif / $lot['total_qty'];
                 $finalCostPerKg = $cifyen + ($shipmentCharges[$shipmentId] ?? 0);
                 $lotOtherCosts = ($shipmentOtherCosts[$shipmentId] ?? 0) * $lot['total_qty'];
+                $lotOtherCostsUSD = $otherCostsPerKgUSD * $lot['total_qty']; // Other costs in USD for this lot
                 $totalCost = $cif + $lotOtherCosts;
                 
                 $inventory[$key]['lots'][$lotIndex]['cif'] = $cif;
                 $inventory[$key]['lots'][$lotIndex]['cifyen'] = $cifyen;
                 $inventory[$key]['lots'][$lotIndex]['final_cost_per_kg'] = $finalCostPerKg;
                 $inventory[$key]['lots'][$lotIndex]['lot_other_costs'] = $lotOtherCosts;
+                $inventory[$key]['lots'][$lotIndex]['lot_other_costs_usd'] = $lotOtherCostsUSD;
                 $inventory[$key]['lots'][$lotIndex]['total_cost'] = $totalCost;
             }
             
+            // Calculate product totals
             $productTotalQty = 0;
             $productTotalCost = 0;
             $productTotalCifYen = 0;
             $productTotalOtherCosts = 0;
+            $productTotalOtherCostsUSD = 0;
+            $productTotalCostYen = 0;
             
-            foreach($item['lots'] as $lot) {
+            foreach($item['lots'] as $lotIdx => $lot) {
                 $productTotalQty += $lot['total_qty'];
                 $productTotalCost += $lot['total_price'];
                 $productTotalCifYen += $lot['total_price'] * number_format($lot->shipment->exchange_rate ?? 1, 2);
                 $productTotalOtherCosts += ($shipmentOtherCosts[$shipmentId] ?? 0) * $lot['total_qty'];
+                $productTotalOtherCostsUSD += $otherCostsPerKgUSD * $lot['total_qty'];
+                $productTotalCostYen += $inventory[$key]['lots'][$lotIdx]['total_cost'];
             }
             
             $inventory[$key]['product_totals'] = [
                 'qty' => $productTotalQty,
                 'cost' => $productTotalCost,
                 'cif_yen' => $productTotalCifYen,
-                'other_costs' => $productTotalOtherCosts
+                'other_costs' => $productTotalOtherCosts,
+                'other_costs_usd' => $productTotalOtherCostsUSD,
+                'total_cost_yen' => $productTotalCostYen
             ];
         }
 
@@ -116,18 +138,17 @@ class InventoryController extends Controller
         $totalCost = 0;
         $totalCifYen = 0;
         $totalOtherCosts = 0;
+        $totalOtherCostsUSD = 0;
+        $totalCostYen = 0;
 
         foreach($inventory as $invItem) {
             foreach($invItem['lots'] as $invLot) {
                 $totalQty += $invLot['total_qty'];
                 $totalCost += $invLot['total_price'];
                 $totalCifYen += $invLot['total_price'] * number_format($invLot->shipment->exchange_rate ?? 1, 2);
-            }
-            
-            $shipmentId = $invItem['lots'][0]->shipment->id ?? 0;
-            $productOtherCostsPerKg = $shipmentOtherCosts[$shipmentId] ?? 0;
-            foreach($invItem['lots'] as $lot) {
-                $totalOtherCosts += $productOtherCostsPerKg * $lot['total_qty'];
+                $totalOtherCosts += $invLot['lot_other_costs'];
+                $totalOtherCostsUSD += $invLot['lot_other_costs_usd'];
+                $totalCostYen += $invLot['total_cost'];
             }
         }
 
@@ -135,7 +156,9 @@ class InventoryController extends Controller
             'qty' => $totalQty,
             'cost' => $totalCost,
             'cif_yen' => $totalCifYen,
-            'other_costs' => $totalOtherCosts
+            'other_costs' => $totalOtherCosts,
+            'other_costs_usd' => $totalOtherCostsUSD,
+            'total_cost_yen' => $totalCostYen
         ];
 
         return view('admin.inventory.index', compact('inventory', 'grandTotals'));
