@@ -43,7 +43,7 @@
                 <th>No.</th>
                 <th>Product Pic</th>
                 <th>Product Name</th>
-                <th>Shipment Cost Details</th>
+                <th>Purchase Cost Details</th>
             </tr>
         </thead>
         <tbody>
@@ -62,18 +62,22 @@
                         @endif
                     </td>
                     <td>{{ $item->item->item_name ?? 'N/A' }}</td>
-                    <td style="padding: 0;">
+                    <td >
                         <table class="table table-bordered mb-0" style="border: 1px solid #000; table-layout: fixed; width: 100%;">
                             <thead>
                                 <tr style="background-color:rgb(208, 234, 255);">
-                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 8%;">No.</th>
-                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%;">Cost Date</th>
-                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%;">Total Qty</th>
-                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%;">Cost Amount $</th>
-                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%;">Exchange Rate</th>
-                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 16%;">Total Cost in Yen ¥</th>
-                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%;">Other Costs</th>
-                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%;">Cost Per Kg</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 6%; text-align: center;">No.</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 13%; text-align: center;">Purchase Date</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 9%; text-align: center;">Total Qty</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 9%; text-align: center;">Purchase $</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 6%; text-align: center;">Ex. Rate</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">Purchase ¥</th>
+                                    <th style="background-color:rgb(255, 255, 255); width: 3%;"></th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">Other Costs $</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">Other Costs ¥</th>
+                                    <th style="background-color:rgb(255, 255, 255);width: 3%;"></th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">Total Cost ¥</th>
+                                    <th style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">Cost Per Kg</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,29 +88,41 @@
                                         $lotNum = (int) substr($lastTwo, 1, 1);
                                     @endphp
                                     <tr>
-                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 8%; word-wrap: break-word;">{{ $lotIndex + 1 }}.</td>
-                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;">{{ $lot->shipment->invoice_date ?? 'N/A' }}</td>
-                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;">{{ number_format($lot['total_qty'], 0) }} Kg</td>
-                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%; word-wrap: break-word;">$ {{ number_format($lot['total_price'], 0) }}</td>
-                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;">{{ $lot->shipment->exchange_rate ?? 'N/A' }}</td>
-                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 16%; word-wrap: break-word;">¥ {{ number_format($lot['cif'], 0) }}</td>
-                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%; word-wrap: break-word;">¥ {{ number_format($lot['lot_other_costs'], 0) }}</td>
-                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;">¥ {{ number_format($lot['final_cost_per_kg'], 0) }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 6%; text-align: center;">{{ $lotIndex + 1 }}.</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 13%; text-align: center;">{{ $lot->shipment->invoice_date ?? 'N/A' }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 9%; text-align: center;">{{ number_format($lot['total_qty'], 0) }} Kg</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 9%; text-align: center;">$ {{ number_format($lot['total_price'], 0) }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 6%; text-align: center;">{{ $lot->shipment->exchange_rate ?? 'N/A' }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($lot['cif'], 0) }}</td>
+                                        <th style="background-color:rgb(255, 255, 255);width: 3%;"></th>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">$ {{ number_format($item['cost_amount'], 0) }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($lot['lot_other_costs'], 0) }}</td>
+                                        <th style="background-color:rgb(255, 255, 255);width: 3%;"></th>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($lot['total_cost'], 0) }}</td>
+                                        <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($lot['final_cost_per_kg'], 0) }}</td>
                                     </tr>
                                 @endforeach
                                 <tr class="total-row" style="background-color: #ebebeb; font-weight: 600;">
-                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 8%; word-wrap: break-word;"></td>
-                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; text-align: center; word-wrap: break-word;">Total:</td>
-                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;">{{ number_format($item['product_totals']['qty'], 0) }} Kg</td>
-                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%; word-wrap: break-word;">$ {{ number_format($item['product_totals']['cost'], 0) }}</td>
-                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;"></td>
-                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 16%; word-wrap: break-word;">¥ {{ number_format($item['product_totals']['cif_yen'], 0) }}</td>
-                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%; word-wrap: break-word;">¥ {{ number_format($item['product_totals']['other_costs'], 0) }}</td>
-                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; word-wrap: break-word;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 8%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; text-align: center;">Total {{ ucwords(strtolower($item->item->item_name ?? 'N/A')) }}                                    :</td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 11%; text-align: center;">{{ number_format($item['product_totals']['qty'], 0) }} Kg</td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 13%; text-align: center;">$ {{ number_format($item['product_totals']['cost'], 0) }}</td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 11%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 16%; text-align: center;">¥ {{ number_format($item['product_totals']['cif_yen'], 0) }}</td>
+                                    <td style="background-color:rgb(255, 255, 255);width: 3%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 12%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 14%; text-align: center;">¥ {{ number_format($item['product_totals']['other_costs'], 0) }}</td>
+                                    <td style="background-color:rgb(255, 255, 255);width: 3%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 11%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; padding: 4px 8px; font-size: 13px; width: 11%; text-align: center;"></td>
+
                                 </tr>
                             </tbody>
                         </table>
                     </td>
+                    
+
+                    
                 </tr>
             @empty
                 <tr>
@@ -116,17 +132,21 @@
             @if($inventory->count() > 0)
                 <tr>
                     <td colspan="3"></td>
-                    <td style="padding: 0;">
+                    <td >
                         <table class="table table-bordered mb-0" style="border: 1px solid #000; table-layout: fixed; width: 100%;">
                             <tbody>
                                 <tr class="grand-row" style="background-color:#cfcfcf; font-weight: 600;">
-                                    <td style="border: 1px solid #000; font-size: 13px; text-align: center; width: 20%; word-wrap: break-word;">Purchase Grand Costs:</td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 12%; word-wrap: break-word;">{{ number_format($grandTotals['qty'], 0) }} Kg</td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 14%; word-wrap: break-word;">$ {{ number_format($grandTotals['cost'], 0) }}</td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 12%; word-wrap: break-word;"></td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 16%; word-wrap: break-word;">¥ {{ number_format($grandTotals['cif_yen'], 0) }}</td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 14%; word-wrap: break-word;">¥ {{ number_format($grandTotals['other_costs'], 0) }}</td>
-                                    <td style="border: 1px solid #000; font-size: 13px; width: 12%; word-wrap: break-word;"></td>
+                                    <td style="border: 1px solid #000; font-size: 13px; text-align: center; width: 19%; word-wrap: break-word;">Total All:</td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 9%; text-align: center;">{{ number_format($grandTotals['qty'], 0) }} Kg</td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 9%; text-align: center;">$ {{ number_format($grandTotals['cost'], 0) }}</td>
+                                    <td style="border: 1px solid #000; width: 6%;"></td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($grandTotals['cif_yen'], 0) }}</td>
+                                    <td style="background-color:rgb(255, 255, 255); width: 3%;"></td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 10%; text-align: center;"></td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 10%; text-align: center;">¥ {{ number_format($grandTotals['other_costs'], 0) }}</td>
+                                    <td style="background-color:rgb(255, 255, 255); width: 3%;"></td>
+                                    <td style="border: 1px solid #000; width: 10%;"></td>
+                                    <td style="border: 1px solid #000; font-size: 13px; width: 10%; text-align: center;"></td>
                                 </tr>
                             </tbody>
                         </table>

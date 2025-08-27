@@ -18,11 +18,43 @@
     {{-- Font Awesome Icon --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+    <style>
+        .mobile-menu-btn {
+            position: fixed;
+            top: 35px;
+            right: 15px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 5px;
+        }
+        
+        .mobile-menu-btn button {
+            border: none;
+            border-radius: 6px;
+            padding: 10px 12px;
+            font-size: 18px;
+        }
+        
+        @media (min-width: 992px) {
+            .mobile-menu-btn {
+                display: none !important;
+            }
+        }
+    </style>
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
 <div class="screen-overlay"></div>
+
+<!-- Mobile Menu Button -->
+<div class="mobile-menu-btn d-lg-none">
+    <button class="btn btn-primary" id="mobile-menu-toggle" type="button">
+        <i class="fas fa-bars"></i>
+    </button>
+</div>
 
 @include('admin.layouts.sidebar')
 
@@ -95,6 +127,39 @@
     }
 
 </script>
+
+<script>
+    // Mobile menu toggle functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const sidebar = document.getElementById('offcanvas_aside');
+        const screenOverlay = document.querySelector('.screen-overlay');
+        
+        if (mobileMenuToggle && sidebar) {
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                screenOverlay.classList.toggle('show');
+            });
+            
+            // Close sidebar when clicking overlay
+            screenOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                screenOverlay.classList.remove('show');
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth < 992) {
+                    if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                        sidebar.classList.remove('show');
+                        screenOverlay.classList.remove('show');
+                    }
+                }
+            });
+        }
+    });
+</script>
+
 @stack('scripts')
 
 </body>
