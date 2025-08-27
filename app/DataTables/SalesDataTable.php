@@ -35,40 +35,22 @@ class SalesDataTable extends DataTable
             ->addColumn('customer_name', function ($query) {
                 return $query->customer->customer_name;
             })
-            ->addColumn('sale_amount', function ($query) {
-                return "$ ".number_format($query->sale_amount,2);
+            ->addColumn('total_with_tax', function ($query) {
+                // Calculate subtotal from sales items
+                $subtotal = $query->salesItems->sum('item_line_price');
+                // Calculate 8% tax
+                $tax = $subtotal * 0.08;
+                // Total with tax
+                $totalWithTax = $subtotal + $tax;
+                return "$ ".number_format($totalWithTax, 2);
             })
             ->addColumn('product_qty', function ($query) {
                 $item_count = $query->salesItems->count();
-                $html = $item_count;
-                if($item_count>0){
-                    $html .= '
-                    <a id="detail_link_show_'.$query->id.'" class="show_detail_table_link float-end" onclick="show_detail('.$query->id.')">Show Details</a>
-                    <a id="detail_link_hide_'.$query->id.'" class="float-end" onclick="show_detail('.$query->id.')" style="display: none;">Hide Details</a>
-                    <table id="detail_table_'.$query->id.'" width="100%" class="table table-nowrap mb-0 " style="line-height:0; font-size:10px; display:none;">
-                        <tr>
-                            <td class="fw-bolder bg-black text-white">No.</td>
-                            <td class="fw-bolder bg-black text-white">Item</td>
-                            <td class="fw-bolder bg-black text-white">Qty</td>
-                            <td class="fw-bolder bg-black text-white">Unit<br>Price</td>
-                            <td class="fw-bolder bg-black text-white">Amount</td>
-                        </tr>';
-
-                    foreach($query->salesItems as $key => $item){
-                        $html .= '<tr>
-                            <td class="text-left">'.($key+1).'</td>
-                            <td class="text-left">'.$item->item->item_name.'</td>
-                            <td class="text-center">'.number_format($item->item_qty,0).'</td>
-                            <td class="text-end">'.number_format($item->item_unit_price,2).'</td>
-                            <td class="text-end">'.number_format($item->item_line_price,2).'</td>
-                        </tr>';
-                    }
-
-                    $html .= '<tr>
-                            <td class="fw-bolder" colspan="4">Total</td>
-                            <td class="fw-bolder text-end">'.number_format($query->sale_amount,2).'</td>
-                        </tr>
-                    </table>';
+                $html = '<span class="badge bg-primary">'.$item_count.'</span>';
+                if($item_count > 0){
+                    $html .= ' <button class="btn btn-sm btn-outline-info ms-2" onclick="show_detail('.$query->id.')">
+                        <i class="material-icons md-visibility fs-6"></i> View Details
+                    </button>';
                 }
                 return $html;
             })
@@ -81,7 +63,7 @@ class SalesDataTable extends DataTable
                 </a>';
 
             })
-            ->rawColumns(['sale_no', 'customer_name', 'sale_date', 'product_qty', 'sale_amount', 'sale_invoice', 'action']);
+            ->rawColumns(['sale_no', 'customer_name', 'sale_date', 'product_qty', 'total_with_tax', 'sale_invoice', 'action']);
     }
 
     /**
@@ -148,7 +130,7 @@ class SalesDataTable extends DataTable
             Column::make('customer_name')->className('text-start')->width(100),
             Column::make('sale_date')->className('text-start')->width(100),
             Column::make('product_qty')->className('text-start')->width(200),
-            Column::make('sale_amount')->className('text-center')->width(100),
+            Column::make('total_with_tax')->className('text-center')->width(100)->title('Total (with Tax)'),
             Column::make('sale_invoice')->className('text-start')->width(100),
             Column::computed('action')
                 ->exportable(true)

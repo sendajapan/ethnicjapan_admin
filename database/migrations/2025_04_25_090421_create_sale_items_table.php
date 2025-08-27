@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Sale::class)->constrained();
             $table->foreignIdFor(Item::class)->constrained();
             $table->double('item_qty')->nullable();
+            $table->string('item_unit')->nullable();
             $table->string('item_description')->nullable();
             $table->string('item_hts_code')->nullable();
             $table->double('item_unit_price')->nullable();

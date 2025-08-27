@@ -20,6 +20,26 @@
         </div>
     </section>
 
+    <!-- Sale Details Modal -->
+    <div class="modal fade" id="saleDetailsModal" tabindex="-1" aria-labelledby="saleDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saleDetailsModalLabel">Sale Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="saleDetailsContent">
+                        <!-- Sale details will be loaded here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @push('scripts')
@@ -57,10 +77,24 @@
             });
         }
 
-        function show_detail(id){
-            $('#detail_table_'+id).toggle('slow');
-            $('#detail_link_show_'+id).toggle();
-            $('#detail_link_hide_'+id).toggle();
+        function show_detail(saleId) {
+            // Show loading spinner
+            $('#saleDetailsContent').html('<div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div>');
+            
+            // Show modal
+            $('#saleDetailsModal').modal('show');
+            
+            // Fetch sale details via AJAX
+            $.ajax({
+                url: '/admin/sale/' + saleId + '/details',
+                type: 'GET',
+                success: function(response) {
+                    $('#saleDetailsContent').html(response);
+                },
+                error: function() {
+                    $('#saleDetailsContent').html('<div class="alert alert-danger">Error loading sale details. Please try again.</div>');
+                }
+            });
         }
 
         $(document).ready(function () {

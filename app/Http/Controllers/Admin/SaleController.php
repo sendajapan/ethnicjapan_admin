@@ -54,7 +54,8 @@ class SaleController extends Controller
             $sale->customer_id = $request->input('customer_id');
             $sale->sale_no = $request->input('sale_no');
             $sale->sale_date = $request->input('sale_date');
-            $sale->sale_amount = $request->input('sale_amount');
+            // We'll calculate sale_amount after saving items
+            $sale->sale_amount = 0;
             if(isset($filePath)){
                 if(!empty($filePath)){
                     $sale->sale_invoice = $filePath;
@@ -63,20 +64,29 @@ class SaleController extends Controller
             $sale->save();
             $sale_id = $sale->id;
 
+            $subtotal = 0;
             foreach($request->input('item_id') as $key=> $value){
                 if(($request->input('item_id')[$key]) && ($request->input('item_qty')[$key]) && ($request->input('item_unit_price')[$key]) && ($request->input('item_line_price')[$key])){
 
                     $saleItems = new SaleItem();
                     $saleItems->sale_id = $sale_id;
                     $saleItems->item_id = $request->input('item_id')[$key];
-                    $saleItems->item_description = $request->input('item_description')[$key];
+                    $saleItems->item_description = $request->input('item_description')[$key] ?? '';
                     $saleItems->item_qty = $request->input('item_qty')[$key];
+                    $saleItems->item_unit = $request->input('item_unit')[$key] ?? 'Package';
                     $saleItems->item_unit_price = $request->input('item_unit_price')[$key];
                     $saleItems->item_line_price = $request->input('item_line_price')[$key];
 
                     $saleItems->save();
+                    $subtotal += $request->input('item_line_price')[$key];
                 }
             }
+            
+            // Calculate total with 8% tax and update sale_amount
+            $tax = $subtotal * 0.08;
+            $totalWithTax = $subtotal + $tax;
+            $sale->sale_amount = $totalWithTax;
+            $sale->save();
             DB::commit();
 
         } catch (Exception $exception) {
@@ -100,9 +110,9 @@ class SaleController extends Controller
      */
     public function edit(string $id)
     {
-        $data = Sale::where('id', $id)->firstOrFail();
-        //dd($data);
-        return view('admin.sale.edit', compact('data'));
+        $data = Sale::with('saledItems')->where('id', $id)->firstOrFail();
+        $items = \App\Models\Item::all();
+        return view('admin.sale.edit', compact('data', 'items'));
     }
 
     /**
@@ -126,7 +136,7 @@ class SaleController extends Controller
             $sale->customer_id = $request->input('customer_id');
             $sale->sale_no = $request->input('sale_no');
             $sale->sale_date = $request->input('sale_date');
-            $sale->sale_amount = $request->input('sale_amount');
+            // We'll calculate sale_amount after saving items
 
             if(isset($filePath)){
                 if(!empty($filePath)){
@@ -134,24 +144,32 @@ class SaleController extends Controller
                 }
             }
 
-            $sale->update();
             $sale_id = $sale->id;
 
             $sale->salesItems()->delete();
 
+            $subtotal = 0;
             foreach($request->input('item_id') as $key=> $value){
                 if(($request->input('item_id')[$key]) && ($request->input('item_qty')[$key]) && ($request->input('item_unit_price')[$key]) && ($request->input('item_line_price')[$key])){
                     $saleItems = new SaleItem();
                     $saleItems->sale_id = $sale_id;
                     $saleItems->item_id = $request->input('item_id')[$key];
-                    $saleItems->item_description = $request->input('item_description')[$key];
+                    $saleItems->item_description = $request->input('item_description')[$key] ?? '';
                     $saleItems->item_qty = $request->input('item_qty')[$key];
+                    $saleItems->item_unit = $request->input('item_unit')[$key] ?? 'Package';
                     $saleItems->item_unit_price = $request->input('item_unit_price')[$key];
                     $saleItems->item_line_price = $request->input('item_line_price')[$key];
 
                     $saleItems->save();
+                    $subtotal += $request->input('item_line_price')[$key];
                 }
             }
+            
+            // Calculate total with 8% tax and update sale_amount
+            $tax = $subtotal * 0.08;
+            $totalWithTax = $subtotal + $tax;
+            $sale->sale_amount = $totalWithTax;
+            $sale->update();
 
             DB::commit();
 
@@ -162,6 +180,21 @@ class SaleController extends Controller
 
         return redirect()->route('admin.sale.index')->with('success', $sale->sale_no . ' updated successfully.');
 
+    }
+
+    /**
+     * Get sale details for modal display
+     */
+    public function details(string $id)
+    {
+        $sale = Sale::with(['salesItems.item', 'customer'])->findOrFail($id);
+        
+        // Calculate totals
+        $subtotal = $sale->salesItems->sum('item_line_price');
+        $tax = $subtotal * 0.08;
+        $totalWithTax = $subtotal + $tax;
+        
+        return view('admin.sale.details-modal', compact('sale', 'subtotal', 'tax', 'totalWithTax'));
     }
 
     /**

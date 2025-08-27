@@ -51,12 +51,12 @@
                                         <input type="date" placeholder="ex. Sale Date." class="form-control" id="sale_date" name="sale_date"  value="{{ empty(old('sale_date')) ? date("Y-m-d")  : old('sale_date') }}" required>
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
+                                {{-- <div class="col-lg-2">
                                     <div class="mb-4">
                                         <label for="sale_amount" class="form-label">Sale Amount (USD)</label>
                                         <input type="text" placeholder="ex. 99.50" class="form-control" id="sale_amount" name="sale_amount"  value="{{ old('sale_amount') }}" required>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div class="col-lg-2">
                                     <div class="mb-4">
                                         <label for="sale_invoice" class="form-label">Sale Invoice</label>
@@ -72,10 +72,10 @@
                                         <tr>
                                             <th class="text-center px-4" width="60">S/N</th>
                                             <th class="text-left px-4">Item Name</th>
-                                            <th class="text-left px-4">Item Description</th>
                                             <th class="text-left px-4">Item Qty</th>
-                                            <th class="text-left px-4">Unit Price</th>
-                                            <th class="text-left px-4">Total</th>
+                                            <th class="text-left px-4">Unit</th>
+                                            <th class="text-left px-4">Item Price</th>
+                                            <th class="text-left px-4">Total Price</th>
                                             <th class="text-left px-4">Action</th>
                                         </tr>
                                         </thead>
@@ -85,24 +85,28 @@
                                             <tr id="tr_{{$i}}" style="display:none;">
                                                 <td class="border-1 fw-bolder text-primary-emphasis text-center py-0">{{ ($i+1) }}</td>
                                                 <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                                    <select class="form-select" id="item_id" name="item_id[]"  value="{{ old('item_id') }}">
+                                                    <select class="form-select" id="item_id_{{$i}}" name="item_id[]" onchange="populate_price({{$i}})" value="{{ old('item_id') }}">
                                                         <option value="">Select</option>
                                                         @foreach($items as $p)
-                                                            <option value="{{ $p['id'] }}">{{ $p['item_name'] }}</option>
+                                                            <option value="{{ $p['id'] }}" data-price="{{ $p['default_price'] }}">{{ $p['item_name'] }}</option>
                                                         @endforeach
                                                     </select>
                                                 </td>
+                        
                                                 <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                                    <textarea placeholder="ex. description" class="form-control" id="item_description_{{$i}}" name="item_description[]" style="min-height:50px !important;" >{{ old('item_description') }}</textarea>
+                                                    <input type="text"  class="form-control" id="item_qty_{{$i}}" name="item_qty[]" onkeyup="update_line({{$i}});"  value="{{ old('item_qty') }}">
                                                 </td>
                                                 <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                                    <input type="text" placeholder="ex. 5" class="form-control" id="item_qty_{{$i}}" name="item_qty[]" onkeyup="update_line({{$i}});"  value="{{ old('item_qty') }}">
+                                                    <select class="form-select" id="item_unit_{{$i}}" name="item_unit[]">
+                                                        <option value="Package" selected>Package</option>
+                                                        <option value="Kg">Kg</option>
+                                                    </select>
                                                 </td>
                                                 <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                                    <input type="text" placeholder="ex. 19.50" class="form-control" onkeyup="update_line({{$i}});" id="item_unit_price_{{$i}}" name="item_unit_price[]"  value="{{ old('item_unit_price') }}">
+                                                    <input type="text" class="form-control" onkeyup="update_line({{$i}});" id="item_unit_price_{{$i}}" name="item_unit_price[]"  value="{{ old('item_unit_price') }}">
                                                 </td>
                                                 <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                                    <input type="text" placeholder="ex. 39.50" class="form-control" id="item_line_price_{{$i}}" name="item_line_price[]"  value="" readonly>
+                                                    <input type="text" class="form-control" id="item_line_price_{{$i}}" name="item_line_price[]"  value="" readonly>
                                                 </td>
                                                 <td width="120" class="border-1 py-0">
                                                     <div class="d-flex justify-content-evenly text-end">
@@ -114,6 +118,29 @@
                                             </tr>
                                         @endfor
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="5" class="text-end fw-bold border-1 py-2" style="background-color: #f8f9fa;">Subtotal:</td>
+                                                <td class="border-1 fw-bold py-2 text-center" style="background-color: #f8f9fa;">
+                                                    <input type="text" id="subtotal" name="subtotal" class="form-control text-center fw-bold" value="0.00" readonly style="background-color: transparent; border: none;">
+                                                </td>
+                                                <td class="border-1" style="background-color: #f8f9fa;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-end fw-bold border-1 py-2" style="background-color: #e9ecef;"> Consumption tax 8%:</td>
+                                                <td class="border-1 fw-bold py-2 text-center" style="background-color: #e9ecef;">
+                                                    <input type="text" id="tax_amount" name="tax_amount" class="form-control text-center fw-bold" value="0.00" readonly style="background-color: transparent; border: none;">
+                                                </td>
+                                                <td class="border-1" style="background-color: #e9ecef;"></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-end fw-bold border-1 py-2" style="background-color: #d1ecf1;">Total:</td>
+                                                <td class="border-1 fw-bold py-2 text-center" style="background-color: #d1ecf1;">
+                                                    <input type="text" id="total_with_tax" name="total_with_tax" class="form-control text-center fw-bold" value="0.00" readonly style="background-color: transparent; border: none;">
+                                                </td>
+                                                <td class="border-1" style="background-color: #d1ecf1;"></td>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                             <div class="d-flex justify-content-start">
                                 <a id="add_btn" onclick="show_line()" class="btn btn-sm  font-sm rounded btn-outline-secondary">
@@ -152,6 +179,8 @@
         function hide_line(i){
             if(i!=''){
                 $('#tr_'+i).remove();
+                // Recalculate totals after removing a line
+                calculate_totals();
             }
         }
 
@@ -161,9 +190,20 @@
 
         show_line();
         show_line();
-        show_line();
-        show_line();
-        show_line();
+
+        function populate_price(i) {
+            var select = document.getElementById('item_id_' + i);
+            var selectedOption = select.options[select.selectedIndex];
+            var defaultPrice = selectedOption.getAttribute('data-price');
+            
+            if (defaultPrice && defaultPrice !== '') {
+                document.getElementById('item_unit_price_' + i).value = defaultPrice;
+                // Trigger calculation if quantity is already entered
+                update_line(i);
+            } else {
+                document.getElementById('item_unit_price_' + i).value = '';
+            }
+        }
 
         function update_line(i){
             unit_price = parseFloat(document.getElementById('item_unit_price_'+i).value);
@@ -175,6 +215,32 @@
             else{
                 document.getElementById('item_line_price_'+i).value = 0;
             }
+            // Update totals after each line calculation
+            calculate_totals();
+        }
+
+        function calculate_totals() {
+            var subtotal = 0;
+            
+            // Calculate subtotal by summing all visible line totals
+            for(var i = 0; i < 20; i++) {
+                var lineTotal = document.getElementById('item_line_price_' + i);
+                if(lineTotal && $('#tr_' + i + ':visible').length > 0) {
+                    var lineValue = parseFloat(lineTotal.value) || 0;
+                    subtotal += lineValue;
+                }
+            }
+            
+            // Calculate tax (8%)
+            var taxAmount = subtotal * 0.08;
+            
+            // Calculate total with tax
+            var totalWithTax = subtotal + taxAmount;
+            
+            // Update the display fields
+            document.getElementById('subtotal').value = subtotal.toFixed(2);
+            document.getElementById('tax_amount').value = taxAmount.toFixed(2);
+            document.getElementById('total_with_tax').value = totalWithTax.toFixed(2);
         }
     </script>
     @endpush

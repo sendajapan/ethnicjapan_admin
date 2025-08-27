@@ -53,6 +53,7 @@ Route::resource('accounts', AccountsController::class);
 
 Route::resource('inventory', InventoryController::class);
 
+Route::get('sale/{id}/details', [SaleController::class, 'details'])->name('sale.details');
 Route::resource('sale', SaleController::class);
 Route::resource('stock', StockController::class);
 Route::resource('purchase_report', PurchaseReportController::class);

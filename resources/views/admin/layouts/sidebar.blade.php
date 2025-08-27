@@ -118,10 +118,20 @@
                 </a>
             </li>
 
+            <li class="menu-item {{ setActive(['admin.sale.*']) }}">
+                <a class="menu-link {{ setActive(['admin.sale.index']) }}" href="{{ route('admin.sale.index') }}">
+                    <i class="icon material-icons md-payments text-muted"></i>
+                    <span class="text">Sales List</span>
+                </a>
+            </li>
 
 
-
-
+            <!-- <li class="menu-item {{ setActive(['admin.sale_report.*']) }}">
+                <a class="menu-link {{ setActive(['admin.sale_report.index']) }}" href="{{ route('admin.sale_report.index') }}">
+                    <i class="icon material-icons md-shopping_cart text-muted"></i>
+                    <span class="text">Sales Report</span>
+                </a>
+            </li> -->
 
 
 
