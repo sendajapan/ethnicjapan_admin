@@ -220,6 +220,16 @@ class SaleController extends Controller
     public function details(string $id)
     {
         $sale = Sale::with(['salesItems.item', 'customer'])->findOrFail($id);
+        
+        // Get lot tracking information for each sale item with lot details
+        foreach ($sale->salesItems as $saleItem) {
+            $saleItem->lotTracking = LotTracking::where('sale_item_id', $saleItem->id)
+                ->leftJoin('lots', 'lot_tracking.lot_unique', '=', 'lots.lot_unique')
+                ->leftJoin('shipments', 'lots.shipment_id', '=', 'shipments.id')
+                ->select('lot_tracking.*', 'lots.lot_number', 'shipments.invoice_date as lot_date')
+                ->get();
+        }
+        
         $subtotal = $sale->salesItems->sum('item_line_price');
         $tax = $subtotal * 0.08;
         $totalWithTax = $subtotal + $tax;     

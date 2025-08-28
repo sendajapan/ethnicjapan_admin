@@ -341,7 +341,7 @@
                                             <div class="col-lg-1 col-xl-1 border-1 p-2 border-top-0 text-center">¥ {{ number_format($cifyen, 0) }}</div>
                                         @endif
 
-                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">Cont. {{ $containerIndex }} / Lot {{ $lotIndex }}</div>
+                                        <div class="col-lg-2 col-xl-2 border-1 p-2 border-top-0">Cont. {{ $containerIndex }} / Lot {{ $lot['lot_number'] ?? $lotIndex }}</div>
                                     </div>
                                     @php $totalLotsCost += $lot['total_price'];
                                     $totalcif += $cif;

@@ -129,7 +129,7 @@ class SalesDataTable extends DataTable
             Column::make('sale_no')->className('text-start')->width(100),
             Column::make('customer_name')->className('text-start')->width(100),
             Column::make('sale_date')->className('text-start')->width(100),
-            Column::make('product_qty')->className('text-start')->width(200),
+            Column::make('product_qty')->className('text-center')->width(200),
             Column::make('total_with_tax')->className('text-center')->width(100)->title('Total (with Tax)'),
             Column::make('sale_invoice')->className('text-start')->width(100),
             Column::computed('action')
