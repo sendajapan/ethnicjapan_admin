@@ -451,8 +451,8 @@ class AllSeeder extends Seeder
 
 
 
-        for($i=1; $i<=60; $i++){
-            $sale['sale_amount']=0;
+        for($i=1; $i<=2; $i++){
+            $sale['total_sale']=0;
             $item_count = rand(4,7);
             for($j=1; $j<=$item_count; $j++){
                 $item_index = rand(0,6);
@@ -467,7 +467,7 @@ class AllSeeder extends Seeder
                 $item2['item_unit_price'] = $item_selected['default_price'];
                 $item2['item_line_price'] = $item_selected['default_price']*$item_qty;
                 $items2[] = $item2;
-                $sale['sale_amount'] += $item2['item_line_price'];
+                $sale['total_sale'] += $item2['item_line_price'];
             }
 
 

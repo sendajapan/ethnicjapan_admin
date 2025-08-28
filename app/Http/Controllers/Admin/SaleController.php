@@ -7,6 +7,8 @@ use App\DataTables\SalesDataTable;
 use App\Http\Controllers\Controller;
 use App\Models\sale;
 use App\Models\SaleItem;
+use App\Models\Lot;
+use App\Models\LotTracking;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -47,15 +49,13 @@ class SaleController extends Controller
             $filePath = $request->file('sale_invoice')->store('uploads/sale', 'public');
         }
 
-        // Return success response
         DB::beginTransaction();
         try {
             $sale = new Sale();
             $sale->customer_id = $request->input('customer_id');
             $sale->sale_no = $request->input('sale_no');
             $sale->sale_date = $request->input('sale_date');
-            // We'll calculate sale_amount after saving items
-            $sale->sale_amount = 0;
+            $sale->total_sale = 0;
             if(isset($filePath)){
                 if(!empty($filePath)){
                     $sale->sale_invoice = $filePath;
@@ -78,14 +78,21 @@ class SaleController extends Controller
                     $saleItems->item_line_price = $request->input('item_line_price')[$key];
 
                     $saleItems->save();
+                                        $this->createLotTrackingEntries(
+                        $saleItems->id,
+                        $request->input('item_id')[$key],
+                        $request->input('item_qty')[$key]
+                    );
+                    
                     $subtotal += $request->input('item_line_price')[$key];
                 }
             }
             
-            // Calculate total with 8% tax and update sale_amount
             $tax = $subtotal * 0.08;
-            $totalWithTax = $subtotal + $tax;
-            $sale->sale_amount = $totalWithTax;
+            $totalWithTax = $subtotal + $tax;           
+            $sale->net_sale = $subtotal;
+            $sale->tax = $tax;
+            $sale->total_sale = $totalWithTax;
             $sale->save();
             DB::commit();
 
@@ -136,7 +143,6 @@ class SaleController extends Controller
             $sale->customer_id = $request->input('customer_id');
             $sale->sale_no = $request->input('sale_no');
             $sale->sale_date = $request->input('sale_date');
-            // We'll calculate sale_amount after saving items
 
             if(isset($filePath)){
                 if(!empty($filePath)){
@@ -145,14 +151,27 @@ class SaleController extends Controller
             }
 
             $sale_id = $sale->id;
-
-            $sale->salesItems()->delete();
+            $existingSaleItems = $sale->salesItems()->get()->keyBy('id');
+            $processedItemIds = [];
 
             $subtotal = 0;
             foreach($request->input('item_id') as $key=> $value){
                 if(($request->input('item_id')[$key]) && ($request->input('item_qty')[$key]) && ($request->input('item_unit_price')[$key]) && ($request->input('item_line_price')[$key])){
-                    $saleItems = new SaleItem();
-                    $saleItems->sale_id = $sale_id;
+                    
+                    $saleItemId = $request->input('sale_item_id')[$key] ?? null;
+                    $saleItems = null;
+                    
+                    if ($saleItemId && isset($existingSaleItems[$saleItemId])) {
+                        $saleItems = $existingSaleItems[$saleItemId];
+                        $processedItemIds[] = $saleItemId;
+                        
+                        LotTracking::where('sale_item_id', $saleItems->id)->delete();
+                    } else {
+                        // Create new sale item
+                        $saleItems = new SaleItem();
+                        $saleItems->sale_id = $sale_id;
+                    }
+                    
                     $saleItems->item_id = $request->input('item_id')[$key];
                     $saleItems->item_description = $request->input('item_description')[$key] ?? '';
                     $saleItems->item_qty = $request->input('item_qty')[$key];
@@ -161,14 +180,27 @@ class SaleController extends Controller
                     $saleItems->item_line_price = $request->input('item_line_price')[$key];
 
                     $saleItems->save();
+                                        $this->createLotTrackingEntries(
+                        $saleItems->id,
+                        $request->input('item_id')[$key],
+                        $request->input('item_qty')[$key]
+                    );
+                    
                     $subtotal += $request->input('item_line_price')[$key];
                 }
             }
+                        foreach ($existingSaleItems as $existingItem) {
+                if (!in_array($existingItem->id, $processedItemIds)) {
+                    LotTracking::where('sale_item_id', $existingItem->id)->delete();
+                    $existingItem->delete();
+                }
+            }
             
-            // Calculate total with 8% tax and update sale_amount
             $tax = $subtotal * 0.08;
             $totalWithTax = $subtotal + $tax;
-            $sale->sale_amount = $totalWithTax;
+            $sale->net_sale = $subtotal;
+            $sale->tax = $tax;
+            $sale->total_sale = $totalWithTax;
             $sale->update();
 
             DB::commit();
@@ -188,12 +220,9 @@ class SaleController extends Controller
     public function details(string $id)
     {
         $sale = Sale::with(['salesItems.item', 'customer'])->findOrFail($id);
-        
-        // Calculate totals
         $subtotal = $sale->salesItems->sum('item_line_price');
         $tax = $subtotal * 0.08;
-        $totalWithTax = $subtotal + $tax;
-        
+        $totalWithTax = $subtotal + $tax;     
         return view('admin.sale.details-modal', compact('sale', 'subtotal', 'tax', 'totalWithTax'));
     }
 
@@ -204,6 +233,10 @@ class SaleController extends Controller
     {
         try {
             $sale = Sale::where('id', $id)->firstOrFail();
+            $saleItems = $sale->salesItems()->get();
+            foreach ($saleItems as $saleItem) {
+                LotTracking::where('sale_item_id', $saleItem->id)->delete();
+            }          
             $sale->salesItems()->delete();
             $sale->delete();
         } catch (Exception $exception) {
@@ -214,5 +247,48 @@ class SaleController extends Controller
             'status' => 'success',
             'message' => 'Sale deleted successfully!!!',
         ), 200, array('Content-Type' => 'application/json'));
+    }
+
+    private function createLotTrackingEntries($saleItemId, $itemId, $quantity)
+    {
+        $remainingQty = floatval($quantity);    
+        // Get available lots
+        $lots = Lot::where('item_id', $itemId)
+            ->orderBy('created_at', 'asc')
+            ->get();
+            
+            
+
+
+        foreach ($lots as $lot) {
+            if ($remainingQty <= 0) break;
+                        $soldFromLot = LotTracking::where('lot_unique', $lot->lot_unique)->sum('item_quantity');
+            $availableInLot = floatval($lot->total_qty) - floatval($soldFromLot);          
+            if ($availableInLot > 0) {
+                $takeFromLot = min($remainingQty, $availableInLot);              
+                // Create tracking entry
+                LotTracking::create([
+                    'sale_item_id' => $saleItemId,
+                    'item_id' => $itemId,
+                    'lot_unique' => $lot->lot_unique,
+                    'item_quantity' => $takeFromLot
+                ]);
+                
+                $remainingQty -= $takeFromLot;
+            }
+        }
+
+
+
+
+
+                if ($remainingQty > 0) {
+            LotTracking::create([
+                'sale_item_id' => $saleItemId,
+                'item_id' => $itemId,
+                'lot_unique' => null,
+                'item_quantity' => $remainingQty
+            ]);
+        }
     }
 }

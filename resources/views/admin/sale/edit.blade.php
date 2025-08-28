@@ -91,6 +91,8 @@
                                     <tr id="tr_{{$i}}" style="display:none;">
                                         <td class="border-1 fw-bolder text-primary-emphasis text-center py-0">{{ ($i+1) }}</td>
                                         <td class="border-1 fw-bold py-0" style="font-size: 11px">
+                                            <!-- Hidden field to preserve sale item ID -->
+                                            <input type="hidden" name="sale_item_id[]" value="{{ $data->saledItems[$i]['id'] ?? '' }}">
                                             <select class="form-select" id="item_id_{{$i}}" name="item_id[]" onchange="populate_price({{$i}})" value="{{ old('item_id') }}">
                                                 <option value="">Select</option>
                                                 @foreach($items as $p)
@@ -127,6 +129,8 @@
                                     <tr id="tr_{{$i}}" style="display:none;">
                                         <td class="border-1 fw-bolder text-primary-emphasis text-center py-0">{{ ($i+1) }}</td>
                                         <td class="border-1 fw-bold py-0" style="font-size: 11px">
+                                            <!-- Hidden field for new items (empty value) -->
+                                            <input type="hidden" name="sale_item_id[]" value="">
                                             <select class="form-select" id="item_id_{{$i}}" name="item_id[]" onchange="populate_price({{$i}})" value="{{ old('item_id') }}">
                                                 <option value="">Select</option>
                                                 @foreach($items as $p)
