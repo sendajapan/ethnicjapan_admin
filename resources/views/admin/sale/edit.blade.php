@@ -82,7 +82,7 @@
                                     <th class="text-left px-4 text-center">Unit</th>
                                     <th class="text-left px-4 text-center">Kg/Package</th>
                                     <th class="text-left px-4 text-center">Item Price</th>
-                                    <th class="text-left px-4 text-center">Total Price</th>
+                                    <th class="text-left px-4 text-center">Total Price ¥</th>
                                     <th class="text-left px-4">Action</th>
                                 </tr>
                                 </thead>
