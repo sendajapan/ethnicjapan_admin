@@ -77,11 +77,12 @@
                                 <thead class="table-light border-1">
                                 <tr>
                                     <th class="text-center px-4" width="60">S/N</th>
-                                    <th class="text-left px-4">Item Name</th>
-                                    <th class="text-left px-4">Item Qty</th>
-                                    <th class="text-left px-4">Unit</th>
-                                    <th class="text-left px-4">Item Price</th>
-                                    <th class="text-left px-4">Total Price</th>
+                                    <th class="text-left px-4 text-center">Item Name</th>
+                                    <th class="text-left px-4 text-center">Item Qty</th>
+                                    <th class="text-left px-4 text-center">Unit</th>
+                                    <th class="text-left px-4 text-center">Kg/Package</th>
+                                    <th class="text-left px-4 text-center">Item Price</th>
+                                    <th class="text-left px-4 text-center">Total Price</th>
                                     <th class="text-left px-4">Action</th>
                                 </tr>
                                 </thead>
@@ -95,25 +96,34 @@
                                             <input type="hidden" name="sale_item_id[]" value="{{ $data->saledItems[$i]['id'] ?? '' }}">
                                             <select class="form-select" id="item_id_{{$i}}" name="item_id[]" onchange="populate_price({{$i}})" value="{{ old('item_id') }}">
                                                 <option value="">Select</option>
-                                                @foreach($items as $p)
-                                                    <option value="{{ $p['id'] }}" data-price="{{ $p['default_price'] }}" {{ $data->saledItems[$i]['item_id'] == $p['id'] ? 'selected' : '' }} >{{ $p['item_name'] }}</option>
+                                                @foreach($purchaseItems as $p)
+                                                    <option value="{{ $p->item->id }}" data-price="{{ $p->item->default_price }}" data-available-qty="{{ $p->total_available_qty }}" {{ $data->saledItems[$i]['item_id'] == $p->item->id ? 'selected' : '' }}>
+                                                        {{ $p->item->item_name }} (Available: {{ number_format($p->total_available_qty, 0) }} kg)
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </td>
                                         <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                            <input type="text" placeholder="ex. 5" class="form-control" id="item_qty_{{$i}}" name="item_qty[]" onkeyup="update_line({{$i}});"  value="{{ !empty($data->saledItems[$i]['item_qty']) ? $data->saledItems[$i]['item_qty'] : old('item_qty') }}">
+                                            <input type="text" class="form-control text-center" id="item_qty_{{$i}}" name="item_qty[]" onkeyup="calculateTotal({{$i}})"  value="{{ !empty($data->saledItems[$i]['item_qty']) ? $data->saledItems[$i]['item_qty'] : old('item_qty') }}">
                                         </td>
                                         <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                            <select class="form-select" id="item_unit_{{$i}}" name="item_unit[]">
-                                                <option value="Package" {{ (!empty($data->saledItems[$i]['item_unit']) && $data->saledItems[$i]['item_unit'] == 'Package') || empty($data->saledItems[$i]['item_unit']) ? 'selected' : '' }}>Package</option>
-                                                <option value="Kg" {{ (!empty($data->saledItems[$i]['item_unit']) && $data->saledItems[$i]['item_unit'] == 'Kg') ? 'selected' : '' }}>Kg</option>
+                                            <select class="form-select text-center" id="item_unit_{{$i}}" name="item_unit[]" onchange="calculateTotal({{$i}})">
+                                                <option value="">Select Unit</option>
+                                                @foreach($sellingUnits as $unit)
+                                                    <option value="{{ $unit->unit_type }}" data-power="{{ $unit->unit_power }}" {{ (!empty($data->saledItems[$i]['item_unit']) && $data->saledItems[$i]['item_unit'] == $unit->unit_type) ? 'selected' : '' }}>
+                                                        {{ $unit->unit_type }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </td>
                                         <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                            <input type="text" placeholder="ex. 19.50" class="form-control" onkeyup="update_line({{$i}});" id="item_unit_price_{{$i}}" name="item_unit_price[]"  value="{{ !empty($data->saledItems[$i]['item_unit_price']) ? $data->saledItems[$i]['item_unit_price'] : old('item_unit_price') }}">
+                                            <input type="text" class="form-control text-center" id="calculated_total_{{$i}}" name="calculated_total[]" value="" readonly style="background-color: #f8f9fa;">
                                         </td>
                                         <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                            <input type="text" class="form-control" id="item_line_price_{{$i}}" name="item_line_price[]"  value="" readonly>
+                                            <input type="text" class="form-control text-center" onkeyup="update_line({{$i}});" id="item_unit_price_{{$i}}" name="item_unit_price[]"  value="{{ !empty($data->saledItems[$i]['item_unit_price']) ? $data->saledItems[$i]['item_unit_price'] : old('item_unit_price') }}">
+                                        </td>
+                                        <td class="border-1 fw-bold py-0" style="font-size: 11px">
+                                            <input type="text" class="form-control text-center" id="item_line_price_{{$i}}" name="item_line_price[]"  value="" readonly>
                                         </td>
                                         <td width="120" class="border-1 py-0">
                                             <div class="d-flex justify-content-evenly text-end">
@@ -133,25 +143,34 @@
                                             <input type="hidden" name="sale_item_id[]" value="">
                                             <select class="form-select" id="item_id_{{$i}}" name="item_id[]" onchange="populate_price({{$i}})" value="{{ old('item_id') }}">
                                                 <option value="">Select</option>
-                                                @foreach($items as $p)
-                                                    <option value="{{ $p['id'] }}" data-price="{{ $p['default_price'] }}">{{ $p['item_name'] }}</option>
+                                                @foreach($purchaseItems as $p)
+                                                    <option value="{{ $p->item->id }}" data-price="{{ $p->item->default_price }}" data-available-qty="{{ $p->total_available_qty }}">
+                                                        {{ $p->item->item_name }} (Available: {{ number_format($p->total_available_qty, 0) }} kg)
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </td>
                                         <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                            <input type="text" class="form-control" id="item_qty_{{$i}}" name="item_qty[]" onkeyup="update_line({{$i}});"  value="{{ old('item_qty') }}">
+                                            <input type="text" class="form-control text-center" id="item_qty_{{$i}}" name="item_qty[]" onkeyup="calculateTotal({{$i}})"  value="{{ old('item_qty') }}">
                                         </td>
                                         <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                            <select class="form-select" id="item_unit_{{$i}}" name="item_unit[]">
-                                                <option value="Package" selected>Package</option>
-                                                <option value="Kg">Kg</option>
+                                            <select class="form-select" id="item_unit_{{$i}}" name="item_unit[]" onchange="calculateTotal({{$i}})">
+                                                <option value="">Select Unit</option>
+                                                @foreach($sellingUnits as $unit)
+                                                    <option value="{{ $unit->unit_type }}" data-power="{{ $unit->unit_power }}">
+                                                        {{ $unit->unit_type }}
+                                                    </option>
+                                                @endforeach
                                             </select>
                                         </td>
                                         <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                            <input type="text"  class="form-control" onkeyup="update_line({{$i}});" id="item_unit_price_{{$i}}" name="item_unit_price[]"  value="{{ old('item_unit_price') }}">
+                                            <input type="text" class="form-control text-center" id="calculated_total_{{$i}}" name="calculated_total[]" value="" readonly style="background-color: #f8f9fa;">
                                         </td>
                                         <td class="border-1 fw-bold py-0" style="font-size: 11px">
-                                            <input type="text" class="form-control" id="item_line_price_{{$i}}" name="item_line_price[]"  value="" readonly>
+                                            <input type="text"  class="form-control text-center" onkeyup="update_line({{$i}});" id="item_unit_price_{{$i}}" name="item_unit_price[]"  value="{{ old('item_unit_price') }}">
+                                        </td>
+                                        <td class="border-1 fw-bold py-0" style="font-size: 11px">
+                                            <input type="text" class="form-control text-center" id="item_line_price_{{$i}}" name="item_line_price[]"  value="" readonly>
                                         </td>
                                         <td width="120" class="border-1 py-0">
                                             <div class="d-flex justify-content-evenly text-end">
@@ -163,24 +182,32 @@
                                     </tr>
                                 @endfor
 
+                                <!-- Add Item Button Row -->
+                                <tr>
+                                    <td colspan="8" class="text-start py-3" style="background-color: #f8f9fa;">
+                                        <a id="add_btn" onclick="show_line()" class="btn btn-sm font-sm rounded btn-outline-secondary">
+                                            <i class="material-icons md-add fs-6"></i> Add Item
+                                        </a>
+                                    </td>
+                                </tr>
                                 </tbody>
                                 <tfoot>
                                     <tr>
-                                        <td colspan="5" class="text-end fw-bold border-1 py-2" style="background-color: #f8f9fa;">Subtotal:</td>
+                                        <td colspan="6" class="text-end fw-bold border-1 py-2" style="background-color: #f8f9fa;">Subtotal:</td>
                                         <td class="border-1 fw-bold py-2 text-center" style="background-color: #f8f9fa;">
                                             <input type="text" id="subtotal" name="subtotal" class="form-control text-center fw-bold" value="0.00" readonly style="background-color: transparent; border: none;">
                                         </td>
                                         <td class="border-1" style="background-color: #f8f9fa;"></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="5" class="text-end fw-bold border-1 py-2" style="background-color: #e9ecef;"> Consumption tax 8%:</td>
+                                        <td colspan="6" class="text-end fw-bold border-1 py-2" style="background-color: #e9ecef;"> Consumption tax 8%:</td>
                                         <td class="border-1 fw-bold py-2 text-center" style="background-color: #e9ecef;">
                                             <input type="text" id="tax_amount" name="tax_amount" class="form-control text-center fw-bold" value="0.00" readonly style="background-color: transparent; border: none;">
                                         </td>
                                         <td class="border-1" style="background-color: #e9ecef;"></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="5" class="text-end fw-bold border-1 py-2" style="background-color: #d1ecf1;">Total:</td>
+                                        <td colspan="6" class="text-end fw-bold border-1 py-2" style="background-color: #d1ecf1;">Total:</td>
                                         <td class="border-1 fw-bold py-2 text-center" style="background-color: #d1ecf1;">
                                             <input type="text" id="total_with_tax" name="total_with_tax" class="form-control text-center fw-bold" value="0.00" readonly style="background-color: transparent; border: none;">
                                         </td>
@@ -188,11 +215,6 @@
                                     </tr>
                                 </tfoot>
                             </table>
-                            <div class="d-flex justify-content-start">
-                                <a id="add_btn" onclick="show_line()" class="btn btn-sm  font-sm rounded btn-outline-secondary">
-                                    <i class="material-icons md-add fs-6"></i> Add Item
-                                </a>
-                            </div>
                             <div class="d-flex justify-content-center">
                                 <button class="btn btn-primary btn-block rounded" type="submit" name="submit">SUBMIT</button>
                             </div>
@@ -286,17 +308,41 @@
             var totalWithTax = subtotal + taxAmount;
             
             // Update the display fields
-            document.getElementById('subtotal').value = subtotal.toFixed(2);
-            document.getElementById('tax_amount').value = taxAmount.toFixed(2);
-            document.getElementById('total_with_tax').value = totalWithTax.toFixed(2);
+            document.getElementById('subtotal').value = subtotal.toFixed(0);
+            document.getElementById('tax_amount').value = taxAmount.toFixed(0);
+            document.getElementById('total_with_tax').value = totalWithTax.toFixed(0);
         }
 
-        @foreach($data->saledItems as $i => $v)
-            update_line({{ $i }});
-        @endforeach
+        // Simple function to calculate everything at once
+        function calculateTotal(i) {
+            // Get quantity and unit
+            var qty = document.getElementById('item_qty_' + i).value;
+            var unitSelect = document.getElementById('item_unit_' + i);
+            var unitPrice = document.getElementById('item_unit_price_' + i).value;
+            
+            // Calculate unit total (qty × unit power)
+            if (qty && unitSelect.value) {
+                var unitPower = unitSelect.options[unitSelect.selectedIndex].getAttribute('data-power') || 0;
+                document.getElementById('calculated_total_' + i).value = (qty * unitPower).toFixed(0);
+            } else {
+                document.getElementById('calculated_total_' + i).value = '';
+            }
+            
+            // Calculate line total (qty × price)
+            if (qty && unitPrice) {
+                document.getElementById('item_line_price_' + i).value = (qty * unitPrice).toFixed(0);
+            } else {
+                document.getElementById('item_line_price_' + i).value = '';
+            }
+            
+            // Update grand totals
+            calculate_totals();
+        }
 
-        // Calculate initial totals when page loads
-        calculate_totals();
+        // Initialize calculations for existing items
+        @foreach($data->saledItems as $i => $v)
+            calculateTotal({{ $i }});
+        @endforeach
 
     </script>
 @endpush

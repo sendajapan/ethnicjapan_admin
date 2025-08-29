@@ -90,7 +90,7 @@
             <li class="menu-item {{ setActive(['admin.item.*']) }}">
                 <a class="menu-link {{ setActive(['admin.item.index']) }}" href="{{ route('admin.item.index') }}">
                     <i class="icon material-icons md-production_quantity_limits text-muted"></i>
-                    <span class="text">Items / Products List</span>
+                    <span class="text">Stock / Items List</span>
                 </a>
             </li>
 

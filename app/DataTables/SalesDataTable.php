@@ -36,20 +36,17 @@ class SalesDataTable extends DataTable
                 return $query->customer->customer_name;
             })
             ->addColumn('total_with_tax', function ($query) {
-                // Calculate subtotal from sales items
                 $subtotal = $query->salesItems->sum('item_line_price');
-                // Calculate 8% tax
                 $tax = $subtotal * 0.08;
-                // Total with tax
                 $totalWithTax = $subtotal + $tax;
-                return "$ ".number_format($totalWithTax, 2);
+                return "¥ ".number_format($totalWithTax, 0);
             })
             ->addColumn('product_qty', function ($query) {
                 $item_count = $query->salesItems->count();
                 $html = '<span class="badge bg-primary">'.$item_count.'</span>';
                 if($item_count > 0){
-                    $html .= ' <button class="btn btn-sm btn-outline-info ms-2" onclick="show_detail('.$query->id.')">
-                        <i class="material-icons md-visibility fs-6"></i> View Details
+                    $html .= ' <button class="btn btn-sm btn-primary ms-2" onclick="show_detail('.$query->id.')">
+                        View Details
                     </button>';
                 }
                 return $html;

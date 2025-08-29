@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\DataTables\CategoriesDataTable;
 use App\DataTables\SalesDataTable;
 use App\Http\Controllers\Controller;
-use App\Models\sale;
+use App\Models\Sale;
 use App\Models\SaleItem;
-use App\Models\Lot;
+use App\Models\DataSellingUnit;
 use App\Models\LotTracking;
+use App\Models\Lot;
 use Exception;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -30,7 +31,17 @@ class SaleController extends Controller
      */
     public function create(): View
     {
-        return view('admin.sale.create');
+        $sellingUnits = DataSellingUnit::all();
+                $purchaseItems = Lot::with(['item'])
+            ->selectRaw('
+                item_id,
+                SUM(total_qty) as total_available_qty
+            ')
+            ->groupBy('item_id')
+            ->havingRaw('SUM(total_qty) > 0')
+            ->get();
+            
+        return view('admin.sale.create', compact('sellingUnits', 'purchaseItems'));
     }
 
     /**
@@ -118,8 +129,17 @@ class SaleController extends Controller
     public function edit(string $id)
     {
         $data = Sale::with('saledItems')->where('id', $id)->firstOrFail();
-        $items = \App\Models\Item::all();
-        return view('admin.sale.edit', compact('data', 'items'));
+        $sellingUnits = DataSellingUnit::all();
+                $purchaseItems = Lot::with(['item'])
+            ->selectRaw('
+                item_id,
+                SUM(total_qty) as total_available_qty
+            ')
+            ->groupBy('item_id')
+            ->havingRaw('SUM(total_qty) > 0')
+            ->get();
+            
+        return view('admin.sale.edit', compact('data', 'sellingUnits', 'purchaseItems'));
     }
 
     /**
@@ -167,7 +187,6 @@ class SaleController extends Controller
                         
                         LotTracking::where('sale_item_id', $saleItems->id)->delete();
                     } else {
-                        // Create new sale item
                         $saleItems = new SaleItem();
                         $saleItems->sale_id = $sale_id;
                     }
@@ -220,9 +239,7 @@ class SaleController extends Controller
     public function details(string $id)
     {
         $sale = Sale::with(['salesItems.item', 'customer'])->findOrFail($id);
-        
-        // Get lot tracking information for each sale item with lot details
-        foreach ($sale->salesItems as $saleItem) {
+                foreach ($sale->salesItems as $saleItem) {
             $saleItem->lotTracking = LotTracking::where('sale_item_id', $saleItem->id)
                 ->leftJoin('lots', 'lot_tracking.lot_unique', '=', 'lots.lot_unique')
                 ->leftJoin('shipments', 'lots.shipment_id', '=', 'shipments.id')
@@ -262,7 +279,6 @@ class SaleController extends Controller
     private function createLotTrackingEntries($saleItemId, $itemId, $quantity)
     {
         $remainingQty = floatval($quantity);    
-        // Get available lots
         $lots = Lot::where('item_id', $itemId)
             ->orderBy('created_at', 'asc')
             ->get();
