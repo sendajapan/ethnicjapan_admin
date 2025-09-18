@@ -7,13 +7,16 @@
     "require": {
         "php": "^8.2",
         "anayarojo/shoppingcart": "^4.2",
+        "barryvdh/laravel-dompdf": "^3.1",
         "barryvdh/laravel-snappy": "^1.0",
+        "elibyy/tcpdf-laravel": "^11.5",
         "laravel/framework": "^11.9",
         "laravel/tinker": "^2.9",
         "livewire/livewire": "^3.5",
         "maantje/charts": "^0.8.0",
         "maatwebsite/excel": "*",
         "php-flasher/flasher-laravel": "^2.0",
+        "tecnickcom/tcpdf": "^6.10",
         "yajra/laravel-datatables": "^11.0",
         "yajra/laravel-datatables-buttons": "11.0"
     },

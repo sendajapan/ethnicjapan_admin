@@ -24,13 +24,10 @@ class SalesDataTable extends DataTable
         return (new EloquentDataTable($query))
             ->setRowId('DT_RowIndex')
             ->addIndexColumn()
-            ->addColumn('sale_invoice', function ($query) {
-                if ($query->sale_invoice != '') {
-                    return '<a target="_blank" href="' . url('/' . $query->sale_invoice) . '" class="btn btn-youtube font-sm btn-outline-danger">
-                    <i class="material-icons md-picture_as_pdf fs-6"></i>
+            ->addColumn('invoice_pdf', function ($query) {
+                return '<a href="' . route('admin.sale.pdf', $query->id) . '" class="btn btn-sm font-sm rounded btn-success" target="_blank">
+                    <i class="material-icons md-picture_as_pdf fs-6"></i> PDF
                 </a>';
-                }
-                return '';
             })
             ->addColumn('customer_name', function ($query) {
                 return $query->customer->customer_name;
@@ -52,7 +49,7 @@ class SalesDataTable extends DataTable
                 return $html;
             })
             ->addColumn('action', function ($query) {
-                return '<a href="' . route('admin.sale.edit', $query->id) . '" class="btn btn-sm font-sm rounded btn-dark">
+                return '<a href="' . route('admin.sale.edit', $query->id) . '" class="btn btn-sm font-sm rounded btn-dark me-1">
                     <i class="material-icons md-edit fs-6"></i>
                 </a>
                 <a href="' . route('admin.sale.destroy', $query->id) . '" class="btn btn-sm delete-part-category font-sm rounded btn-danger">
@@ -60,7 +57,7 @@ class SalesDataTable extends DataTable
                 </a>';
 
             })
-            ->rawColumns(['sale_no', 'customer_name', 'sale_date', 'product_qty', 'total_with_tax', 'sale_invoice', 'action']);
+            ->rawColumns(['sale_no', 'customer_name', 'sale_date', 'product_qty', 'total_with_tax', 'invoice_pdf', 'action']);
     }
 
     /**
@@ -128,7 +125,7 @@ class SalesDataTable extends DataTable
             Column::make('sale_date')->className('text-start')->width(100),
             Column::make('product_qty')->className('text-center')->width(200),
             Column::make('total_with_tax')->className('text-center')->width(100)->title('Total (with Tax)'),
-            Column::make('sale_invoice')->className('text-start')->width(100),
+            Column::make('invoice_pdf')->className('text-center')->width(100)->title('Invoice PDF'),
             Column::computed('action')
                 ->exportable(true)
                 ->printable(true)

@@ -54,6 +54,8 @@ Route::resource('accounts', AccountsController::class);
 Route::resource('inventory', InventoryController::class);
 
 Route::get('sale/{id}/details', [SaleController::class, 'details'])->name('sale.details');
+Route::get('sale/{id}/pdf', [SaleController::class, 'generatePdf'])->name('sale.pdf');
+Route::get('sale/{id}/tcpdf', [SaleController::class, 'generateTcpdf'])->name('sale.tcpdf');
 Route::resource('sale', SaleController::class);
 Route::resource('stock', StockController::class);
 Route::resource('purchase_report', PurchaseReportController::class);

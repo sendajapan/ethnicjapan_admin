@@ -17,7 +17,7 @@
     <section class="content-main">
         <div class="content-header">
             <div>
-                <h4 class="content-title card-title">Create New Sale</h4>
+                <h4 class="content-title card-title">Edit Sale</h4>
             </div>
         </div>
         <div class="row">

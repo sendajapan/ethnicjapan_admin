@@ -11,6 +11,7 @@ use App\Models\DataSellingUnit;
 use App\Models\LotTracking;
 use App\Models\Lot;
 use Exception;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -35,11 +36,21 @@ class SaleController extends Controller
                 $purchaseItems = Lot::with(['item'])
             ->selectRaw('
                 item_id,
-                SUM(total_qty) as total_available_qty
+                SUM(total_qty) as total_qty
             ')
             ->groupBy('item_id')
             ->havingRaw('SUM(total_qty) > 0')
             ->get();
+            
+        foreach ($purchaseItems as $item) {
+                        $soldQty = LotTracking::where('item_id', $item->item_id)
+                ->sum('item_quantity') ?? 0;
+                
+            $item->total_available_qty = $item->total_qty - $soldQty;
+        }
+                $purchaseItems = $purchaseItems->filter(function($item) {
+            return $item->total_available_qty > 0;
+        });
             
         return view('admin.sale.create', compact('sellingUnits', 'purchaseItems'));
     }
@@ -130,14 +141,25 @@ class SaleController extends Controller
     {
         $data = Sale::with('saledItems')->where('id', $id)->firstOrFail();
         $sellingUnits = DataSellingUnit::all();
-                $purchaseItems = Lot::with(['item'])
+        
+        // Get available quantities by subtracting sold quantities from total quantities
+        $purchaseItems = Lot::with(['item'])
             ->selectRaw('
                 item_id,
-                SUM(total_qty) as total_available_qty
+                SUM(total_qty) as total_qty
             ')
             ->groupBy('item_id')
             ->havingRaw('SUM(total_qty) > 0')
             ->get();
+                    foreach ($purchaseItems as $item) {
+            $soldQty = LotTracking::where('item_id', $item->item_id)
+                ->sum('item_quantity') ?? 0;
+                
+            $item->total_available_qty = $item->total_qty - $soldQty;
+        }
+                $purchaseItems = $purchaseItems->filter(function($item) {
+            return $item->total_available_qty > 0;
+        });
             
         return view('admin.sale.edit', compact('data', 'sellingUnits', 'purchaseItems'));
     }
@@ -251,6 +273,28 @@ class SaleController extends Controller
         $tax = $subtotal * 0.08;
         $totalWithTax = $subtotal + $tax;     
         return view('admin.sale.details-modal', compact('sale', 'subtotal', 'tax', 'totalWithTax'));
+    }
+
+    /**
+     * Generate PDF for sale details
+     */
+    public function generatePdf(string $id)
+    {
+        $sale = Sale::with(['salesItems.item', 'customer'])->findOrFail($id);
+        
+        $subtotal = $sale->salesItems->sum('item_line_price');
+        $tax = $subtotal * 0.08;
+        $totalWithTax = $subtotal + $tax;
+        
+        $pdf = Pdf::loadView('admin.sale.pdf', compact('sale', 'subtotal', 'tax', 'totalWithTax'));
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans'
+        ]);
+        
+        return $pdf->stream('sale-details-' . $sale->sale_no . '.pdf');
     }
 
     /**
